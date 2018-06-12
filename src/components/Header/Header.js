@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Link } from 'react-router-dom';
+import './styles.css';
 
 const styles = {
   root: {
@@ -27,11 +29,17 @@ function ButtonAppBar(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="title" color="inherit" className={classes.flex}>
-            True Relief
+            <Link to="/">True Relief</Link>
           </Typography>
-          <Button color="inherit">Home</Button>
-          <Button color="inherit">Sign up</Button>
-          <Button color="inherit">Login</Button>
+          <Button tabIndex="-1" color="inherit">
+            <Link to="/">Home</Link>
+          </Button>
+          <Button tabIndex="-1" color="inherit">
+            <Link to="/sign-up">Sign up</Link>
+          </Button>
+          <Button tabIndex="-1" color="inherit">
+            <Link to="/log-in">Log in</Link>
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
