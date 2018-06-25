@@ -5,6 +5,8 @@ import { AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/co
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
 import './styles.css';
+import firebase from '../firebase.js';
+
 
 const styles = {
   root: {
@@ -18,6 +20,11 @@ const styles = {
     /* marginRight: 20, */
   },
 };
+
+function logout(){
+    firebase.auth().signOut();
+    alert("User logout");
+}
 
 function ButtonAppBar(props) {
   const { classes } = props;
@@ -34,12 +41,23 @@ function ButtonAppBar(props) {
           <Button tabIndex="-1" color="inherit">
             <Link to="/">Home</Link>
           </Button>
-          <Button tabIndex="-1" color="inherit">
+            <div name="hidenMenus" id="hidenMenus" class="menuHide">
+            <Button  tabIndex="-1" color="inherit" ><Link to="/">Profile</Link></Button>
+            <Button  tabIndex="-1" color="inherit" ><Link to="/">Track pain</Link></Button>
+            <Button  tabIndex="-1" color="inherit" ><Link to="/">Tools</Link></Button>
+            <Button  tabIndex="-1" color="inherit" ><Link to="/">Local providers</Link></Button>
+            <Button  tabIndex="-1" color="inherit" ><Link to="/">Treatments and products</Link></Button>
+            <Button  tabIndex="-1" color="inherit" ><Link to="/log-in">Log out</Link></Button>
+            </div>
+           <div name="defaultMenus" id="defaultMenus">
+            <Button tabIndex="-1" color="inherit">
             <Link to="/sign-up">Sign up</Link>
           </Button>
           <Button tabIndex="-1" color="inherit">
             <Link to="/log-in">Log in</Link>
           </Button>
+          </div>
+
         </Toolbar>
       </AppBar>
     </div>
