@@ -9,7 +9,15 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import firebase from '../firebase.js';
-
+import Header from '../Header/Header';
+// import route Components
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from 'react-router-dom'
 const styles = theme => ({
   root: {
     margin: theme.spacing.unit * 6,
@@ -44,7 +52,9 @@ class SignUp extends React.Component {
     this.state = {
       mail: '',
       password1: '',
-      password2: ''
+      password2: '',
+      redirectToRegister:false
+
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -59,7 +69,9 @@ class SignUp extends React.Component {
     this.setState({
       [name]: value,
       [name]: value,
+      [name]: value,
       [name]: value
+
     });
   };
 
@@ -71,15 +83,40 @@ class SignUp extends React.Component {
        console.log(error.code);
        console.log(error.message);
     });
-
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+       console.log(error.code);
+       console.log(error.message);
+    });
+    //If there is a currentUser means the user press logOut in an active session.
+    const hidenMenus=document.getElementById('hidenMenus');
+    const defaultMenus=document.getElementById('defaultMenus');
+    var user = firebase.auth().currentUser;
+    //If the user was autenthicated then we show the propor menus
+    firebase.auth().onAuthStateChanged(user =>{
+      if (user) {
+      alert("User made log in: "+user.email+ " and we must redirect to the demographic section");
+      hidenMenus.classList.remove('menuHide');
+      defaultMenus.classList.add('menuHide');
+    } 
+  });
   this.setState({
     mail: '',
-    password1: ''
+    password1: '',
+    redirectToRegister:true
+
   });
     /* TODO */
   }
 
   render() {
+    const { from } = this.props.location.state || { from: { pathname: '../Registration/Registration.js' } }
+        const { redirectToRegister } = this.state;
+        //if the redirectToRegister value is true, then we redirect to the registration page
+    if (redirectToRegister) {
+        return (
+          <Redirect to={from} />
+        )
+      }
     const { classes } = this.props;
 
     return (
