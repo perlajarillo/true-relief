@@ -8,6 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
+import firebase from '../firebase.js';
 
 const styles = theme => ({
   root: {
@@ -41,9 +42,7 @@ class SignUp extends React.Component {
     super(props);
 
     this.state = {
-      firstName: '',
-      middleName: '',
-      lastName: '',
+      mail: '',
       password1: '',
       password2: ''
     };
@@ -60,13 +59,23 @@ class SignUp extends React.Component {
     this.setState({
       [name]: value,
       [name]: value,
-      [name]: value,
-      [name]: value,
       [name]: value
     });
   };
 
-  handleSubmit() {
+  handleSubmit(e) {
+    e.preventDefault();
+    var email=this.state.mail;
+    var password=this.state.password1;
+    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+       console.log(error.code);
+       console.log(error.message);
+    });
+
+  this.setState({
+    mail: '',
+    password1: ''
+  });
     /* TODO */
   }
 
@@ -84,19 +93,11 @@ class SignUp extends React.Component {
               Your information will be kept private.
             </Typography>
           </Grid>
+          <form onSubmit={this.handleSubmit}>
           <Grid item xs={12} md={3} lg={3}>
             <FormControl className={(classes.formControl, classes.textField)} aria-describedby="required" aria-required="true">
-              <InputLabel htmlFor="firstName">First Name</InputLabel>
-              <Input id="firstName" name="firstName" value={this.state.firstName} onChange={this.handleChange} />
-              <FormHelperText id="required">Required*</FormHelperText>
-            </FormControl>
-            <FormControl className={(classes.formControl, classes.textField)} aria-describedby="required" aria-required="true">
-              <InputLabel htmlFor="middleName">Middle Name</InputLabel>
-              <Input id="middleName" name="middleName" value={this.state.middleName} onChange={this.handleChange} />
-            </FormControl>
-            <FormControl className={(classes.formControl, classes.textField)} aria-describedby="required" aria-required="true">
-              <InputLabel htmlFor="lastName">Last Name</InputLabel>
-              <Input id="lastName" name="lastName" value={this.state.lastName} onChange={this.handleChange} />
+              <InputLabel htmlFor="mail">E-mail</InputLabel>
+              <Input id="mail" name="mail" value={this.state.mail} onChange={this.handleChange} />
               <FormHelperText id="required">Required*</FormHelperText>
             </FormControl>
             <FormControl className={(classes.formControl, classes.textField)} aria-describedby="required" aria-required="true">
@@ -113,6 +114,7 @@ class SignUp extends React.Component {
               Create an Account
             </Button>
           </Grid>
+          </form>
         </Grid>
       </div>
     );
