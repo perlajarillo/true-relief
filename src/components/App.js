@@ -9,6 +9,8 @@ import Header from './Header/Header';
 import Footer from './Footer/Footer'
 import Home from './Home/Home';
 import SignUp from './SignUp/SignUp';
+import SignUp_disclamer from './SignUP_disclamer/SignUp_disclamer';
+import Policy from './Policy/policy';
 import LogIn from './LogIn/LogIn';
 
 const theme = createMuiTheme({
@@ -44,6 +46,8 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/sign-up" component={SignUp} />
             <Route path="/log-in" component={LogIn} />
+            <Route path="/policy" component={Policy} />
+            <Route path="/sign-up_disclamer" component={SignUp_disclamer} />
           </Switch>
 
           <Footer />
