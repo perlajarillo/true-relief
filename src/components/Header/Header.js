@@ -51,7 +51,7 @@ function ButtonAppBar(props) {
             </div>
            <div name="defaultMenus" id="defaultMenus">
             <Button tabIndex="-1" color="inherit">
-            <Link to="/sign-up">Sign up</Link>
+            <Link to="/sign-up_disclamer">Sign up</Link>
           </Button>
           <Button tabIndex="-1" color="inherit">
             <Link to="/log-in">Log in</Link>
