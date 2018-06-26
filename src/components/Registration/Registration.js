@@ -1,83 +1,200 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import StepContent from "@material-ui/core/StepContent";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import Demographic from "./Demographic";
+import Habits from "./Habits";
+import Preferences from "./Preferences";
+import Challenges from "./Challenges";
+import PainHistory from "./PainHistory";
+import MoreConditions from "./MoreConditions";
 
 const styles = theme => ({
   root: {
-    width: '90%',
+    width: "90%"
   },
   button: {
     marginTop: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   actionsContainer: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   resetContainer: {
-    padding: theme.spacing.unit * 3,
-  },
+    padding: theme.spacing.unit * 3
+  }
 });
 
-function getSteps() {
-  return ['Demographic', 'Habits', 'Challenges', 'Pain History', 'Another condition', 'Preferences'];
-}
+class VerticalLinearStepper extends Component {
+  constructor(props) {
+    super(props);
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return 'Please answer these questions to know more about you.';
-    case 1:
-      return 'The next questions are related to your health habits';
-    case 2:
-      return 'What are the biggest challenges you face?:';
-    case 3:
-      return 'Now are going to ask questions about your pain as well as what makes it better or worse and how you currently treated so we can come up with the best ideas for additional pain';
-    case 4:
-      return 'Complete your pain history...';
-    case 5:
-      return 'Now we want to know what you are most looking for in an app that will help you with your pain. Based on your input we will pick specific tools that will meet your needs:';
-    default:
-      return 'Unknown step';
+    this.state = {
+      activeStep: 0,
+      gender: "",
+      selectedDate: new Date(),
+      weight: "",
+      height: "",
+      smoke: "",
+      physicalActivity: "",
+      sleepHours: "",
+      sleepQuality: "",
+      alcohol: "",
+      alcoholFrequency: "",
+      drinksOfAlcohol: "",
+      kindOfDrink: "",
+      coffee: "",
+      coffeeFrequency: "",
+      cupsOfCoffee: "",
+      kindOfCoffee: "",
+      healthStatus: "",
+      trackingPain: false,
+      communication: false,
+      learningAboutCondition: false,
+      newTreatments: false,
+      learnTreatments: false,
+      providers: false,
+      rememberingMedications: "",
+      handleStress: "",
+      eatingHealthy: "",
+      socialize: "",
+      painCondition: "",
+      medication: "",
+      medicationName: "",
+      medEfficacy: "",
+      procedures: "",
+      procedureName: "",
+      procedureEfficacy: "",
+      nonPharma: "",
+      nonPharmaName: "",
+      nonPharmaEfficacy: "",
+      open: false,
+      anotherCondition: "",
+    };
+
+    this.updateParentState = this.updateParentState.bind(this);
+    this.updateDateInParentState = this.updateDateInParentState.bind(this);
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
   }
-}
 
-function demographic() {
+  updateParentState(event) {
+    const name = event.target.name;
+    const value = event.target.value;
 
-}
+    this.setState({
+      [name]: value
+    });
+  }
 
-class VerticalLinearStepper extends React.Component {
-  state = {
-    activeStep: 0,
+  updateDateInParentState(date) {
+    this.setState({
+      selectedDate: date
+    });
+  }
+
+  handleCheckboxChange = name => event => {
+    this.setState({ [name]: event.target.checked });
   };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleOpen = () => {
+    this.setState({ open: true });
+  };
+
+  getSteps() {
+    return [
+      "Demographic",
+      "Habits",
+      "Preferences",
+      "Challenges",
+      "Pain History",
+      "Another condition",
+    ];
+  }
+
+  getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <Demographic
+            parentState={this.state}
+            updateParentState={this.updateParentState}
+            updateDateInParentState={this.updateDateInParentState}
+          />
+        );
+      case 1:
+        return (
+          <Habits
+            parentState={this.state}
+            updateParentState={this.updateParentState}
+          />
+        );
+      case 2:
+        return (
+          <Preferences
+            parentState={this.state}
+            updateParentState={this.handleCheckboxChange}
+          />
+        );
+      case 3:
+        return (
+          <Challenges
+            parentState={this.state}
+            updateParentState={this.handleCheckboxChange}
+          />
+        );
+      case 4:
+        return (
+          <PainHistory
+            parentState={this.state}
+            updateParentState={this.updateParentState}
+            handleCheckboxChange={this.handleCheckboxChange}
+            handleClose={this.handleClose}
+            handleOpen={this.handleOpen}
+          />
+        );
+      case 5:
+        return <MoreConditions
+          parentState={this.state}
+          updateParentState={this.updateParentState}
+        />;
+      default:
+        return "Unknown step";
+    }
+  }
 
   handleNext = () => {
     this.setState({
-      activeStep: this.state.activeStep + 1,
+      activeStep: this.state.activeStep + 1
     });
   };
 
   handleBack = () => {
     this.setState({
-      activeStep: this.state.activeStep - 1,
+      activeStep: this.state.activeStep - 1
     });
   };
 
   handleReset = () => {
     this.setState({
-      activeStep: 0,
+      activeStep: 0
     });
   };
 
   render() {
     const { classes } = this.props;
-    const steps = getSteps();
+    const steps = this.getSteps();
     const { activeStep } = this.state;
 
     return (
@@ -88,7 +205,7 @@ class VerticalLinearStepper extends React.Component {
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
                 <StepContent>
-                  <Typography>{getStepContent(index)}</Typography>
+                  {this.getStepContent(index)}
                   <div className={classes.actionsContainer}>
                     <div>
                       <Button
@@ -104,7 +221,7 @@ class VerticalLinearStepper extends React.Component {
                         onClick={this.handleNext}
                         className={classes.button}
                       >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                        {activeStep === steps.length - 1 ? "Finish" : "Next"}
                       </Button>
                     </div>
                   </div>
@@ -127,7 +244,7 @@ class VerticalLinearStepper extends React.Component {
 }
 
 VerticalLinearStepper.propTypes = {
-  classes: PropTypes.object,
+  classes: PropTypes.object
 };
 
 export default withStyles(styles)(VerticalLinearStepper);
