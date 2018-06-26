@@ -53,6 +53,7 @@ class SignUp extends React.Component {
       mail: '',
       password1: '',
       password2: '',
+      error: '',
       redirectToRegister:false
 
     };
@@ -67,6 +68,7 @@ class SignUp extends React.Component {
     const name = target.name;
     console.log('target', target, 'name', name, 'value', value);
     this.setState({
+      [name]: value,
       [name]: value,
       [name]: value,
       [name]: value,
@@ -97,14 +99,26 @@ class SignUp extends React.Component {
       alert("User made log in: "+user.email+ " and we must redirect to the demographic section");
       hidenMenus.classList.remove('menuHide');
       defaultMenus.classList.add('menuHide');
+      this.setState({
+      mail: '',
+      password1: '',
+      password2: '',
+      error:'',
+      redirectToRegister:true
+    });
     } 
+    else
+    {
+      this.setState({
+      mail: '',
+      password1: '',
+      password2: '',
+      error:'The account was not created!',
+      redirectToRegister:false
+    });
+    }
   });
-  this.setState({
-    mail: '',
-    password1: '',
-    redirectToRegister:true
-
-  });
+  
     /* TODO */
   }
 
@@ -134,23 +148,27 @@ class SignUp extends React.Component {
           <Grid item xs={12} md={3} lg={3}>
             <FormControl className={(classes.formControl, classes.textField)} aria-describedby="required" aria-required="true">
               <InputLabel htmlFor="mail">E-mail</InputLabel>
-              <Input id="mail" name="mail" value={this.state.mail} onChange={this.handleChange} />
+              <Input id="mail" name="mail" type="email" value={this.state.mail} onChange={this.handleChange} />
               <FormHelperText id="required">Required*</FormHelperText>
             </FormControl>
             <FormControl className={(classes.formControl, classes.textField)} aria-describedby="required" aria-required="true">
               <InputLabel htmlFor="password">Password</InputLabel>
-              <Input id="password" name="password1" value={this.state.password1} onChange={this.handleChange} />
+              <Input id="password" name="password1" type="Password" value={this.state.password1} onChange={this.handleChange} />
               <FormHelperText id="required">Required*</FormHelperText>
             </FormControl>
             <FormControl className={(classes.formControl, classes.textField)} aria-describedby="required" aria-required="true">
               <InputLabel htmlFor="passwordConfirm">Confirm Password</InputLabel>
-              <Input id="passwordConfirm" name="password2" value={this.state.password2} onChange={this.handleChange} />
+              <Input id="passwordConfirm" name="password2" type="Password" value={this.state.password2} onChange={this.handleChange} />
               <FormHelperText id="required">Required*</FormHelperText>
             </FormControl>
+            <div>
+            <Button variant="contained" color="primary" className={classes.button}><Link to="/log-in">I have an account</Link></Button>
             <Button variant="contained" type="submit" color="primary" className={classes.button}>
               Create an Account
             </Button>
+            </div>
           </Grid>
+           <FormHelperText id="error" name="error" value={this.state.error} onChange={this.handleChange}>{this.state.error}</FormHelperText>
           </form>
         </Grid>
       </div>
