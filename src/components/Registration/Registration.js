@@ -74,8 +74,7 @@ class VerticalLinearStepper extends Component {
       nonPharma: "",
       nonPharmaName: "",
       nonPharmaEfficacy: "",
-      open: false,
-      anotherCondition: "",
+      open: false
     };
 
     this.updateParentState = this.updateParentState.bind(this);
@@ -83,15 +82,39 @@ class VerticalLinearStepper extends Component {
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
+    this.clearConditionalState = this.clearConditionalState.bind(this);
+  }
+
+  clearConditionalState(name, value) {
+    name === "medication" &&
+      this.setState({
+        [name]: "no",
+        medicationName: "",
+        medEfficacy: ""
+      });
+    name === "procedures" &&
+      this.setState({
+        [name]: "no",
+        procedureName: "",
+        procedureEfficacy: ""
+      });
+    name === "nonPharma" &&
+      this.setState({
+        [name]: "no",
+        nonPharmaName: "",
+        nonPharmaEfficacy: ""
+      });
   }
 
   updateParentState(event) {
     const name = event.target.name;
     const value = event.target.value;
 
-    this.setState({
-      [name]: value
-    });
+    value === "no"
+      ? this.clearConditionalState(name, value)
+      : this.setState({
+          [name]: value
+        });
   }
 
   updateDateInParentState(date) {
@@ -119,7 +142,7 @@ class VerticalLinearStepper extends Component {
       "Preferences",
       "Challenges",
       "Pain History",
-      "Another condition",
+      "Another condition"
     ];
   }
 
@@ -165,10 +188,12 @@ class VerticalLinearStepper extends Component {
           />
         );
       case 5:
-        return <MoreConditions
-          parentState={this.state}
-          updateParentState={this.updateParentState}
-        />;
+        return (
+          <MoreConditions
+            parentState={this.state}
+            updateParentState={this.updateParentState}
+          />
+        );
       default:
         return "Unknown step";
     }

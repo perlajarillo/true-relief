@@ -85,11 +85,7 @@ const nonPharmaData = [
 ];
 
 const PainHistory = props => {
-  const {
-    classes,
-    parentState,
-    updateParentState,
-  } = props;
+  const { classes, parentState, updateParentState } = props;
   return (
     <Fragment>
       <Typography variant="subheading">
@@ -186,7 +182,14 @@ const PainHistory = props => {
           </Select>
         </FormControl>
       </div>
-      <div style={{ display: parentState.medicationName === "" && "none" }}>
+      <div
+        style={{
+          display:
+            (parentState.medication === "no" ||
+              parentState.medicationName === "") &&
+            "none"
+        }}
+      >
         <FormControl required className={classes.formControl}>
           <FormLabel component="legend">
             How did medication {parentState.medicationName} worked?
@@ -362,7 +365,14 @@ const PainHistory = props => {
         </FormControl>
       </div>
       {/********* HOW IT WORKED *******************/}
-      <div style={{ display: parentState.nonPharmaName === "" && "none" }}>
+      <div
+        style={{
+          display:
+            (parentState.nonPharmaName === "" ||
+              parentState.nonPharma === "no") &&
+            "none"
+        }}
+      >
         <FormControl required className={classes.formControl}>
           <FormLabel component="legend">
             Have {parentState.nonPharmaName} worked?
