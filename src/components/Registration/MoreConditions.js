@@ -24,17 +24,16 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2
   }
 });
+
 const MoreConditions = props => {
   const { classes, parentState, updateParentState } = props;
-  console.log('props', props, 'parentState', parentState);
+
   return (
     <Fragment>
-      <div
-        className={classes.root}
-      >
-      <Typography variant="subheading">
-        Complete your pain history ...
-      </Typography>
+      <div className={classes.root}>
+        <Typography variant="subheading">
+          Complete your pain history...
+        </Typography>
         <div className={classes.root}>
           <FormControl
             component="fieldset"

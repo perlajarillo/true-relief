@@ -29,25 +29,11 @@ const styles = theme => ({
 });
 
 const Demographic = props => {
-  /*  handleChange = (event, date) => {
-    const name = event.target.name;
-    const value = event.target.value;
-
-    this.setState({
-      [name]: value,
-    })
-  }
-
-   handleDateChange = (date) => {
-    this.setState({
-      selectedDate: date
-    });
-  } */
   const {
     classes,
     parentState,
     updateParentState,
-    updateDateInParentState,
+    updateDateInParentState
   } = props;
 
   return (
@@ -68,7 +54,6 @@ const Demographic = props => {
               label=""
               format="DD/MM/YYYY"
               placeholder="10/10/2018"
-              // handle clearing outside => pass plain array if you are not controlling value outside
               mask={value =>
                 value
                   ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]

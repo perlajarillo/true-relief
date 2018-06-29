@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -21,10 +21,10 @@ const styles = theme => ({
 });
 
 const challengesData = [
-  { value: 'rememberingMedications', label: 'Remembering my medications' },
-  { value: 'handleStress', label: 'Knowing how to handle stress' },
-  { value: 'eatingHealthy', label: 'Eating healthy' },
-  { value: 'socialize', label: 'Socialize' }
+  { value: "rememberingMedications", label: "Remembering my medications" },
+  { value: "handleStress", label: "Knowing how to handle stress" },
+  { value: "eatingHealthy", label: "Eating healthy" },
+  { value: "socialize", label: "Socialize" }
 ];
 
 const CheckboxComponent = props => {
@@ -44,16 +44,17 @@ const CheckboxComponent = props => {
       />
     </Fragment>
   );
-}
+};
 
 const Challenges = props => {
   const { classes } = props;
+
   return (
     <Fragment>
-    <Typography variant="subheading">
-      What are the biggest challenges you face?
-    </Typography>
-    <FormControl component="fieldset" className={classes.formControl}>
+      <Typography variant="subheading">
+        What are the biggest challenges you face?
+      </Typography>
+      <FormControl component="fieldset" className={classes.formControl}>
         <FormLabel component="legend">Chose all that apply</FormLabel>
         <FormGroup>
           {challengesData.map(challenge => (
@@ -66,9 +67,9 @@ const Challenges = props => {
           ))}
         </FormGroup>
       </FormControl>
-  </Fragment>
-  )
-}
+    </Fragment>
+  );
+};
 
 Challenges.propTypes = {
   classes: PropTypes.object.isRequired

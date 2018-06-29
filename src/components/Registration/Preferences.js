@@ -56,10 +56,11 @@ const CheckboxComponent = props => {
       />
     </Fragment>
   );
-}
+};
 
 const Preferences = props => {
   const { classes } = props;
+
   return (
     <Fragment>
       <Typography variant="subheading">
