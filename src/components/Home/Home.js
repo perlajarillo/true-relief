@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, CardMedia, Grid, Paper, Typography, withStyles } from '@material-ui/core';
+import { Button, Grid, Paper, Typography, withStyles } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import Image from '../../images/background.jpg';
 import Registration from '../Registration/Registration';
