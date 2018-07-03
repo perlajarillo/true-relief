@@ -9,6 +9,7 @@ import Select from "@material-ui/core/Select";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
+import painHistoryData from "./literals/painHistoryData.js";
 
 const styles = theme => ({
   root: {
@@ -27,77 +28,26 @@ const styles = theme => ({
   }
 });
 
-const painConditionData = [
-  { value: "postSurgicalPain", label: "Post - surgical pain" },
-  { value: "kidneyStones", label: "Kidney stones" },
-  { value: "chronicalLowerBackPain", label: "Chronical lower-back pain" },
-  { value: "peripheralNeuropathy", label: "Peripheral neuropathy" },
-  { value: "cancerPain", label: "Cancer pain" },
-  { value: "posherpeticNeuralgia", label: "Posherpetic Neuralgia" },
-  { value: "trigeminalNeuralgia", label: "Trigeminal Neuralgia" },
-  { value: "interstitialCystitis", label: "Interstitial Cystitis" },
-  {
-    value: "complexRegionalPainSyndrome",
-    label: "Complex Regional Pain Syndrome"
-  },
-  { value: "clusterHeadaches", label: "Cluster headaches" },
-  { value: "abdominalPain", label: "Abdominal pain" },
-  { value: "neckPain", label: "Neck pain" },
-  { value: "chestPain", label: "Chest pain" }
-];
-
-const medicationData = [
-  { value: "medication1", label: "medication 1" },
-  { value: "medication2", label: "medication 2" },
-  { value: "medication3", label: "medication 3" },
-  { value: "medication4", label: "medication 4" },
-  { value: "medication5", label: "medication 5" },
-  { value: "medication6", label: "medication 6" }
-];
-
-const efficacyLevel = ["Effective", "Worked OK", "Did not worked"];
-
-const proceduresData = ["surgery", "injections"];
-
-const nonPharmaData = [
-  { value: "massage", label: "Massage" },
-  { value: "relaxationTechniques", label: "Relaxation techniques" },
-  { value: "acupunture", label: "Acupunture" },
-  { value: "physicalTherapy", label: "Physical therapy" },
-  { value: "petTherapy", label: "Pet therapy" },
-  { value: "gelPacks", label: "Gel packs" },
-  { value: "meditation", label: "Meditation" },
-  { value: "magnets", label: "Magnets" },
-  { value: "chiropracticServices", label: "Chiropractic services" },
-  { value: "homeopathy", label: "Homeopathy" },
-  { value: "reiki", label: "Reiki" },
-  { value: "musicTherapy", label: "Music therapy" },
-  { value: "prayer", label: "Prayer" },
-  { value: "acupressure", label: "Acupressure" },
-  { value: "deepBreathing", label: "Deep breathing" },
-  { value: "distraction", label: "Distraction" },
-  { value: "guidedImagery", label: "Guided imagery" },
-  { value: "hypnosisAndSelfHypnosis", label: "Hypnosis and self hypnosis" },
-  {
-    value: "herbsAndDietarySupplements",
-    label: "Herbs and dietary supplements"
-  }
-];
-
 const PainHistory = props => {
   const { classes, parentState, updateParentState } = props;
+  const {
+    text,
+    sections,
+    painConditionData,
+    medicationData,
+    efficacyLevel,
+    proceduresData,
+    nonPharmaData
+  } = painHistoryData;
+
   return (
     <Fragment>
-      <Typography variant="subheading">
-        Now are going to ask questions about your pain as well as what makes it
-        better or worse and how you currently treated so we can come up with the
-        best ideas for additional pain
-      </Typography>
+      <Typography variant="subheading">{text}</Typography>
       {/********** PAIN CONDITION ***************/}
       <form className={classes.root} autoComplete="off">
         <FormControl required className={classes.formControl}>
           <FormLabel component="legend">
-            What pain condition have you been diagnosed with?
+            {sections.painCondition.title}
           </FormLabel>
           <Select
             value={parentState.painCondition}
@@ -126,7 +76,7 @@ const PainHistory = props => {
         style={{ display: parentState.painCondition === "" && "none" }}
       >
         <Typography variant="subheading">
-          We want to know what you have tried for your pain and how it worked.
+          {sections.medication.title}
         </Typography>
         <div className={classes.root}>
           <FormControl
@@ -135,7 +85,7 @@ const PainHistory = props => {
             className={classes.formControl}
           >
             <FormLabel component="legend">
-              Have you tried some medication for {parentState.painCondition}?
+              {sections.medication.haveTried}{parentState.painCondition}?
             </FormLabel>
             <RadioGroup
               aria-label="medication"
@@ -160,7 +110,7 @@ const PainHistory = props => {
         }}
       >
         <FormControl required className={classes.formControl}>
-          <FormLabel component="legend"> Medication you have tried</FormLabel>
+          <FormLabel component="legend">{sections.medication.whatHaveTried}</FormLabel>
           <Select
             value={parentState.medicationName}
             onChange={updateParentState}
@@ -229,7 +179,7 @@ const PainHistory = props => {
           className={classes.formControl}
         >
           <FormLabel component="legend">
-            Have you tried any procedures for {parentState.painCondition}?
+            {sections.procedure.haveTried}{parentState.painCondition}?
           </FormLabel>
           <RadioGroup
             aria-label="procedures"
@@ -253,7 +203,7 @@ const PainHistory = props => {
         }}
       >
         <FormControl required className={classes.formControl}>
-          <FormLabel component="legend">Procedure you have tried</FormLabel>
+          <FormLabel component="legend">{sections.procedure.whatHaveTried}</FormLabel>
           <Select
             value={parentState.procedureName}
             onChange={updateParentState}
@@ -316,7 +266,7 @@ const PainHistory = props => {
           className={classes.formControl}
         >
           <FormLabel component="legend">
-            Have you tried non pharmacological treatments for{" "}
+            {sections.nonPharma.haveTried}
             {parentState.painCondition}?
           </FormLabel>
           <RadioGroup
@@ -341,7 +291,7 @@ const PainHistory = props => {
       >
         <FormControl required className={classes.formControl}>
           <FormLabel component="legend">
-            Non pharmacological treatments you have tried
+            {sections.nonPharma.whatHaveTried}
           </FormLabel>
           <Select
             value={parentState.nonPharmaName}

@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
 import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
 import { DatePicker } from "material-ui-pickers";
+import demographicData from "./literals/demographic";
 
 const styles = theme => ({
   root: {
@@ -38,16 +39,14 @@ const Demographic = props => {
 
   return (
     <Fragment>
-      <Typography variant="subheading">
-        Please answer these questions to know more about you.
-      </Typography>
+      <Typography variant="subheading">{demographicData.title}</Typography>
       <div className={classes.root}>
         <FormControl
           component="fieldset"
           required
           className={classes.formControl}
         >
-          <FormLabel component="legend">Date of Birth</FormLabel>
+          <FormLabel component="legend">{demographicData.birth}</FormLabel>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
               keyboard={false}
@@ -73,7 +72,7 @@ const Demographic = props => {
           required={true}
           className={classes.formControl}
         >
-          <FormLabel component="legend">Gender</FormLabel>
+          <FormLabel component="legend">{demographicData.gender}</FormLabel>
           <RadioGroup
             aria-label="gender"
             name="gender"
@@ -94,7 +93,7 @@ const Demographic = props => {
           className={classes.formControl}
           aria-describedby="weight-helper-text"
         >
-          <FormLabel component="legend">Weight</FormLabel>
+          <FormLabel component="legend">{demographicData.weight}</FormLabel>
           <Input
             id="adornment-weight"
             name="weight"

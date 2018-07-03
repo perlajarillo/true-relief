@@ -7,6 +7,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import needsData from "./literals/preferences";
 
 const styles = theme => ({
   formControl: {
@@ -19,25 +20,6 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2
   }
 });
-
-const needsData = [
-  { value: "copingStrategies", label: "Coping strategies" },
-  { value: "trackingPain", label: "Tracking Pain" },
-  {
-    value: "communication",
-    label: "Communicating pain status and the easy way with my doctor"
-  },
-  {
-    value: "learningAboutCondition",
-    label: "Learning about my pain condition"
-  },
-  { value: "newTreatments", label: "New ways to treat my pain" },
-  { value: "learnTreatments", label: "Learn about treatments" },
-  {
-    value: "providers",
-    label: "Identifying providers for treatments in my area"
-  }
-];
 
 const CheckboxComponent = props => {
   const { value, label, parentState, updateParentState } = props;
