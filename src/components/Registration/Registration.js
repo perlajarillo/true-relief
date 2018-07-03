@@ -109,8 +109,10 @@ class VerticalLinearStepper extends Component {
   updateParentState(event) {
     const name = event.target.name;
     const value = event.target.value;
+    const isAnHabit =
+      name === "smoke" || name === "alcohol" || name === "coffee";
 
-    value === "no"
+    value === "no" && !isAnHabit
       ? this.clearConditionalState(name, value)
       : this.setState({
           [name]: value
@@ -194,8 +196,6 @@ class VerticalLinearStepper extends Component {
             updateParentState={this.updateParentState}
           />
         );
-      default:
-        return "Unknown step";
     }
   }
 

@@ -119,8 +119,6 @@ function Home(props) {
             {tools.map(tool => (
               <Tools key={tool.name} classes={classes} tool={tool}/>
             ))}
-
-            <Registration />
           </Grid>
         </div>
       </React.Fragment>
