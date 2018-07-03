@@ -5,8 +5,6 @@ import { AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/co
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
 import './styles.css';
-import firebase from '../firebase.js';
-
 
 const styles = {
   root: {
@@ -20,10 +18,6 @@ const styles = {
   },
 };
 
-function logout(){
-    firebase.auth().signOut();
-    alert("User logout");
-}
 
 function ButtonAppBar(props) {
   const { classes } = props;
