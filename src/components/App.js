@@ -12,6 +12,8 @@ import SignUp from './SignUp/SignUp';
 import SignUp_disclamer from './SignUP_disclamer/SignUp_disclamer';
 import Policy from './Policy/policy';
 import LogIn from './LogIn/LogIn';
+import Registration from './Registration/Registration';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -48,6 +50,8 @@ class App extends Component {
             <Route path="/log-in" component={LogIn} />
             <Route path="/policy" component={Policy} />
             <Route path="/sign-up_disclamer" component={SignUp_disclamer} />
+            <Route path="/registration" component={Registration} />
+
           </Switch>
 
           <Footer />
