@@ -1,4 +1,6 @@
-const needsData = [
+const needsData = {
+  title: "Now we want to know what you are most looking for in an app that will help you with your pain. Base on your input we will pick specific tools that will meet your needs:",
+  data: [
   { value: "copingStrategies", label: "Coping strategies" },
   { value: "trackingPain", label: "Tracking Pain" },
   {
@@ -16,5 +18,5 @@ const needsData = [
     label: "Identifying providers for treatments in my area"
   }
 ];
-
+}
 export default needsData;

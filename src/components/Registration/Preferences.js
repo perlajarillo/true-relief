@@ -46,14 +46,12 @@ const Preferences = props => {
   return (
     <Fragment>
       <Typography variant="subheading">
-        Now we want to know what you are most looking for in an app that will
-        help you with your pain. Based on your input we will pick specific tools
-        that will meet your needs:
+        {needsData.title}
       </Typography>
       <FormControl component="fieldset" className={classes.formControl}>
         <FormLabel component="legend">Chose all that apply</FormLabel>
         <FormGroup>
-          {needsData.map(need => (
+          {needsData.data.map(need => (
             <CheckboxComponent
               key={need.value}
               value={need.value}
