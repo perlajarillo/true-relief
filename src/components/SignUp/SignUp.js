@@ -36,12 +36,11 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
 
-/* He cambiado los nombres de las propiedades en el estado para no tener que reasignarlas más adelante  */
     this.state = {
       email: "",
       password: "",
       confirmPassword: "",
-      error: "",
+      error: ""
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -59,7 +58,6 @@ class SignUp extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    /* usamos "destructuring" para extraer las propiedades del estado */
     const { email, password, confirmPassword } = this.state;
 
     //password and password confirmation must be equal
@@ -100,7 +98,6 @@ class SignUp extends Component {
 
     return (
       <div className={classes.root}>
-      {/* if the user value is true, then we redirect to the registration page */}
         {user && <Redirect to={from} />}
 
         <Grid container spacing={24}>

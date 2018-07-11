@@ -29,7 +29,6 @@ class Header extends Component {
   constructor(props) {
     super(props);
 
-/* Firebase nos da un objeto con los datos del usuarion en caso de que exista. Lo vamos a usar para redirigir nuestras páginas. Lo setamos al inicio como null*/
     this.state = {
       user: null
     };
@@ -38,7 +37,6 @@ class Header extends Component {
     this.authLogOut = this.authLogOut.bind(this);
   }
 
-  /* Este es un life cycle hook de React, se instancia cuando se crea el componente, aquí vamos a ver si existe un usuario con el listener que nos da Firebase */
   componentDidMount() {
     this.authListener();
   }
@@ -54,7 +52,6 @@ class Header extends Component {
     });
   }
 
-  /* Escuchamos si el usuario ha desconectado*/
   authLogOut() {
     /*If there is a currentUser means the user press logOut in an active session.
     we will close the session and change state.*/
@@ -91,7 +88,6 @@ class Header extends Component {
               <Link to="/">Home</Link>
             </Button>
 
-            {/* Si existe un usuario mostramos el "dashboard" del perfil */}
             {user && (
               <div>
                 <Button tabIndex="-1" color="inherit">
@@ -115,7 +111,6 @@ class Header extends Component {
               </div>
             )}
 
-            {/* Si NO hay un usuario mostramos estos botones */}
             {!user && (
               <div name="defaultMenus" id="defaultMenus">
                 <Button tabIndex="-1" color="inherit">

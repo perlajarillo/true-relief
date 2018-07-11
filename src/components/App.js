@@ -9,7 +9,7 @@ import Footer from "./Footer/Footer";
 import Home from "./Home/Home";
 import SignUp from "./SignUp/SignUp";
 import Disclaimer from "./SignUp/Disclaimer/Disclaimer";
-import Policy from "./Policy/policy";
+import Policy from "./SignUp/Policy/policy";
 import LogIn from "./LogIn/LogIn";
 import Registration from "./Registration/Registration";
 

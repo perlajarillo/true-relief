@@ -62,7 +62,6 @@ class Disclaimer extends Component {
     e.preventDefault();
     const { chkDisclaimer } = this.state;
 
-    /* Si chkDisclaimer es true setea redirectToSignUp a true sino dame el error*/
     chkDisclaimer
       ? this.setState({
         redirectToSignUp: true
@@ -81,7 +80,6 @@ class Disclaimer extends Component {
 
     return (
       <div className={classes.root}>
-        {/* if the redirectToRegister value is true, then we redirect to the registration page */}
         {redirectToSignUp && <Redirect to={from} />}
 
         <Grid container spacing={24}>
@@ -102,7 +100,6 @@ class Disclaimer extends Component {
                 control={
                   <Checkbox
                     value="chkDisclaimer"
-                    /* Material UI nos da la propiedad checked que es un buleano */
                     checked={chkDisclaimer}
                     onChange={this.handleChange}
                     required

@@ -83,8 +83,6 @@ class LogIn extends React.Component {
     };
     const { user, email, password } = this.state;
 
-    /*if the user value is true, then we redirect to the registration page
-    and show the proper menu bar*/
     return user ? (
       <Redirect to={from} />
     ) : (
