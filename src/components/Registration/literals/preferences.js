@@ -17,6 +17,6 @@ const needsData = {
     value: "providers",
     label: "Identifying providers for treatments in my area"
   }
-];
+]
 }
 export default needsData;
