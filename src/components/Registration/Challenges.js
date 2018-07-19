@@ -7,7 +7,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import challengesData from "./literals/challenges"
+import challengesData from "./literals/challenges";
 
 const styles = theme => ({
   formControl: {
@@ -23,13 +23,19 @@ const styles = theme => ({
 
 const CheckboxComponent = props => {
   const { value, label, parentState, updateParentState } = props;
+  const checkboxObject =
+    parentState.find(checkboxValue => {
+      return Object.keys(checkboxValue).includes(value);
+    }) || {};
+  const isChecked =
+    (Object.keys(checkboxObject).length && checkboxObject[value]) || false;
 
   return (
     <Fragment>
       <FormControlLabel
         control={
           <Checkbox
-            checked={parentState[value]}
+            checked={isChecked}
             onChange={updateParentState(value)}
             value={value}
           />

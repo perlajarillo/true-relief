@@ -14,8 +14,9 @@ import Preferences from "./Preferences";
 import Challenges from "./Challenges";
 import PainHistory from "./PainHistory";
 import MoreConditions from "./MoreConditions";
-import {writeNewPatient} from "../FirebaseOperations.js";
+import { writeNewPatient } from "../FirebaseOperations.js";
 import * as R from "ramda";
+
 const styles = theme => ({
   root: {
     width: "90%"
@@ -32,177 +33,259 @@ const styles = theme => ({
   }
 });
 
+const HABITS = ["smoke", "alcohol", "coffee"];
+const PAIN_CONDITIONS = [
+  "medicationName",
+  "medicationEffectiveness",
+  "procedureName",
+  "procedureEffectiveness",
+  "nonPharmaName",
+  "nonPharmaEffectiveness"
+];
+
 class VerticalLinearStepper extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       activeStep: 0,
-      name: "",
-      gender: "",
-      selectedDate: new Date(),
-      weight: "",
-      height: "",
-      smoke: "",
-      physicalActivity: "",
-      sleepHours: "",
-      sleepQuality: "",
-      alcohol: "",
-      alcoholFrequency: "",
-      drinksOfAlcohol: "",
-      kindOfDrink: "",
-      coffee: "",
-      coffeeFrequency: "",
-      cupsOfCoffee: "",
-      kindOfCoffee: "",
-      healthStatus: "",
-      /*Needs y challenges ya se generan en la forma que necesitamos, por ejemplo:
-      needs: {
-        0:{
-          newTreatments: true
-        }
-        1:
-        {
-          copingStrategies: true
-        } 
-      }
-      Hará falta eliminar de la lista si el usuario dio clic para deseleccionarlo
-      */
-      needs: {},
-      challenges: {},
-      /* painConditions requiere más trabajo, por ahora solo agrega los painCondition 
-      pero aún necesitamos agregar para cada painCondition medicamentos, procedimientos y noPharma
-      */
-      painConditions: {},
+      needs: [],
+      challenges: [],
+      painConditions: [],
       medicationName: "",
       procedureName: "",
       nonPharmaName: "",
       medication: "",
-      medEfficacy: "",
+      medicationEffectiveness: "",
       procedures: "",
-      procedureEfficacy: "",
+      procedureEffectiveness: "",
       nonPharma: "",
-      nonPharmaEfficacy: "",
-      painCondition:"",
+      nonPharmaEffectiveness: "",
+      painCondition: "",
       open: false
     };
 
     this.updateParentState = this.updateParentState.bind(this);
     this.updateDateInParentState = this.updateDateInParentState.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-    this.handleNeedsCheckboxChange =this.handleNeedsCheckboxChange.bind(this);
-    this.handleChallengesCheckboxChange =this.handleChallengesCheckboxChange.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleOpen = this.handleOpen.bind(this);
+    this.handleNeedsCheckboxChange = this.handleNeedsCheckboxChange.bind(this);
+    this.handleChallengesCheckboxChange = this.handleChallengesCheckboxChange.bind(
+      this
+    );
+    this.toggleStepContent = this.toggleStepContent.bind(this);
     this.clearConditionalState = this.clearConditionalState.bind(this);
+    this.setPainConditionName = this.setPainConditionName.bind(this);
+    this.setPainConditionProps = this.setPainConditionProps.bind(this);
+    this.getPropName = this.getPropName.bind(this);
+    this.getFirebasePayload = this.getFirebasePayload.bind(this);
+    this.setCheckBoxesState = this.setCheckBoxesState.bind(this);
   }
-
-  clearConditionalState(name, value) {
-    name === "medication" &&
-      this.setState({
-        [name]: "no",
-        medicationName: "",
-        medEfficacy: ""
-      });
-    name === "procedures" &&
-      this.setState({
-        [name]: "no",
-        procedureName: "",
-        procedureEfficacy: ""
-      });
-    name === "nonPharma" &&
-      this.setState({
-        [name]: "no",
-        nonPharmaName: "",
-        nonPharmaEfficacy: ""
-      });
-  }
-
-  updateParentState(event) {
-    /* Razón para usar newList:
-    si el usuario selecciona un valor y se da cuenta que se equivoco, por lo que selecciona otro...
-    no queremos guardar el que habia seleccionado. Debemos eliminar el último agregado, 
-    que está en PainCondition.
-    Solo debemos recordar limpiar este valor cada vez que un pain condition es agregado, antes de
-    agregar el siguiente (solo en caso de que queramos agregar un nuevo painCondition en el futuro)*/
-        
-    const newList = R.reject(R.equals(this.state.painCondition), this.state.painConditions);
-    
-    const lastPainConditionInserted = R.last(this.state.painConditions);
-    const painConditionColection=this.state.painConditions;
-    const name = event.target.name;
-    const value = event.target.value;
-    const isAnHabit =
-      name === "smoke" || name === "alcohol" || name === "coffee";
-
-    value === "no" && !isAnHabit
-      ? this.clearConditionalState(name, value)
-      : this.setState({
-        [name]: value
-     });
-    
-     /*Si el nombre del objeto es painCondition vamos a agregarlo a la colección PainConditions
-     en lugar de la clave conditions se va a agregar una clave numérica, ya que el paciente
-     puede tener más de un pain Condition 
-     Retomando tu ejemplo:
-     const conditions = {
-      0: {
-      name: 'headache',
-      medications: [{name: 'ibuprofeno', effectiveness: 'OK'}, {name: 'peniciline', effectiveness: 'Nada'}],
-      procedures: [{name: 'injections', effectiveness: 'no ON'}],
-      nonParma: [{name: 'pet therapy', effectiveness: 'super'}], 
-  }
-}
-     */
-    name === "painCondition" &&
-      this.setState(
-        {
-        painConditions: R.union(newList, [{"name": value}])
-      });
-
-    /*Hasta aquí me quedé, no he logrado que el medicamento quede dentro de la ultima 
-    pain condition insertada, queda como un "hermanito", ya no intenté nada más aquí por que
-    estaba tratando en el SandBox de Ramda, traté insert, append, merge, mergeDeepWith...*/
-    name== "medicationName" &&
-    this.setState(
-      {
-        painConditions: R.union(painConditionColection, [{"medication": value}])
-      });
-  }
-
+  /**
+   * updateDateInParentState - sets the selected date in the state
+   * @param {Object} the date object
+   * @return {void}
+   */
   updateDateInParentState(date) {
     this.setState({
       selectedDate: date
     });
   }
 
+  /**
+   * updateParentState - sets values of all input except for Challenges and
+   * Preferences
+   * @param {Object} event the event object
+   * @return {void}
+   */
+  updateParentState(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+    const isAnHabit = HABITS.includes(name);
+    const isPainConditionValue = PAIN_CONDITIONS.includes(name);
+
+    value === "no" && !isAnHabit
+      ? this.clearConditionalState(name, value)
+      : this.setState({
+          [name]: value
+        });
+
+    name === "painCondition" && this.setPainConditionName(value);
+
+    isPainConditionValue &&
+      this.setPainConditionProps(name, value, this.getPropName(name));
+  }
+
+  /**
+   * clearConditionalState - Helps to render conditional elements in the DOM for
+   * painCondition component
+   * @param {String} name the input name
+   * @return {void}
+   */
+  clearConditionalState(name) {
+    name === "medication" &&
+      this.setState({
+        [name]: "no",
+        medicationName: "",
+        medEffectiveness: ""
+      });
+    name === "procedures" &&
+      this.setState({
+        [name]: "no",
+        procedureName: "",
+        procedureEffectiveness: ""
+      });
+    name === "nonPharma" &&
+      this.setState({
+        [name]: "no",
+        nonPharmaName: "",
+        nonPharmaEffectiveness: ""
+      });
+  }
+
+  /**
+   * handleCheckboxChange - generic function to set checkbox value
+   * @param {String} name the input name
+   * @param {Object} event the event object
+   * @return {void}
+   */
   handleCheckboxChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
 
+  /**
+   * setCheckBoxesState - General method to set Preferences and Challenges
+   * checkboxes in the component state
+   * @param {Object} selectedItem the selected checkbox
+   * @param {String} name the checkbox value
+   * @param {String} stateKey the target key in the state
+   * @return {void}
+   */
+  setCheckBoxesState = (selectedItem, name, stateKey) => {
+    this.setState(function(prevState, props) {
+      const list = prevState[stateKey];
+      const selectedItemIndex = list.findIndex(item => {
+        return Object.keys(item).includes(name);
+      });
+      const overwriteItem = () => {
+        return [
+          ...list.slice(0, selectedItemIndex),
+          ...list.slice(selectedItemIndex + 1)
+        ];
+      };
+      const addSelectedItem = () => list.concat(selectedItem);
+      const stateToSet =
+        selectedItemIndex > -1 ? overwriteItem() : addSelectedItem();
+      const removeFalseValues = item => Object.values(item).includes(true);
+      const newState = stateToSet.filter(removeFalseValues);
 
+      return {
+        ...prevState,
+        [stateKey]: newState
+      };
+    });
+  };
+
+  /**
+   * handleChallengesCheckboxChange - sets values for the checkboxes in the
+   * Challenges component
+   * @param {String} name the input name
+   * @param {Object} event the event object
+   * @return {void}
+   */
   handleChallengesCheckboxChange = name => event => {
-    let selectedChallenge={[name]: event.target.checked};
-    this.setState(
-      {challenges: R.union(this.state.challenges, [selectedChallenge])}
-    )
+    const selectedChallenge = { [name]: event.target.checked };
+
+    this.setCheckBoxesState(selectedChallenge, name, "challenges");
   };
 
+  /**
+   * handleNeedsCheckboxChange - sets values for the checkboxes in the
+   * Preferences component
+   * @param {String} name the input name
+   * @param {Object} event the event object
+   * @return {void}
+   */
   handleNeedsCheckboxChange = name => event => {
-    let selectedNeed={[name]: event.target.checked};
-    this.setState(
-      {needs: R.union(this.state.needs, [selectedNeed])}
-    )
+    const selectedNeed = { [name]: event.target.checked };
+
+    this.setCheckBoxesState(selectedNeed, name, "needs");
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  /**
+   * getPropName - Grabbing dynamically the prop name
+   * @param {String} name the input name
+   * @return {String} the prop name
+   */
+  getPropName(name) {
+    const names = {
+      medicationName: "medications",
+      medicationEffectiveness: "medications",
+      procedureName: "procedures",
+      procedureEffectiveness: "procedures",
+      nonPharmaName: "nonPharma",
+      nonPharmaEffectiveness: "nonPharma"
+    };
+    return names[name];
+  }
+
+  /**
+   * setPainConditionName - Sets the selected pain condition name and the
+   * default object keys
+   * @param {String} value pain condition name
+   * @return {void}
+   */
+  setPainConditionName(value) {
+    const { painConditions } = this.state;
+    const updatedPainConditions = painConditions.concat({
+      name: value,
+      medications: [{ name: "", effectiveness: "" }],
+      procedures: [{ name: "", effectiveness: "" }],
+      nonPharma: [{ name: "", effectiveness: "" }]
+    });
+
+    this.setState({
+      painConditions: updatedPainConditions.slice(-1)
+    });
+  }
+
+  /**
+   * setPainConditionProps - Sets the selected values for medications,
+   * procedures and nonPharma
+   * @param {String} name the object key, name or effectiveness
+   * @param {String} value the medication, procedure or nonPharma option
+   * @param {[String]} propPath the medication, procedure or nonPharma key in
+   * the pain condition object
+   * @return {void}
+   */
+  setPainConditionProps(name, value, propPath) {
+    const { painConditions } = this.state;
+    const propLens = R.lensPath([painConditions.length - 1, propPath]);
+    const props = R.view(propLens, painConditions);
+    const prop = props[props.length - 1];
+    const propToUpdate =
+      name.toLowerCase().indexOf("name") > -1
+        ? { name: value }
+        : { effectiveness: value };
+    const dataToSet = Object.assign({}, prop, propToUpdate);
+
+    this.setState({
+      painConditions: R.set(propLens, [dataToSet], painConditions)
+    });
+  }
+
+  /**
+   * toggleStepContent - opens and closes step contents
+   */
+  toggleStepContent = () => {
+    this.setState(prevState => {
+      open: !prevState.open;
+    });
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
+  /**
+   * getSteps - returns the step names for the stepper component
+   * @returns {[String]} step names
+   */
   getSteps() {
     return [
       "Demographic",
@@ -214,6 +297,11 @@ class VerticalLinearStepper extends Component {
     ];
   }
 
+  /**
+   * getStepContent - return correspondent step component
+   * @param {Number} step step index
+   * @returns {Function} the react component
+   */
   getStepContent(step) {
     switch (step) {
       case 0:
@@ -251,8 +339,8 @@ class VerticalLinearStepper extends Component {
             parentState={this.state}
             updateParentState={this.updateParentState}
             handleCheckboxChange={this.handleCheckboxChange}
-            handleClose={this.handleClose}
-            handleOpen={this.handleOpen}
+            handleClose={this.toggleStepContent}
+            handleOpen={this.toggleStepContent}
           />
         );
       case 5:
@@ -265,22 +353,68 @@ class VerticalLinearStepper extends Component {
     }
   }
 
+  /**
+   * getFirebasePayload - returns the data to send to Firebase
+   * @returns {Object} the Firebase payload
+   */
+  getFirebasePayload() {
+    return R.pick(
+      [
+        "name",
+        "gender",
+        "selectedDate",
+        "weight",
+        "height",
+        "smoke",
+        "physicalActivity",
+        "sleepHours",
+        "sleepQuality",
+        "alcohol",
+        "alcoholFrequency",
+        "drinksOfAlcohol",
+        "kindOfDrink",
+        "coffee",
+        "coffeeFrequency",
+        "cupsOfCoffee",
+        "kindOfCoffee",
+        "healthStatus",
+        "needs",
+        "challenges",
+        "painConditions"
+      ],
+      this.state
+    );
+  }
+
+  /**
+   * handleNext - sets active step in the state and sends Firebase payload on
+   * last step
+   * @returns {void}
+   */
   handleNext = () => {
-    /*En esta primera fase estoy enviando a la función writeNewPatient todo lo que contiene el estado*/
-    if (this.state.activeStep === this.getSteps().length-1){
-      writeNewPatient(this.state);
+    if (this.state.activeStep === this.getSteps().length - 1) {
+      writeNewPatient(this.getFirebasePayload());
     }
+
     this.setState({
       activeStep: this.state.activeStep + 1
     });
   };
 
+  /**
+   * handleBack - sets active step in the state when going back
+   * @returns {void}
+   */
   handleBack = () => {
     this.setState({
       activeStep: this.state.activeStep - 1
     });
   };
 
+  /**
+   * handleReset - resets active step to first step
+   * @returns {void}
+   */
   handleReset = () => {
     this.setState({
       activeStep: 0
@@ -290,7 +424,7 @@ class VerticalLinearStepper extends Component {
   render() {
     const { classes } = this.props;
     const steps = this.getSteps();
-    const { activeStep } = this.state;
+    const { activeStep, needs } = this.state;
 
     return (
       <div className={classes.root}>
