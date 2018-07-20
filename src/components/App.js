@@ -1,47 +1,45 @@
-import React, { Component } from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import {
-  Route,
-  Switch
-} from 'react-router-dom';
-import Header from './Header/Header';
-import Footer from './Footer/Footer'
-import Home from './Home/Home';
-import SignUp from './SignUp/SignUp';
-import SignUp_disclamer from './SignUP_disclamer/SignUp_disclamer';
-import Policy from './Policy/policy';
-import LogIn from './LogIn/LogIn';
-import Registration from './Registration/Registration';
+import React, { Component } from "react";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { Route, Switch } from "react-router-dom";
 
+/* COMPONENTS */
+import Header from "./Header/Header";
+import Footer from "./Footer/Footer";
+import Home from "./Home/Home";
+import SignUp from "./SignUp/SignUp";
+import Disclaimer from "./SignUp/Disclaimer/Disclaimer";
+import Policy from "./SignUp/Policy/policy";
+import LogIn from "./LogIn/LogIn";
+import Registration from "./Registration/Registration";
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: '#63a4ff',
-      main: '#1976d2',
-      dark: '#004ba0',
-      contrastText: '#fff',
+      light: "#63a4ff",
+      main: "#1976d2",
+      dark: "#004ba0",
+      contrastText: "#fff"
     },
     secondary: {
-      light: '#ffa040',
-      main: '#ff6f00',
-      dark: '#c43e00',
-      contrastText: '#fff',
-    },
+      light: "#ffa040",
+      main: "#ff6f00",
+      dark: "#c43e00",
+      contrastText: "#fff"
+    }
   },
   typography: {
-    fontSize: 16,
+    fontSize: 16
   },
-  overflow: 'hidden'
+  overflow: "hidden"
 });
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
           <Header />
 
           <Switch>
@@ -49,13 +47,12 @@ class App extends Component {
             <Route path="/sign-up" component={SignUp} />
             <Route path="/log-in" component={LogIn} />
             <Route path="/policy" component={Policy} />
-            <Route path="/sign-up_disclamer" component={SignUp_disclamer} />
+            <Route path="/disclaimer" component={Disclaimer} />
             <Route path="/registration" component={Registration} />
-
           </Switch>
 
           <Footer />
-      </MuiThemeProvider>
+        </MuiThemeProvider>
       </div>
     );
   }
