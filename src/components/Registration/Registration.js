@@ -48,9 +48,7 @@ const PAIN_CONDITIONS = [
 class VerticalLinearStepper extends Component {
   constructor(props) {
     super(props);
-   
-
-
+  
     this.state = {
       activeStep: 0,
       needs: [],
@@ -433,8 +431,7 @@ class VerticalLinearStepper extends Component {
     const { classes } = this.props;
     const steps = this.getSteps();
     const { activeStep, needs } = this.state;
-    if (firebase.auth().currentUser)
-    {
+    if (firebase.auth().currentUser){
     return (
       <div className={classes.root}>
         <Stepper activeStep={activeStep} orientation="vertical">
