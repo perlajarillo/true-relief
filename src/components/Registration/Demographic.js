@@ -13,6 +13,7 @@ import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
 import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
 import { DatePicker } from "material-ui-pickers";
 import demographicData from "./literals/demographic";
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
   root: {
@@ -34,6 +35,7 @@ const Demographic = props => {
     classes,
     parentState,
     updateParentState,
+    reviewValidations,
     updateDateInParentState
   } = props;
 
@@ -52,10 +54,12 @@ const Demographic = props => {
             name="name"
             value={parentState.name}
             onChange={updateParentState}
+            onBlur={reviewValidations}
             inputProps={{
               "aria-label": "Name"
             }}
           />
+          <FormHelperText>{parentState.errorname}</FormHelperText>
       </FormControl>
         <FormControl
           component="fieldset"
@@ -103,6 +107,7 @@ const Demographic = props => {
             />
             <FormControlLabel value="male" control={<Radio />} label="Male" />
           </RadioGroup>
+          <FormHelperText>{parentState.errorgender}</FormHelperText>
         </FormControl>
         <FormControl
           required={true}
@@ -113,13 +118,17 @@ const Demographic = props => {
           <Input
             id="adornment-weight"
             name="weight"
+            type="number"
             value={parentState.weight}
             onChange={updateParentState}
+            onBlur={reviewValidations}
             endAdornment={<InputAdornment position="end">lb</InputAdornment>}
             inputProps={{
-              "aria-label": "Weight"
+              "aria-label": "Weight",
+              min: "65", max: "800", step: "0.5" 
             }}
           />
+          <FormHelperText>{parentState.errorweight}</FormHelperText>
         </FormControl>
         <FormControl
           required={true}
@@ -130,14 +139,19 @@ const Demographic = props => {
           <Input
             id="adornment-height"
             name="height"
+            type="number"
             value={parentState.height}
             onChange={updateParentState}
+            onBlur={reviewValidations}
             endAdornment={<InputAdornment position="end">ft</InputAdornment>}
             inputProps={{
-              "aria-label": "Height"
+              "aria-label": "Height",
+              min: "4", max: "8", step: "0.5"
             }}
           />
+          <FormHelperText>{parentState.errorheight}</FormHelperText>
         </FormControl>
+        <FormHelperText>{parentState.errorSection}</FormHelperText>
       </div>
     </Fragment>
   );

@@ -17,7 +17,8 @@ import MoreConditions from "./MoreConditions";
 import { writeNewPatient } from "../FirebaseOperations.js";
 import * as R from "ramda";
 import firebase from '../firebase.js';
-
+import {validatingString} from "../Validations.js";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -66,6 +67,13 @@ class VerticalLinearStepper extends Component {
       nonPharma: "",
       nonPharmaEffectiveness: "",
       painCondition: "",
+      errorheight: "",
+      errorweight: "",
+      errorgender: "",
+      errorname: "",
+      errorSection: "",
+      errorcupsOfCoffee:"",
+      errordrinksOfAlcohol: "",
       open: false
     };
 
@@ -83,6 +91,8 @@ class VerticalLinearStepper extends Component {
     this.getPropName = this.getPropName.bind(this);
     this.getFirebasePayload = this.getFirebasePayload.bind(this);
     this.setCheckBoxesState = this.setCheckBoxesState.bind(this);
+    this.reviewValidations=this.reviewValidations.bind(this);
+    
   }
   /**
    * updateDateInParentState - sets the selected date in the state
@@ -93,6 +103,19 @@ class VerticalLinearStepper extends Component {
     this.setState({
       selectedDate: date
     });
+  }
+
+  reviewValidations(event)
+  {
+    const name=event.target.name;
+    const value=event.target.value;
+    const formControl="error"+name;
+    this.setState({
+      [formControl]: validatingString(name, value)
+    });
+
+    
+    
   }
 
   /**
@@ -313,6 +336,7 @@ class VerticalLinearStepper extends Component {
           <Demographic
             parentState={this.state}
             updateParentState={this.updateParentState}
+            reviewValidations={this.reviewValidations}
             updateDateInParentState={this.updateDateInParentState}
           />
         );
@@ -321,12 +345,14 @@ class VerticalLinearStepper extends Component {
           <Habits
             parentState={this.state}
             updateParentState={this.updateParentState}
+            reviewValidations={this.reviewValidations}
           />
         );
       case 2:
         return (
           <Preferences
             parentState={this.state.needs}
+            parentGeneralState={this.state}
             updateParentState={this.handleNeedsCheckboxChange}
           />
         );
@@ -334,6 +360,7 @@ class VerticalLinearStepper extends Component {
         return (
           <Challenges
             parentState={this.state.challenges}
+            parentGeneralState={this.state}
             updateParentState={this.handleChallengesCheckboxChange}
           />
         );
@@ -401,12 +428,62 @@ class VerticalLinearStepper extends Component {
       firebase.auth().onAuthStateChanged(user => {
         user &&
           writeNewPatient(user.uid, this.getFirebasePayload());
-    });      
-    }
-
-    this.setState({
-      activeStep: this.state.activeStep + 1
     });
+  }
+    const step=this.state.activeStep;
+    let thereAreErrors;
+    let msg="Some fields are required";
+    
+    switch (step) {
+      case 0:      
+        thereAreErrors = !this.state.name  || !this.state.weight
+        || !this.state.height || !this.state.gender || this.state.errorweight !==""
+        || this.state.errorheight !=="";
+        break;
+      
+        case 1:
+        thereAreErrors = !this.state.smoke || !this.state.physicalActivity
+        || !this.state.sleepHours || !this.state.sleepQuality || !this.state.alcohol
+        || !this.state.coffee    || !this.state.healthStatus ||
+        (this.state.alcohol === "yes" && !this.state.alcoholFrequency) ||
+        (this.state.coffee === "yes" && !this.state.coffeeFrequency) || 
+        ((this.state.alcoholFrequency ==="Almost everyday" ||
+        this.state.alcoholFrequency === "Everyday") && (!this.state.kindOfDrink || !this.state.drinksOfAlcohol)) ||
+        ((this.state.coffeeFrequency ==="Almost everyday" ||
+        this.state.coffeeFrequency === "Everyday") && (!this.state.kindOfCoffee || !this.state.cupsOfCoffee)) ||
+        this.state.errorcupsOfCoffee !=="" || this.state.errordrinksOfAlcohol !==""
+        ;
+        break;
+        case 2:
+          const keysInNeeds=R.keys(this.state.needs);
+          const numberOfNeeds=R.length(keysInNeeds);
+          thereAreErrors = numberOfNeeds === 0;
+          msg="Please select at least one preference";
+        break;
+        case 3:
+          const keysInChallenges=R.keys(this.state.challenges);
+          const numberOfChallenges=R.length(keysInChallenges);
+          thereAreErrors = numberOfChallenges === 0;
+          msg="Please select at least one challenge";
+        break;
+        case 4:
+          const keysInPainConditions=R.keys(this.state.painConditions);
+          const numberOfPainConditions=R.length(keysInPainConditions);
+          thereAreErrors = numberOfPainConditions === 0;
+          msg="Please select at least one pain condition";
+          break;
+    }
+   !thereAreErrors
+   ?
+    this.setState({
+      activeStep: this.state.activeStep + 1,
+      errorSection: ""
+    })
+    :
+    this.setState({
+      errorSection: msg
+    });
+
   };
 
   /**
@@ -433,9 +510,11 @@ class VerticalLinearStepper extends Component {
     const { classes } = this.props;
     const steps = this.getSteps();
     const { activeStep, needs } = this.state;
-    if (firebase.auth().currentUser)
-    {
-    return (
+    const { from } = this.props.location.state || {
+      from: { pathname: "/log-in" }
+    };
+    
+    return (firebase.auth().currentUser) ? (
       <div className={classes.root}>
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => {
@@ -477,12 +556,9 @@ class VerticalLinearStepper extends Component {
           </Paper>
         )}
       </div>
-    );
+    ):  
+   (<Redirect to={from} />);
   
-  }
-  else {
-  return(<div><h2>Please login to your account.</h2> </div>);
-  }
 }
 }
 

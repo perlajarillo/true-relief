@@ -10,6 +10,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
 import painHistoryData from "./literals/painHistoryData.js";
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
   root: {
@@ -348,6 +349,7 @@ const PainHistory = props => {
           </Select>
         </FormControl>
       </div>
+      <FormHelperText>{parentState.errorSection}</FormHelperText>
     </Fragment>
   );
 };
