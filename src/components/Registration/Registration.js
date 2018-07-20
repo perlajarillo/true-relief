@@ -49,9 +49,7 @@ const PAIN_CONDITIONS = [
 class VerticalLinearStepper extends Component {
   constructor(props) {
     super(props);
-   
-
-
+  
     this.state = {
       activeStep: 0,
       needs: [],
