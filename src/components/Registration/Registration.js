@@ -16,6 +16,8 @@ import PainHistory from "./PainHistory";
 import MoreConditions from "./MoreConditions";
 import { writeNewPatient } from "../FirebaseOperations.js";
 import * as R from "ramda";
+import firebase from '../firebase.js';
+
 
 const styles = theme => ({
   root: {
@@ -46,6 +48,8 @@ const PAIN_CONDITIONS = [
 class VerticalLinearStepper extends Component {
   constructor(props) {
     super(props);
+   
+
 
     this.state = {
       activeStep: 0,
@@ -358,7 +362,7 @@ class VerticalLinearStepper extends Component {
    * @returns {Object} the Firebase payload
    */
   getFirebasePayload() {
-    return R.pick(
+      return R.pick(
       [
         "name",
         "gender",
@@ -392,8 +396,12 @@ class VerticalLinearStepper extends Component {
    * @returns {void}
    */
   handleNext = () => {
-    if (this.state.activeStep === this.getSteps().length - 1) {
-      writeNewPatient(this.getFirebasePayload());
+    if (this.state.activeStep === this.getSteps().length - 1) {  
+      //We need to review if there are changes in the session status    
+      firebase.auth().onAuthStateChanged(user => {
+        user &&
+          writeNewPatient(user.uid, this.getFirebasePayload());
+    });      
     }
 
     this.setState({
@@ -425,7 +433,8 @@ class VerticalLinearStepper extends Component {
     const { classes } = this.props;
     const steps = this.getSteps();
     const { activeStep, needs } = this.state;
-
+    if (firebase.auth().currentUser)
+    {
     return (
       <div className={classes.root}>
         <Stepper activeStep={activeStep} orientation="vertical">
@@ -469,7 +478,12 @@ class VerticalLinearStepper extends Component {
         )}
       </div>
     );
+  
   }
+  else {
+  return(<div><h2>Please login to your account.</h2> </div>);
+  }
+}
 }
 
 VerticalLinearStepper.propTypes = {
