@@ -41,6 +41,22 @@ const Demographic = props => {
     <Fragment>
       <Typography variant="subheading">{demographicData.title}</Typography>
       <div className={classes.root}>
+      <FormControl
+          required={true}
+          className={classes.formControl}
+          aria-describedby="name-helper-text"
+        >
+          <FormLabel component="legend">{demographicData.name}</FormLabel>
+          <Input
+            id="adornment-name"
+            name="name"
+            value={parentState.name}
+            onChange={updateParentState}
+            inputProps={{
+              "aria-label": "Name"
+            }}
+          />
+      </FormControl>
         <FormControl
           component="fieldset"
           required
