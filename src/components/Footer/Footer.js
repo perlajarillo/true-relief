@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography } from '@material-ui/core';
+import React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import { Grid, Paper, Typography } from "@material-ui/core";
 
 const styles = theme => ({
   root: {
@@ -10,9 +10,9 @@ const styles = theme => ({
   },
   paper: {
     padding: theme.spacing.unit * 2,
-    textAlign: 'center',
+    textAlign: "center",
     color: theme.palette.text.primary,
-    backgroundColor: '#1976d2'
+    backgroundColor: theme.palette.primary.main
   },
 });
 function Footer(props) {

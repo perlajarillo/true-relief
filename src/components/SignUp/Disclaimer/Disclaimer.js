@@ -5,28 +5,38 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
 // importing route Components
 import { Redirect } from "react-router-dom";
 
+import logo from "../../../images/logo.png";
+
 const styles = theme => ({
-  root: {
-    margin: theme.spacing.unit * 6
-  },
   formControl: {
     margin: theme.spacing.unit
   },
   button: {
-    margin: theme.spacing.unit
-  },
-  textField: {
-    maxWidth: 400
+    marginTop: theme.spacing.unit
   },
   text: {
-    padding: theme.spacing.unit * 2,
-    textAlign: "center",
-    color: theme.palette.text.secondary
+    margin: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2
+  },
+  card: {
+    width: "350px",
+    margin: "50px auto",
+    backgroundColor: "#fafafa"
+  },
+  pos: {
+    marginBottom: 24
+  },
+  media: {
+    height: 0,
+    paddingTop: "56.25%"
   }
 });
 
@@ -64,11 +74,11 @@ class Disclaimer extends Component {
 
     chkDisclaimer
       ? this.setState({
-        redirectToSignUp: true
-      })
+          redirectToSignUp: true
+        })
       : this.setState({
-        error: "You must agree with the terms and conditions!"
-      });
+          error: "You must agree with the terms and conditions!"
+        });
   }
 
   render() {
@@ -79,24 +89,27 @@ class Disclaimer extends Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
+      <div>
         {redirectToSignUp && <Redirect to={from} />}
 
-        <Grid container spacing={24}>
-          <Grid item xs={12} md={9} lg={6}>
-            <Typography variant="display3">True Relief</Typography>
-
-            <Typography variant="subheading">
-              Please read and agree with the{" "}
-              <a href="/policy" target="_blank" style={aTagStyles}>
-                terms and conditions{" "}
-              </a>{" "}
-              in order to continue.
-            </Typography>
-          </Grid>
+        <Card className={classes.card} elevation={0}>
+          <CardMedia
+            className={classes.media}
+            image={logo}
+            title="True Relief"
+          />
+          <Typography className={classes.text} variant="subheading">
+            Please read and agree with the{" "}
+            <a href="/policy" target="_blank" style={aTagStyles}>
+              terms and conditions{" "}
+            </a>{" "}
+            in order to continue.
+          </Typography>
           <form onSubmit={this.handleSubmit}>
-            <Grid item xs={12} md={12} lg={12}>
+            <CardContent>
               <FormControlLabel
+                className={classes.formControl}
+                fullWidth
                 control={
                   <Checkbox
                     value="chkDisclaimer"
@@ -107,27 +120,28 @@ class Disclaimer extends Component {
                 }
                 label="I have read terms and conditions and I agree with them."
               />
-              <div>
+              <FormHelperText
+                id="error"
+                name="error"
+                value={error}
+                onChange={this.handleChange}
+              >
+                {error}
+              </FormHelperText>
+            </CardContent>
+            <CardActions className={classes.pos}>
                 <Button
                   variant="contained"
                   type="submit"
                   color="primary"
+                  fullWidth
                   className={classes.button}
                 >
                   Continue
                 </Button>
-              </div>
-            </Grid>
-            <FormHelperText
-              id="error"
-              name="error"
-              value={error}
-              onChange={this.handleChange}
-            >
-              {error}
-            </FormHelperText>
+            </CardActions>
           </form>
-        </Grid>
+        </Card>
       </div>
     );
   }

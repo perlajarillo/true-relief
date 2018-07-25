@@ -17,7 +17,10 @@ import MoreConditions from "./MoreConditions";
 
 const styles = theme => ({
   root: {
-    width: "90%"
+    width: "60%",
+    margin: "0 auto",
+    marginTop: "20px",
+    backgroundColor: "#fafafa"
   },
   button: {
     marginTop: theme.spacing.unit,
@@ -223,8 +226,8 @@ class VerticalLinearStepper extends Component {
     const { activeStep } = this.state;
 
     return (
-      <div className={classes.root}>
-        <Stepper activeStep={activeStep} orientation="vertical">
+      <div>
+        <Stepper activeStep={activeStep} orientation="vertical" className={classes.root}>
           {steps.map((label, index) => {
             return (
               <Step key={label}>

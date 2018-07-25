@@ -6,29 +6,40 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
 import firebase from "../firebase.js";
 // import route Components
 import { Link, Redirect } from "react-router-dom";
 
+import logo from "../../images/logo.png";
+
 const styles = theme => ({
-  root: {
-    margin: theme.spacing.unit * 6
-  },
   formControl: {
     margin: theme.spacing.unit
   },
   button: {
-    margin: theme.spacing.unit
-  },
-  textField: {
-    maxWidth: 400
+    marginTop: theme.spacing.unit * 2
   },
   text: {
     padding: theme.spacing.unit * 2,
-    textAlign: "center",
+    marginLeft: theme.spacing.unit * 2,
     color: theme.palette.text.secondary
+  },
+  card: {
+    width: "350px",
+    margin: "50px auto",
+    backgroundColor: "#fafafa"
+  },
+  pos: {
+    marginBottom: 24
+  },
+  media: {
+    height: 0,
+    paddingTop: "56.25%"
   }
 });
 
@@ -97,25 +108,28 @@ class SignUp extends Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
+      <div>
         {user && <Redirect to={from} />}
 
-        <Grid container spacing={24}>
-          <Grid item xs={12} md={9} lg={6}>
-            <Typography variant="display3">True Relief</Typography>
-            <Typography gutterBottom variant="subheading">
-              The information you provide in this web site is for educational
-              purposes only and it is not intended to prevent diagnose of treat
-              any medical conditions.
-            </Typography>
-            <Typography variant="subheading">
-              Your information will be kept private.
-            </Typography>
-          </Grid>
+        <Card className={classes.card} elevation={0}>
+          <CardMedia
+            className={classes.media}
+            image={logo}
+            title="True Relief"
+          />
+          <Typography variant="body1" className={classes.text}>
+            The information you provide in this web site is for educational
+            purposes only and it is not intended to prevent diagnose of treat
+            any medical conditions.
+          </Typography>
+          <Typography variant="body1" className={classes.text}>
+            Your information will be kept private.
+          </Typography>
           <form onSubmit={this.handleSubmit}>
-            <Grid item xs={12} md={3} lg={3}>
+            <CardContent>
               <FormControl
-                className={(classes.formControl, classes.textField)}
+                className={classes.formControl}
+                fullWidth
                 aria-describedby="required"
                 aria-required="true"
               >
@@ -130,7 +144,8 @@ class SignUp extends Component {
                 <FormHelperText id="required">Required*</FormHelperText>
               </FormControl>
               <FormControl
-                className={(classes.formControl, classes.textField)}
+                className={classes.formControl}
+                fullWidth
                 aria-describedby="required"
                 aria-required="true"
               >
@@ -145,7 +160,8 @@ class SignUp extends Component {
                 <FormHelperText id="required">Required*</FormHelperText>
               </FormControl>
               <FormControl
-                className={(classes.formControl, classes.textField)}
+                className={classes.formControl}
+                fullWidth
                 aria-describedby="required"
                 aria-required="true"
               >
@@ -161,34 +177,34 @@ class SignUp extends Component {
                 />
                 <FormHelperText id="required">Required*</FormHelperText>
               </FormControl>
-              <div>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  <Link to="/log-in">I have an account</Link>
-                </Button>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  color="primary"
-                  className={classes.button}
-                >
-                  Create an Account
-                </Button>
-              </div>
-            </Grid>
-            <FormHelperText
-              id="error"
-              name="error"
-              value={error}
-              onChange={this.handleChange}
-            >
-              {error}
-            </FormHelperText>
+              <Button
+                variant="contained"
+                type="submit"
+                color="primary"
+                fullWidth
+                className={classes.button}
+              >
+                Create an Account
+              </Button>
+              <FormHelperText
+                id="error"
+                name="error"
+                value={error}
+                onChange={this.handleChange}
+              >
+                {error}
+              </FormHelperText>
+            </CardContent>
           </form>
-        </Grid>
+          <Typography className={classes.text} variant="body1">
+            Are You already registered?
+          </Typography>
+          <CardActions>
+            <Button color="primary" component={Link} to="/log-in">
+              Log In
+            </Button>
+          </CardActions>
+        </Card>
       </div>
     );
   }
