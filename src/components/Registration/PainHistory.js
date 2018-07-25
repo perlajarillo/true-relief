@@ -145,12 +145,12 @@ const PainHistory = props => {
             How did medication {parentState.medicationName} worked?
           </FormLabel>
           <Select
-            value={parentState.medEfficacy}
+            value={parentState.medicationEffectiveness}
             onChange={updateParentState}
-            name="medEfficacy"
+            name="medicationEffectiveness"
             displayEmpty
             inputProps={{
-              id: "medEfficacy-required"
+              id: "medicationEffectiveness-required"
             }}
             className={classes.selectEmpty}
           >
@@ -170,7 +170,7 @@ const PainHistory = props => {
         style={{
           display:
             (parentState.medication === "no" && "block") ||
-            (parentState.medEfficacy === "" && "none")
+            (parentState.medicationEffectiveness === "" && "none")
         }}
       >
         <FormControl
@@ -232,12 +232,12 @@ const PainHistory = props => {
             Have {parentState.procedureName} worked?
           </FormLabel>
           <Select
-            value={parentState.procedureEfficacy}
+            value={parentState.procedureEffectiveness}
             onChange={updateParentState}
-            name="procedureEfficacy"
+            name="procedureEffectiveness"
             displayEmpty
             inputProps={{
-              id: "procedureEfficacy-required"
+              id: "procedureEffectiveness-required"
             }}
             className={classes.selectEmpty}
           >
@@ -257,7 +257,7 @@ const PainHistory = props => {
         style={{
           display:
             (parentState.procedures === "no" && "block") ||
-            (parentState.procedureEfficacy === "" && "none")
+            (parentState.procedureEffectiveness === "" && "none")
         }}
       >
         <FormControl
@@ -328,12 +328,12 @@ const PainHistory = props => {
             Have {parentState.nonPharmaName} worked?
           </FormLabel>
           <Select
-            value={parentState.nonPharmaEfficacy}
+            value={parentState.nonPharmaEffectiveness}
             onChange={updateParentState}
-            name="nonPharmaEfficacy"
+            name="nonPharmaEffectiveness"
             displayEmpty
             inputProps={{
-              id: "nonPharmaEfficacy-required"
+              id: "nonPharmaEffectiveness-required"
             }}
             className={classes.selectEmpty}
           >

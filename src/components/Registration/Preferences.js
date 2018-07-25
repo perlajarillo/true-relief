@@ -23,13 +23,19 @@ const styles = theme => ({
 
 const CheckboxComponent = props => {
   const { value, label, parentState, updateParentState } = props;
+  const checkboxObject =
+    parentState.find(checkboxValue => {
+      return Object.keys(checkboxValue).includes(value);
+    }) || {};
+  const isChecked =
+    (Object.keys(checkboxObject).length && checkboxObject[value]) || false;
 
   return (
     <Fragment>
       <FormControlLabel
         control={
           <Checkbox
-            checked={parentState[value]}
+            checked={isChecked}
             onChange={updateParentState(value)}
             value={value}
           />
@@ -45,9 +51,7 @@ const Preferences = props => {
 
   return (
     <Fragment>
-      <Typography variant="subheading">
-        {needsData.title}
-      </Typography>
+      <Typography variant="subheading">{needsData.title}</Typography>
       <FormControl component="fieldset" className={classes.formControl}>
         <FormLabel component="legend">Chose all that apply</FormLabel>
         <FormGroup>
