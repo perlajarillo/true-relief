@@ -32,6 +32,8 @@ const styles = theme => ({
 const Habits = props => {
   const { classes, parentState, updateParentState, reviewValidations } = props;
 
+this.input = React.createRef();
+
   return (
     <Fragment>
       <Typography variant="subheading">{habitsData.title}</Typography>
@@ -193,7 +195,7 @@ const Habits = props => {
               id="drinks-of-alcohol"
               name="drinksOfAlcohol"
               type="number"
-              value={parentState.drinksOfAlcohol}
+              res={this.input}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
@@ -294,7 +296,7 @@ const Habits = props => {
               id="cups-of-coffee"
               name="cupsOfCoffee"
               type="number"
-              value={parentState.cupsOfCoffee}
+              res={this.input}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
