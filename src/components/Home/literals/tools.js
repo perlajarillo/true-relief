@@ -26,22 +26,22 @@ const tools = [{
 {
   name: 'Reports',
   icon: 'assignment',
-  description: 'Communication your status with your healthcare team with pain reports.'
+  description: 'Communicating your status with your healthcare team.'
 },
 {
   name: 'Tools',
   icon: 'build',
-  description: 'Provide tools that can help you manage you pain in the moment including relaxation and cognitive behavioral therapy.'
+  description: 'Tools that can help you manage you pain.'
 },
 {
   name: 'Treatments',
   icon: 'healing',
-  description: 'Recommend treatments and products that you may not have tried but which research shows may help your pain.'
+  description: 'Recommended treatments and products.'
 },
 {
   name: 'Local Providers',
   icon: 'people',
-  description: 'Locate providers in your area that can help you Better manager pain'
+  description: 'Locate providers in your area.'
 }
 ];
 
