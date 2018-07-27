@@ -89,6 +89,7 @@ const Demographic = props => {
               maxDate="2050/01/01"
             />
           </MuiPickersUtilsProvider>
+          <FormHelperText error={true}>{parentState.errorSelectedDate}</FormHelperText>
         </FormControl>
         <FormControl
           component="fieldset"
