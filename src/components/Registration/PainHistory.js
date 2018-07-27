@@ -349,7 +349,7 @@ const PainHistory = props => {
           </Select>
         </FormControl>
       </div>
-      <FormHelperText>{parentState.errorSection}</FormHelperText>
+      <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
     </Fragment>
   );
 };

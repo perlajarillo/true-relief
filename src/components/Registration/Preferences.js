@@ -66,7 +66,7 @@ const Preferences = props => {
           ))}
         </FormGroup>
       </FormControl>
-      <FormHelperText>{parentGeneralState.errorSection}</FormHelperText>
+      <FormHelperText error={true}>{parentGeneralState.errorSection}</FormHelperText>
     </Fragment>
   );
 };

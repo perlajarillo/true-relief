@@ -182,6 +182,7 @@ class SignUp extends Component {
             <FormHelperText
               id="error"
               name="error"
+              error={true}
               value={error}
               onChange={this.handleChange}
             >

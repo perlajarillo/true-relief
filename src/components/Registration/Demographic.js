@@ -55,14 +55,14 @@ const Demographic = props => {
             id="adornment-name"
             name="name"
             defaultValue=""
-            res={this.input}
+            ref={this.input}
             onChange={updateParentState}
             onBlur={reviewValidations}
             inputProps={{
               "aria-label": "Name"
             }}
           />
-          <FormHelperText>{parentState.errorname}</FormHelperText>
+          <FormHelperText error={true}>{parentState.errorname}</FormHelperText>
         </FormControl>
         <FormControl
           component="fieldset"
@@ -110,7 +110,7 @@ const Demographic = props => {
             />
             <FormControlLabel value="male" control={<Radio />} label="Male" />
           </RadioGroup>
-          <FormHelperText>{parentState.errorgender}</FormHelperText>
+          <FormHelperText error={true}>{parentState.errorgender}</FormHelperText>
         </FormControl>
         <FormControl
           required={true}
@@ -122,7 +122,7 @@ const Demographic = props => {
             id="adornment-weight"
             name="weight"
             type="number"
-            res={this.input}
+            ref={this.input}
             onChange={updateParentState}
             onBlur={reviewValidations}
             endAdornment={<InputAdornment position="end">lb</InputAdornment>}
@@ -133,7 +133,7 @@ const Demographic = props => {
               step: "0.5"
             }}
           />
-          <FormHelperText>{parentState.errorweight}</FormHelperText>
+          <FormHelperText error={true}>{parentState.errorweight}</FormHelperText>
         </FormControl>
         <FormControl
           required={true}
@@ -145,7 +145,7 @@ const Demographic = props => {
             id="adornment-height"
             name="height"
             type="number"
-            res={this.input}
+            ref={this.input}
             onChange={updateParentState}
             onBlur={reviewValidations}
             endAdornment={<InputAdornment position="end">ft</InputAdornment>}
@@ -156,9 +156,9 @@ const Demographic = props => {
               step: "0.5"
             }}
           />
-          <FormHelperText>{parentState.errorheight}</FormHelperText>
+          <FormHelperText error={true}>{parentState.errorheight}</FormHelperText>
         </FormControl>
-        <FormHelperText>{parentState.errorSection}</FormHelperText>
+        <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
       </div>
     </Fragment>
   );

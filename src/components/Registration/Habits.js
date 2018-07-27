@@ -195,7 +195,7 @@ this.input = React.createRef();
               id="drinks-of-alcohol"
               name="drinksOfAlcohol"
               type="number"
-              res={this.input}
+              ref={this.input}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
@@ -203,7 +203,7 @@ this.input = React.createRef();
                 min: "1", max: "30", step: "1"
               }}
             />
-            <FormHelperText>{parentState.errordrinksOfAlcohol}</FormHelperText>
+            <FormHelperText error={true}>{parentState.errordrinksOfAlcohol}</FormHelperText>
           </FormControl>
           <FormControl required className={classes.formControl}>
             <FormLabel component="legend">
@@ -296,7 +296,7 @@ this.input = React.createRef();
               id="cups-of-coffee"
               name="cupsOfCoffee"
               type="number"
-              res={this.input}
+              ref={this.input}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
@@ -304,7 +304,7 @@ this.input = React.createRef();
                 min: "1", max: "30", step: "1"
               }}
             />
-            <FormHelperText>{parentState.errorcupsOfCoffee}</FormHelperText>
+            <FormHelperText error={true}>{parentState.errorcupsOfCoffee}</FormHelperText>
           </FormControl>
           <FormControl required className={classes.formControl}>
             <FormLabel component="legend">
@@ -348,7 +348,7 @@ this.input = React.createRef();
           </RadioGroup>
         </FormControl>
       </div>
-      <FormHelperText>{parentState.errorSection}</FormHelperText>
+      <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
     </Fragment>
   );
 };
