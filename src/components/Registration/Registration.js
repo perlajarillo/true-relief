@@ -17,9 +17,14 @@ import MoreConditions from "./MoreConditions";
 import { writeNewPatient } from "../FirebaseOperations.js";
 import * as R from "ramda";
 import firebase from "../firebase.js";
-import { validatingString } from "../Validations.js";
-import { validatingFreeInput } from "../Validations.js";
-import { isPainHistoryCompleted } from "../Validations.js";
+import { validateString } from "../Validations.js";
+import { validateFreeInput } from "../Validations.js";
+import { validateDemographicData } from "../Validations.js";
+import { validateHabitsData } from "../Validations.js";
+import { validatePainConditionData } from "../Validations.js";
+import { validateThereIsAtLeastOneChallenge } from "../Validations.js";
+import { validateThereIsAtLeastOneNeed } from "../Validations.js";
+import { validateAge } from "../Validations.js";
 import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
@@ -71,6 +76,7 @@ class VerticalLinearStepper extends Component {
       errorweight: "",
       errorgender: "",
       errorname: "",
+      errorSelectedDate: "", 
       errorSection: "",
       errorcupsOfCoffee: "",
       errordrinksOfAlcohol: "",
@@ -99,9 +105,16 @@ class VerticalLinearStepper extends Component {
    * @return {void}
    */
   updateDateInParentState(date) {
-    this.setState({
-      selectedDate: date
-    });
+    validateAge(date) 
+    ?
+      this.setState({
+        selectedDate: date,
+        errorSelectedDate:""
+      })
+    :
+      this.setState({
+        errorSelectedDate: "You must be older than 16 to use this web site."
+      });
   }
 
   reviewValidations(event) {
@@ -109,7 +122,7 @@ class VerticalLinearStepper extends Component {
     const value = event.target.value;
     const formControl = "error" + name;
     this.setState({
-      [formControl]: validatingString(name, value)
+      [formControl]: validateString(name, value)
     });
   }
 
@@ -124,12 +137,15 @@ class VerticalLinearStepper extends Component {
     const value = event.target.value;
     const isAnHabit = HABITS.includes(name);
     const isPainConditionValue = PAIN_CONDITIONS.includes(name);
-    const isFreeInput =
-      name === "weight" ||
-      name === "height" ||
-      name === "name" ||
-      name === "drinksOfAlcohol" ||
-      name === "cupsOfCoffee";
+    const FREE_INPUTS = [
+      'weight',
+      'height',
+      'name',
+      'drinksOfAlcohol',
+      'cupsOfCoffee'
+    ];
+    const isFreeInput = FREE_INPUTS.includes(name);
+    
     value === "no" && !isAnHabit
       ? this.clearConditionalState(name, value)
       : this.setState({
@@ -141,9 +157,9 @@ class VerticalLinearStepper extends Component {
     isPainConditionValue &&
       this.setPainConditionProps(name, value, this.getPropName(name));
 
-    isFreeInput && validatingFreeInput(name, value) !== ""
+    isFreeInput && validateFreeInput(name, value) !== ""
       ? this.setState({
-          ["error" + name]: validatingFreeInput(name, value)
+          ["error" + name]: validateFreeInput(name, value)
         })
       : this.setState({
           [name]: value,
@@ -398,6 +414,8 @@ class VerticalLinearStepper extends Component {
    * @returns {Object} the Firebase payload
    */
   getFirebasePayload() {
+    const nameTrimmed=(this.state.name).trim();
+    this.setState({name: nameTrimmed});
     return R.pick(
       [
         "name",
@@ -425,112 +443,124 @@ class VerticalLinearStepper extends Component {
       this.state
     );
   }
+/**
+   * getDemographicPayload - returns the data to send to validateDemographicData
+   * @returns {Object} the Demographic payload
+   */
+  getDemographicPayload() {
+    return R.pick(
+      [
+        "name",
+        "gender",
+        "weight",
+        "height",
+        "errorweight",
+        "errorheight",
+        "errorname",
+        "selectedDate"
+      ],
+      this.state
+    );
+  }
 
+  /**
+   * getHabitsPayload - returns the data to send to validateHabitsData
+   * @returns {Object} the Habits payload
+   */
+  getHabitsPayload() {
+    return R.pick(
+      [
+        "smoke",
+        "physicalActivity",
+        "sleepHours",
+        "sleepQuality",
+        "alcohol",
+        "alcoholFrequency",
+        "drinksOfAlcohol",
+        "kindOfDrink",
+        "coffee",
+        "coffeeFrequency",
+        "cupsOfCoffee",
+        "kindOfCoffee",
+        "healthStatus",
+        "errorcupsOfCoffee",
+        "errordrinksOfAlcohol"
+      ],
+      this.state
+    );
+  }
+  /**
+   * getPainConditionPayload - returns the data to send to validatePainConditionData
+   * @returns {Object} the Firebase payload
+   */
+  getPainConditionPayload() {
+    return R.pick(
+      [
+        "medication",
+        "medicationName",
+        "medicationEffectiveness",
+        "procedures",
+        "procedureName",
+        "procedureEffectiveness",
+        "nonPharma",
+        "nonPharmaName",
+        "nonPharmaEffectiveness"
+      ],
+      this.state
+    );
+  }
+  
+  checkForErrors (step) {
+  let thereAreErrors;
+  let msg = "Some fields are required";
+  switch (step) {
+    case 0:
+      thereAreErrors =validateDemographicData(this.getDemographicPayload());
+      break;
+
+    case 1:
+      thereAreErrors = validateHabitsData(this.getHabitsPayload());
+      break;
+    case 2:
+      const keysInNeeds = R.keys(this.state.needs);
+      thereAreErrors = validateThereIsAtLeastOneNeed(R.length(keysInNeeds));
+      msg = "Please select at least one preference";
+      break;
+    case 3:
+      const keysInChallenges = R.keys(this.state.challenges);
+      thereAreErrors = validateThereIsAtLeastOneChallenge(R.length(keysInChallenges));;
+      msg = "Please select at least one challenge";
+      break;
+    case 4:
+      const keysInPainConditions = R.keys(this.state.painConditions);
+      const errorsAndMsg=validatePainConditionData(R.length(keysInPainConditions), this.getPainConditionPayload());
+      thereAreErrors = errorsAndMsg[0];
+      msg = errorsAndMsg[1];
+      break;   
+  }
+  let errorsAndMsg=[thereAreErrors, msg];
+  return errorsAndMsg;
+}
   /**
    * handleNext - sets active step in the state and sends Firebase payload on
    * last step
    * @returns {void}
    */
-  handleNext = () => {
+   handleNext = () => {
     if (this.state.activeStep === this.getSteps().length - 1) {
       //We need to review if there are changes in the session status
       firebase.auth().onAuthStateChanged(user => {
         user && writeNewPatient(user.uid, this.getFirebasePayload());
       });
     }
-    const step = this.state.activeStep;
-    let thereAreErrors;
-    let msg = "Some fields are required";
-
-    switch (step) {
-      case 0:
-        thereAreErrors =
-          !this.state.name ||
-          !this.state.weight ||
-          !this.state.height ||
-          !this.state.gender ||
-          this.state.errorweight !== "" ||
-          this.state.errorheight !== "" ||
-          this.state.errorname !== "";
-        break;
-
-      case 1:
-        thereAreErrors =
-          !this.state.smoke ||
-          !this.state.physicalActivity ||
-          !this.state.sleepHours ||
-          !this.state.sleepQuality ||
-          !this.state.alcohol ||
-          !this.state.coffee ||
-          !this.state.healthStatus ||
-          (this.state.alcohol === "yes" && !this.state.alcoholFrequency) ||
-          (this.state.coffee === "yes" && !this.state.coffeeFrequency) ||
-          ((this.state.alcoholFrequency === "Almost everyday" ||
-            this.state.alcoholFrequency === "Everyday") &&
-            (!this.state.kindOfDrink || !this.state.drinksOfAlcohol)) ||
-          ((this.state.coffeeFrequency === "Almost everyday" ||
-            this.state.coffeeFrequency === "Everyday") &&
-            (!this.state.kindOfCoffee || !this.state.cupsOfCoffee)) ||
-          this.state.errorcupsOfCoffee !== "" ||
-          this.state.errordrinksOfAlcohol !== "";
-        break;
-      case 2:
-        const keysInNeeds = R.keys(this.state.needs);
-        const numberOfNeeds = R.length(keysInNeeds);
-        thereAreErrors = numberOfNeeds === 0;
-        msg = "Please select at least one preference";
-        break;
-      case 3:
-        const keysInChallenges = R.keys(this.state.challenges);
-        const numberOfChallenges = R.length(keysInChallenges);
-        thereAreErrors = numberOfChallenges === 0;
-        msg = "Please select at least one challenge";
-        break;
-      case 4:
-        const keysInPainConditions = R.keys(this.state.painConditions);
-        const numberOfPainConditions = R.length(keysInPainConditions);
-        const medicationIncomplete =
-          numberOfPainConditions &&
-          (this.state.medication === "" ||
-            (this.state.medication === "yes" &&
-              !isPainHistoryCompleted(
-                this.state.medicationName,
-                this.state.medicationEffectiveness
-              )));
-        const procedureIncomplete =
-          numberOfPainConditions &&
-          (this.state.medication === "" ||
-            (this.state.procedures === "yes" &&
-              !isPainHistoryCompleted(
-                this.state.procedureName,
-                this.state.procedureEffectiveness
-              )));
-        const nonPharmaIncomplete =
-          numberOfPainConditions &&
-          (this.state.nonPharma === "" ||
-            (this.state.nonPharma === "yes" &&
-              !isPainHistoryCompleted(
-                this.state.nonPharmaName,
-                this.state.nonPharmaEffectiveness
-              )));
-        thereAreErrors =
-          numberOfPainConditions === 0 ||
-          medicationIncomplete ||
-          procedureIncomplete ||
-          nonPharmaIncomplete;
-        numberOfPainConditions === 0 &&
-          (msg = "Please select at least one pain condition");
-        (medicationIncomplete || procedureIncomplete || nonPharmaIncomplete) &&
-          (msg = "Please complete the pain history treatments");
-        break;
-    }
-    !thereAreErrors
+    let errorsAndMsg=this.checkForErrors(this.state.activeStep);
+    !errorsAndMsg[0]
       ? this.setState({
           activeStep: this.state.activeStep + 1,
           errorSection: ""
         })
       : this.setState({
-          errorSection: msg
+          errorSection: errorsAndMsg[1]
         });
   };
 
