@@ -141,6 +141,7 @@ class LogIn extends React.Component {
           <FormHelperText
             id="error"
             name="error"
+            error={true}
             value={this.state.error}
             onChange={this.handleChange}
           >
