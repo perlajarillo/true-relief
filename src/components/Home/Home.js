@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Grid, Paper, Typography, withStyles } from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-import Image from '../../images/background.jpg';
-import Registration from '../Registration/Registration';
+import React from "react";
+import PropTypes from "prop-types";
+import { Button, Grid, Paper, Typography, withStyles } from "@material-ui/core";
+import Icon from "@material-ui/core/Icon";
+import backgroundImg from "../../images/background.jpg";
+import tools from "./literals/tools"
 
 const styles = theme => ({
   root: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    margin: '20px',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    margin: "20px",
   },
   paper: {
     padding: theme.spacing.unit * 2,
@@ -25,55 +25,8 @@ const styles = theme => ({
     '&:hover': {
       color: '#c43e00',
     },
-  }
+  },
 });
-
-const tools = [{
-    name: 'Education',
-    icon: 'school',
-    description: 'Know how to manage your pain'
-  },
-  {
-    name: 'Daily Tips',
-    icon: 'date_range',
-    description: 'Tips for every day'
-  },
-  {
-    name: 'Journal',
-    icon: 'book',
-    description: 'Recent articles related to pain treatment.'
-  },
-  {
-    name: 'Pain Track',
-    icon: 'insert_chart',
-    description: 'Pain and trigger tracking.'
-  },
-  {
-    name: 'Doctor Visits',
-    icon: 'local_hospital',
-    description: 'Getting ready for your doctors visit – What to ask.'
-  },
-  {
-    name: 'Reports',
-    icon: 'assignment',
-    description: 'Communication your status with your healthcare team with pain reports.'
-  },
-  {
-    name: 'Tools',
-    icon: 'build',
-    description: 'Provide tools that can help you manage you pain in the moment including relaxation and cognitive behavioral therapy.'
-  },
-  {
-    name: 'Treatments',
-    icon: 'healing',
-    description: 'Recommend treatments and products that you may not have tried but which research shows may help your pain.'
-  },
-  {
-    name: 'Local Providers',
-    icon: 'people',
-    description: 'Locate providers in your area that can help you Better manager pain'
-  }
-];
 
 function Tools(props) {
   const { tool, classes } = props;
@@ -102,8 +55,8 @@ function Home(props) {
     return (
       <React.Fragment>
         <Grid container>
-          <Grid item >
-            <img src={Image} alt="" width="100%"/>
+          <Grid item>
+            <img src={backgroundImg} alt="" width="100%"/>
           </Grid>
         </Grid>
         <div className={classes.root}>

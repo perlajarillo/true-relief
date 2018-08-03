@@ -6,29 +6,41 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from "@material-ui/core/Typography";
 import firebase from "../firebase.js";
 // importing route Components
 import { Link, Redirect } from "react-router-dom";
 
+import logo from "../../images/logo.png"
+
 const styles = theme => ({
-  root: {
-    margin: theme.spacing.unit * 6
-  },
   formControl: {
     margin: theme.spacing.unit
   },
   button: {
-    margin: theme.spacing.unit
-  },
-  textField: {
-    maxWidth: 400
+    marginTop: theme.spacing.unit * 2
   },
   text: {
     padding: theme.spacing.unit * 2,
-    textAlign: "center",
+    marginLeft: theme.spacing.unit * 2,
     color: theme.palette.text.secondary
-  }
+  },
+  card: {
+    width: "350px",
+    margin: "50px auto",
+    backgroundColor: "#fafafa"
+  },
+  pos: {
+    marginBottom: 24,
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%',
+  },
 });
 
 class LogIn extends React.Component {
@@ -86,68 +98,77 @@ class LogIn extends React.Component {
     return user ? (
       <Redirect to={from} />
     ) : (
-      <div>
-        <h1>Log In</h1>
-        <form onSubmit={this.handleSubmit}>
-          <Grid item xs={12} md={3} lg={3}>
-            <FormControl
-              className={(classes.formControl, classes.textField)}
-              aria-describedby="required"
-              aria-required="true"
-            >
-              <InputLabel htmlFor="email">E-mail</InputLabel>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={this.handleChange}
-              />
-              <FormHelperText id="required">Required*</FormHelperText>
-            </FormControl>
-            <FormControl
-              className={(classes.formControl, classes.textField)}
-              aria-describedby="required"
-              aria-required="true"
-            >
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input
-                id="password"
-                name="password"
-                type="Password"
-                value={password}
-                onChange={this.handleChange}
-              />
-              <FormHelperText id="required">Required*</FormHelperText>
-            </FormControl>
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
+        <div>
+          <Card className={classes.card} elevation={0}>
+        <CardMedia
+          className={classes.media}
+          image={logo}
+          title="True Relief"
+        />
+            <form onSubmit={this.handleSubmit}>
+          <CardContent>
+              <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                aria-describedby="required"
+                aria-required="true"
               >
-                <Link to="/sign-up_disclamer">Create an account</Link>
-              </Button>
+                <InputLabel htmlFor="email">E-mail</InputLabel>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={this.handleChange}
+                />
+                <FormHelperText id="required">Required*</FormHelperText>
+              </FormControl>
+              <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                aria-describedby="required"
+                aria-required="true"
+              >
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  type="Password"
+                  value={password}
+                  onChange={this.handleChange}
+                />
+                <FormHelperText id="required">Required*</FormHelperText>
+              </FormControl>
               <Button
                 variant="contained"
                 type="submit"
                 color="primary"
+                fullWidth
                 className={classes.button}
               >
-                Log-in
+                Log In
               </Button>
-            </div>
-          </Grid>
-          <FormHelperText
-            id="error"
-            name="error"
-            error={true}
-            value={this.state.error}
-            onChange={this.handleChange}
-          >
-            {this.state.error}
-          </FormHelperText>
-        </form>
+            <FormHelperText
+              id="error"
+              name="error"
+              value={this.state.error}
+              onChange={this.handleChange}
+            >
+              {this.state.error}
+                </FormHelperText>
+              </CardContent>
+              </form>
+            <Typography className={classes.text} variant="body1">Not registered yet?</Typography>
+            <CardActions>
+               <Button
+                color="primary"
+                component={Link}
+                to="/disclaimer"
+              >
+              Create an account
+              </Button>
+          </CardActions>
+        </Card>
       </div>
     );
   }

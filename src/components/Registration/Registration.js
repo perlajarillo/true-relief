@@ -29,7 +29,10 @@ import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   root: {
-    width: "90%"
+    width: "60%",
+    margin: "0 auto",
+    marginTop: "20px",
+    backgroundColor: "#fafafa"
   },
   button: {
     marginTop: theme.spacing.unit,
@@ -76,7 +79,7 @@ class VerticalLinearStepper extends Component {
       errorweight: "",
       errorgender: "",
       errorname: "",
-      errorSelectedDate: "", 
+      errorSelectedDate: "",
       errorSection: "",
       errorcupsOfCoffee: "",
       errordrinksOfAlcohol: "",
@@ -105,7 +108,7 @@ class VerticalLinearStepper extends Component {
    * @return {void}
    */
   updateDateInParentState(date) {
-    validateAge(date) 
+    validateAge(date)
     ?
       this.setState({
         selectedDate: date,
@@ -145,7 +148,7 @@ class VerticalLinearStepper extends Component {
       'cupsOfCoffee'
     ];
     const isFreeInput = FREE_INPUTS.includes(name);
-    
+
     value === "no" && !isAnHabit
       ? this.clearConditionalState(name, value)
       : this.setState({
@@ -509,7 +512,7 @@ class VerticalLinearStepper extends Component {
       this.state
     );
   }
-  
+
   checkForErrors (step) {
   let thereAreErrors;
   let msg = "Some fields are required";
@@ -536,7 +539,7 @@ class VerticalLinearStepper extends Component {
       const errorsAndMsg=validatePainConditionData(R.length(keysInPainConditions), this.getPainConditionPayload());
       thereAreErrors = errorsAndMsg[0];
       msg = errorsAndMsg[1];
-      break;   
+      break;
   }
   let errorsAndMsg=[thereAreErrors, msg];
   return errorsAndMsg;
@@ -593,8 +596,8 @@ class VerticalLinearStepper extends Component {
     };
 
     return firebase.auth().currentUser ? (
-      <div className={classes.root}>
-        <Stepper activeStep={activeStep} orientation="vertical">
+      <div>
+        <Stepper activeStep={activeStep} orientation="vertical" className={classes.root}>
           {steps.map((label, index) => {
             return (
               <Step key={label}>

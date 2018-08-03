@@ -11,9 +11,9 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link } from "react-router-dom";
 import firebase from "../firebase.js";
-import "./styles.css";
+import theme from "../theme.js";
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1
   },
@@ -23,7 +23,7 @@ const styles = {
   menuButton: {
     marginLeft: -12
   }
-};
+});
 
 class Header extends Component {
   constructor(props) {
@@ -82,42 +82,58 @@ class Header extends Component {
               color="inherit"
               className={classes.flex}
             >
-              <Link to="/">True Relief</Link>
+              True Relief
             </Typography>
-            <Button tabIndex="-1" color="inherit">
-              <Link to="/">Home</Link>
+            <Button tabIndex="-1" color="inherit" component={Link} to="/">
+              Home
             </Button>
 
             {user && (
               <div>
-                <Button tabIndex="-1" color="inherit">
-                  <Link to="/">Profile</Link>
+                <Button tabIndex="-1" color="inherit" component={Link} to="/">
+                  Profile
                 </Button>
-                <Button tabIndex="-1" color="inherit">
-                  <Link to="/">Track pain</Link>
+                <Button tabIndex="-1" color="inherit" component={Link} to="/">
+                  Track pain
                 </Button>
-                <Button tabIndex="-1" color="inherit">
-                  <Link to="/">Tools</Link>
+                <Button tabIndex="-1" color="inherit" component={Link} to="/">
+                  Tools
                 </Button>
-                <Button tabIndex="-1" color="inherit">
-                  <Link to="/">Local providers</Link>
+                <Button tabIndex="-1" color="inherit" component={Link} to="/">
+                  Local providers
                 </Button>
-                <Button tabIndex="-1" color="inherit">
-                  <Link to="/">Treatments and products</Link>
+                <Button tabIndex="-1" color="inherit" component={Link} to="/">
+                  Treatments and products
                 </Button>
-                <Button tabIndex="-1" color="inherit" onClick={this.authLogOut}>
-                  <Link to="/log-in">Log out</Link>
+                <Button
+                  tabIndex="-1"
+                  color="inherit"
+                  onClick={this.authLogOut}
+                  component={Link}
+                  to="/log-in"
+                >
+                  Log out
                 </Button>
               </div>
             )}
 
             {!user && (
               <div name="defaultMenus" id="defaultMenus">
-                <Button tabIndex="-1" color="inherit">
-                  <Link to="/disclaimer">Sign up</Link>
+                <Button
+                  tabIndex="-1"
+                  color="inherit"
+                  component={Link}
+                  to="/disclaimer"
+                >
+                  Sign up
                 </Button>
-                <Button tabIndex="-1" color="inherit">
-                  <Link to="/log-in">Log in</Link>
+                <Button
+                  tabIndex="-1"
+                  color="inherit"
+                  component={Link}
+                  to="/log-in"
+                >
+                  Log in
                 </Button>
               </div>
             )}
