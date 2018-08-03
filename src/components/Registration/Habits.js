@@ -9,6 +9,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Typography from "@material-ui/core/Typography";
 import habitsData from './literals/habits.js'
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
   root: {
@@ -29,7 +30,9 @@ const styles = theme => ({
 });
 
 const Habits = props => {
-  const { classes, parentState, updateParentState } = props;
+  const { classes, parentState, updateParentState, reviewValidations } = props;
+
+this.input = React.createRef();
 
   return (
     <Fragment>
@@ -191,12 +194,16 @@ const Habits = props => {
             <Input
               id="drinks-of-alcohol"
               name="drinksOfAlcohol"
-              value={parentState.drinksOfAlcohol}
+              type="number"
+              ref={this.input}
               onChange={updateParentState}
+              onBlur={reviewValidations}
               inputProps={{
-                "aria-label": "drinks-of-alcohol"
+                "aria-label": "drinks-of-alcohol",
+                min: "1", max: "30", step: "1"
               }}
             />
+            <FormHelperText error={true}>{parentState.errordrinksOfAlcohol}</FormHelperText>
           </FormControl>
           <FormControl required className={classes.formControl}>
             <FormLabel component="legend">
@@ -288,12 +295,16 @@ const Habits = props => {
             <Input
               id="cups-of-coffee"
               name="cupsOfCoffee"
-              value={parentState.cupsOfCoffee}
+              type="number"
+              ref={this.input}
               onChange={updateParentState}
+              onBlur={reviewValidations}
               inputProps={{
-                "aria-label": "cups-of-coffee"
+                "aria-label": "cups-of-coffee",
+                min: "1", max: "30", step: "1"
               }}
             />
+            <FormHelperText error={true}>{parentState.errorcupsOfCoffee}</FormHelperText>
           </FormControl>
           <FormControl required className={classes.formControl}>
             <FormLabel component="legend">
@@ -337,6 +348,7 @@ const Habits = props => {
           </RadioGroup>
         </FormControl>
       </div>
+      <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
     </Fragment>
   );
 };
