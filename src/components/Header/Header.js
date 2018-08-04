@@ -11,7 +11,6 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link } from "react-router-dom";
 import firebase from "../firebase.js";
-import theme from "../theme.js";
 
 const styles = theme => ({
   root: {

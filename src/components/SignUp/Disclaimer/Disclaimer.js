@@ -60,9 +60,7 @@ class Disclaimer extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    const { target } = event;
-
+  handleChange() {
     this.setState({
       chkDisclaimer: !this.state.chkDisclaimer
     });
@@ -109,7 +107,6 @@ class Disclaimer extends Component {
             <CardContent>
               <FormControlLabel
                 className={classes.formControl}
-                fullWidth
                 control={
                   <Checkbox
                     value="chkDisclaimer"
