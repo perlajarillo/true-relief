@@ -2,13 +2,13 @@ export function validateString(nameControl, stringToValidate){
     const trimmedStringToValidate = stringToValidate.trim();
     const isWrongHeight = nameControl === "height" && (trimmedStringToValidate <4 || trimmedStringToValidate >8);
     const isWrongWeight = nameControl === "weight" && (trimmedStringToValidate <65 || trimmedStringToValidate >800);
-    const isWrongCuporDrinkNumber = (nameControl === "drinksOfAlcohol" || 
+    const isWrongCuporDrinkNumber = (nameControl === "drinksOfAlcohol" ||
     nameControl ==="cupsOfCoffee") && (trimmedStringToValidate <0 || trimmedStringToValidate >30);
-    
+
     if (!trimmedStringToValidate.localeCompare("")) {
         return "Please introduce a "+nameControl;
     }
-    else 
+    else
     {
         if (isWrongHeight || isWrongWeight){
             return "Please introduce a valid "+nameControl;
@@ -34,13 +34,13 @@ export function validateFreeInput(nameControl, stringToValidate){
     const isWrongWeight = nameControl === "weight" && (trimmedStringToValidate <65 || trimmedStringToValidate >800);
     const isWrongCuporDrinkNumber = (nameControl === "drinksOfAlcohol" || nameControl ==="cupsOfCoffee")
      && (trimmedStringToValidate <0 || trimmedStringToValidate >30);
-    const mustBeANumber = nameControl==="weight" || nameControl==="height" || nameControl==="drinksOfAlcohol" 
+    const mustBeANumber = nameControl==="weight" || nameControl==="height" || nameControl==="drinksOfAlcohol"
     || nameControl==="cupsOfCoffee";
 
     if (!trimmedStringToValidate.localeCompare("")) {
         return "Please introduce a "+nameControl;
     }
-    else 
+    else
     {
         if (mustBeANumber && isNaN(trimmedStringToValidate))
         {
@@ -65,7 +65,7 @@ export function validateFreeInput(nameControl, stringToValidate){
 function validName(name){
     if (!(/^[a-zA-Z\s]+$/.test(name))){
         return "Only letters and spaces are allowed";
-    } 
+    }
     else {
         return "";
     }
@@ -76,7 +76,7 @@ function isPainHistoryCompleted(category, effectiveness){
     if (isValueCompleted )
         return true;
     else
-        return false;  
+        return false;
 }
 
 
@@ -167,7 +167,7 @@ export function validatePainConditionData(numberOfPainConditions, painConditionD
             procedureIncomplete ||
             nonPharmaIncomplete;
     let msg="";
-    if (numberOfPainConditions == 0){
+    if (numberOfPainConditions === 0){
         msg = "Please select at least one pain condition";
     }
     if (medicationIncomplete || procedureIncomplete || nonPharmaIncomplete)

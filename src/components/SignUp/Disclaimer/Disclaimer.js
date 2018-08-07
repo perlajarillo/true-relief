@@ -16,6 +16,9 @@ import { Redirect } from "react-router-dom";
 import logo from "../../../images/logo.png";
 
 const styles = theme => ({
+  root: {
+    marginTop: "112px",
+  },
   formControl: {
     margin: theme.spacing.unit
   },
@@ -61,8 +64,6 @@ class Disclaimer extends Component {
   }
 
   handleChange(event) {
-    const { target } = event;
-
     this.setState({
       chkDisclaimer: !this.state.chkDisclaimer
     });
@@ -89,7 +90,7 @@ class Disclaimer extends Component {
     const { classes } = this.props;
 
     return (
-      <div>
+      <div className={classes.root}>
         {redirectToSignUp && <Redirect to={from} />}
 
         <Card className={classes.card} elevation={0}>

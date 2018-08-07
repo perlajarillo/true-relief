@@ -18,6 +18,9 @@ import { Link, Redirect } from "react-router-dom";
 import logo from "../../images/logo.png";
 
 const styles = theme => ({
+  root: {
+    marginTop: "112px",
+  },
   formControl: {
     margin: theme.spacing.unit
   },
@@ -108,10 +111,10 @@ class SignUp extends Component {
     const { classes } = this.props;
 
     return (
-      <div>
+      <div className={classes.root}>
         {user && <Redirect to={from} />}
 
-        <Card className={classes.card} elevation={0}>
+        <Card className={(classes.root, classes.card)} elevation={0}>
           <CardMedia
             className={classes.media}
             image={logo}

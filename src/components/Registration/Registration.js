@@ -332,9 +332,9 @@ class VerticalLinearStepper extends Component {
    * toggleStepContent - opens and closes step contents
    */
   toggleStepContent = () => {
-    this.setState(prevState => {
-      open: !prevState.open;
-    });
+    this.setState(prevState => ({
+      open: !prevState.open
+    }));
   };
 
   /**
@@ -409,6 +409,8 @@ class VerticalLinearStepper extends Component {
             updateParentState={this.updateParentState}
           />
         );
+      default:
+        return 'Unknown step';
     }
   }
 
@@ -540,6 +542,8 @@ class VerticalLinearStepper extends Component {
       thereAreErrors = errorsAndMsg[0];
       msg = errorsAndMsg[1];
       break;
+    default:
+      return 'Unknown step';
   }
   let errorsAndMsg=[thereAreErrors, msg];
   return errorsAndMsg;
@@ -590,7 +594,7 @@ class VerticalLinearStepper extends Component {
   render() {
     const { classes } = this.props;
     const steps = this.getSteps();
-    const { activeStep, needs } = this.state;
+    const { activeStep } = this.state;
     const { from } = this.props.location.state || {
       from: { pathname: "/log-in" }
     };
