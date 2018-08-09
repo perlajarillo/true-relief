@@ -16,9 +16,6 @@ import { Redirect } from "react-router-dom";
 import logo from "../../../images/logo.png";
 
 const styles = theme => ({
-  root: {
-    marginTop: "112px",
-  },
   formControl: {
     margin: theme.spacing.unit
   },
@@ -90,7 +87,7 @@ class Disclaimer extends Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
+      <div>
         {redirectToSignUp && <Redirect to={from} />}
 
         <Card className={classes.card} elevation={0}>
@@ -110,7 +107,6 @@ class Disclaimer extends Component {
             <CardContent>
               <FormControlLabel
                 className={classes.formControl}
-                fullWidth
                 control={
                   <Checkbox
                     value="chkDisclaimer"

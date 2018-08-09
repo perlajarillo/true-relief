@@ -12,7 +12,7 @@ import Disclaimer from "./SignUp/Disclaimer/Disclaimer";
 import Policy from "./SignUp/Policy/policy";
 import LogIn from "./LogIn/LogIn";
 import Registration from "./Registration/Registration";
-import theme from "./theme"
+import theme from "./theme";
 
 class App extends Component {
   render() {
@@ -22,16 +22,19 @@ class App extends Component {
           <CssBaseline />
           <Header />
 
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/sign-up" component={SignUp} />
-            <Route path="/log-in" component={LogIn} />
-            <Route path="/policy" component={Policy} />
-            <Route path="/disclaimer" component={Disclaimer} />
-            <Route path="/registration" component={Registration} />
-          </Switch>
-
-          <Footer />
+          <main>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/sign-up" component={SignUp} />
+              <Route path="/log-in" component={LogIn} />
+              <Route path="/policy" component={Policy} />
+              <Route path="/disclaimer" component={Disclaimer} />
+              <Route path="/registration" component={Registration} />
+            </Switch>
+          </main>
+          <footer>
+            {/* <Footer /> */}
+          </footer>
         </MuiThemeProvider>
       </div>
     );

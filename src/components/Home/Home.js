@@ -15,15 +15,13 @@ import painTrack from "../../images/painTrack.png";
 import tools from "./literals/tools";
 
 const styles = theme => ({
-  root: {
-    display: "flex",
-    marginTop: theme.spacing.unit * 7
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
+  sectionStyles: {
     textAlign: "center",
-    color: theme.palette.text.secondary,
-    padding: theme.spacing.unit * 2
+    margin: theme.spacing.unit * 3
+  },
+  pageTitle: {
+    paddingTop: theme.spacing.unit * 10,
+    paddingBottom: theme.spacing.unit * 20
   },
   icon: {
     margin: theme.spacing.unit * 2
@@ -34,18 +32,29 @@ const styles = theme => ({
       color: "#c43e00"
     }
   },
-  bgImgStyles: {
-    marginTop: theme.spacing.unit * 7,
-    position: "fixed",
-    zIndex: "-1",
-    background: "cover"
+  heroImg: {
+    background: "url(" + `${backgroundImg}` + ")",
+    backgroundPosition: "center 10%",
+    backgroundSize: "cover",
+    width: "100%",
+    padding: "15% 0 25% 0"
   },
   logoStyles: {
-    margin: "10% 25% 23% 25%"
+    height: "100%",
+    display: "flex",
+    justifyContent: "center"
   },
   tourText: {
     textAlign: "center",
-    paddingTop: theme.spacing.unit * 10
+    padding: theme.spacing.unit * 4,
+    [theme.breakpoints.up("md")]: {
+      padding: theme.spacing.unit * 10
+    }
+  },
+  order: {
+    [theme.breakpoints.up("sm")]: {
+      order: 1
+    }
   }
 });
 
@@ -53,52 +62,54 @@ function Home(props) {
   const { classes } = props;
   return (
     <Fragment>
-      <img
-        src={backgroundImg}
-        className={classes.bgImgStyles}
-        alt=""
-        width="100%"
-      />
-      <div>
-        <img src={logo} className={classes.logoStyles} alt="" />
-      </div>
-      <div>
-        <Paper className={classes.paper} elevation={0}>
-          <Grid container>
-            <Grid item xs={12} s={12} m={12} lg={12}>
+      <section className={classes.heroImg}>
+        <figure className={classes.logoStyles}>
+          <img src={logo} alt="" />
+        </figure>
+      </section>
+      <section className={classes.sectionStyles}>
+        <Grid container>
+          <Grid item xs={12} sm={12} m={12} lg={12}>
+            <header className={classes.pageTitle}>
               <Typography variant="display3">About True Relief App</Typography>
-              <Typography variant="title" style={{ marginBottom: "56px" }}>
+              <Typography variant="subheading">
                 This App has a number of tools and strategies to help you best
                 control your pain.
               </Typography>
-            </Grid>
+            </header>
           </Grid>
-          <Grid container className={classes.root}>
-            <Grid item lg={6}>
-              <Typography variant="title" className={classes.tourText}>
-                Tools to help you manage your pain
-              </Typography>
-            </Grid>
-            <Grid item lg={3}>
-              <img src={dailyTips} alt="" width="100%" />
-            </Grid>
-            <Grid item lg={3}>
-              <img src={painTrack} alt="" width="100%" />
-            </Grid>
-            <Grid item lg={3}>
-              <img src={journal} alt="" width="100%" />
-            </Grid>
-            <Grid item lg={3}>
-              <img src={doctorVisit} alt="" width="100%" />
-            </Grid>
-            <Grid item lg={6}>
-              <Typography variant="title" className={classes.tourText}>
-                Strategies to know more about your pain
-              </Typography>
-            </Grid>
+          <Grid item xs={12} sm={4} md={4} lg={6} xl={6}>
+            <Typography variant="title" className={classes.tourText}>
+              Tools to help you manage your pain
+            </Typography>
           </Grid>
-        </Paper>
-      </div>
+          <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
+            <img src={dailyTips} alt="" width="100%" />
+          </Grid>
+          <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
+            <img src={painTrack} alt="" width="100%" />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            md={4}
+            lg={6}
+            xl={6}
+            className={classes.order}
+          >
+            <Typography variant="title" className={classes.tourText}>
+              Strategies to know more about your pain
+            </Typography>
+          </Grid>
+          <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
+            <img src={journal} alt="" width="100%" />
+          </Grid>
+          <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
+            <img src={doctorVisit} alt="" width="100%" />
+          </Grid>
+        </Grid>
+      </section>
     </Fragment>
   );
 }
@@ -108,6 +119,3 @@ Home.propTypes = {
 };
 
 export default withStyles(styles)(Home);
-/* {tools.map(tool => (
-  <Tools key={tool.name} classes={classes} tool={tool} />
-))} */
