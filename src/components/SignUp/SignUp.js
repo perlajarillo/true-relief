@@ -35,7 +35,7 @@ const styles = theme => ({
     backgroundColor: "#fafafa"
   },
   pos: {
-    marginBottom: 24
+    marginBottom: theme.spacing.unit * 3
   },
   media: {
     height: 0,
@@ -111,7 +111,7 @@ class SignUp extends Component {
       <div>
         {user && <Redirect to={from} />}
 
-        <Card className={classes.card} elevation={0}>
+        <Card className={(classes.root, classes.card)} elevation={0}>
           <CardMedia
             className={classes.media}
             image={logo}
@@ -200,7 +200,7 @@ class SignUp extends Component {
             Are You already registered?
           </Typography>
           <CardActions>
-            <Button color="primary" component={Link} to="/log-in">
+            <Button variant="outlined" fullWidth color="primary" component={Link} to="/log-in">
               Log In
             </Button>
           </CardActions>

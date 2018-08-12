@@ -1,27 +1,35 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton
-} from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link } from "react-router-dom";
 import firebase from "../firebase.js";
 
 const styles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    position: "sticky"
   },
   flex: {
     flex: 1
   },
   menuButton: {
     marginLeft: -12
-  }
+  },
+  list: {
+    width: 250
+  },
+  fullList: {
+    width: "auto"
+  },
 });
 
 class Header extends Component {
@@ -29,11 +37,13 @@ class Header extends Component {
     super(props);
 
     this.state = {
-      user: null
+      user: null,
+      mobileOpen: false
     };
 
     this.authListener = this.authListener.bind(this);
     this.authLogOut = this.authLogOut.bind(this);
+    this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
   }
 
   componentDidMount() {
@@ -62,20 +72,26 @@ class Header extends Component {
     }
   }
 
+  handleDrawerToggle = () => {
+    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
+  };
+
   render() {
     const { classes } = this.props;
     const { user } = this.state;
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
+      <Fragment>
+        <AppBar className={classes.root}>
           <Toolbar>
+            {Boolean(user) &&
             <IconButton
-              className={classes.menuButton}
+              className={classes.navIconHide}
               color="inherit"
               aria-label="Menu"
+              onClick={this.handleDrawerToggle}
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton>}
             <Typography
               variant="title"
               color="inherit"
@@ -87,37 +103,7 @@ class Header extends Component {
               Home
             </Button>
 
-            {user && (
-              <div>
-                <Button tabIndex="-1" color="inherit" component={Link} to="/">
-                  Profile
-                </Button>
-                <Button tabIndex="-1" color="inherit" component={Link} to="/">
-                  Track pain
-                </Button>
-                <Button tabIndex="-1" color="inherit" component={Link} to="/">
-                  Tools
-                </Button>
-                <Button tabIndex="-1" color="inherit" component={Link} to="/">
-                  Local providers
-                </Button>
-                <Button tabIndex="-1" color="inherit" component={Link} to="/">
-                  Treatments and products
-                </Button>
-                <Button
-                  tabIndex="-1"
-                  color="inherit"
-                  onClick={this.authLogOut}
-                  component={Link}
-                  to="/log-in"
-                >
-                  Log out
-                </Button>
-              </div>
-            )}
-
-            {!user && (
-              <div name="defaultMenus" id="defaultMenus">
+            {!user && (<div name="defaultMenus" id="defaultMenus">
                 <Button
                   tabIndex="-1"
                   color="inherit"
@@ -134,11 +120,47 @@ class Header extends Component {
                 >
                   Log in
                 </Button>
-              </div>
-            )}
+              </div>)}
+
+            {Boolean(user) && (<div>
+                <Button
+                  tabIndex="-1"
+                  color="inherit"
+                  onClick={this.authLogOut}
+                  component={Link}
+                  to="/log-in"
+                >
+                  Log out
+                </Button>
+            </div>)}
+              {Boolean(user) && <SwipeableDrawer
+                anchor="left"
+                open={this.state.mobileOpen}
+                onClose={this.handleDrawerToggle}
+                onOpen={this.handleDrawerToggle}
+              >
+                <div className={classes.list}>
+                  <List><Button tabIndex="-1" color="inherit" component={Link} to="/">
+                    Profile
+                  </Button></List>
+                  <List><Button tabIndex="-1" color="inherit" component={Link} to="/">
+                    Track pain
+                  </Button></List>
+                  <List><Button tabIndex="-1" color="inherit" component={Link} to="/">
+                    Tools
+                  </Button></List>
+                  <List><Button tabIndex="-1" color="inherit" component={Link} to="/">
+                    Local providers
+                  </Button></List>
+                  <List><Button tabIndex="-1" color="inherit" component={Link} to="/">
+                    Treatments and products
+                  </Button></List>
+                </div>
+              </SwipeableDrawer>}
+
           </Toolbar>
         </AppBar>
-      </div>
+      </Fragment>
     );
   }
 }

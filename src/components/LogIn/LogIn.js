@@ -160,8 +160,10 @@ class LogIn extends React.Component {
               </form>
             <Typography className={classes.text} variant="body1">Not registered yet?</Typography>
             <CardActions>
-               <Button
+              <Button
+                variant="outlined"
                 color="primary"
+                fullWidth
                 component={Link}
                 to="/disclaimer"
               >
