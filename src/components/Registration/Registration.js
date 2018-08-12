@@ -109,15 +109,13 @@ class VerticalLinearStepper extends Component {
    */
   updateDateInParentState(date) {
     validateAge(date)
-    ?
-      this.setState({
-        selectedDate: date,
-        errorSelectedDate:""
-      })
-    :
-      this.setState({
-        errorSelectedDate: "You must be older than 16 to use this web site."
-      });
+      ? this.setState({
+          selectedDate: date,
+          errorSelectedDate: ""
+        })
+      : this.setState({
+          errorSelectedDate: "You must be older than 16 to use this web site."
+        });
   }
 
   reviewValidations(event) {
@@ -141,11 +139,11 @@ class VerticalLinearStepper extends Component {
     const isAnHabit = HABITS.includes(name);
     const isPainConditionValue = PAIN_CONDITIONS.includes(name);
     const FREE_INPUTS = [
-      'weight',
-      'height',
-      'name',
-      'drinksOfAlcohol',
-      'cupsOfCoffee'
+      "weight",
+      "height",
+      "name",
+      "drinksOfAlcohol",
+      "cupsOfCoffee"
     ];
     const isFreeInput = FREE_INPUTS.includes(name);
 
@@ -410,7 +408,7 @@ class VerticalLinearStepper extends Component {
           />
         );
       default:
-        return 'Unknown step';
+        return "Unknown step";
     }
   }
 
@@ -419,8 +417,8 @@ class VerticalLinearStepper extends Component {
    * @returns {Object} the Firebase payload
    */
   getFirebasePayload() {
-    const nameTrimmed=(this.state.name).trim();
-    this.setState({name: nameTrimmed});
+    const nameTrimmed = this.state.name.trim();
+    this.setState({ name: nameTrimmed });
     return R.pick(
       [
         "name",
@@ -448,7 +446,7 @@ class VerticalLinearStepper extends Component {
       this.state
     );
   }
-/**
+  /**
    * getDemographicPayload - returns the data to send to validateDemographicData
    * @returns {Object} the Demographic payload
    */
@@ -515,52 +513,56 @@ class VerticalLinearStepper extends Component {
     );
   }
 
-  checkForErrors (step) {
-  let thereAreErrors;
-  let msg = "Some fields are required";
-  switch (step) {
-    case 0:
-      thereAreErrors =validateDemographicData(this.getDemographicPayload());
-      break;
-
-    case 1:
-      thereAreErrors = validateHabitsData(this.getHabitsPayload());
-      break;
-    case 2:
-      const keysInNeeds = R.keys(this.state.needs);
-      thereAreErrors = validateThereIsAtLeastOneNeed(R.length(keysInNeeds));
-      msg = "Please select at least one preference";
-      break;
-    case 3:
-      const keysInChallenges = R.keys(this.state.challenges);
-      thereAreErrors = validateThereIsAtLeastOneChallenge(R.length(keysInChallenges));;
-      msg = "Please select at least one challenge";
-      break;
-    case 4:
-      const keysInPainConditions = R.keys(this.state.painConditions);
-      const errorsAndMsg=validatePainConditionData(R.length(keysInPainConditions), this.getPainConditionPayload());
-      thereAreErrors = errorsAndMsg[0];
-      msg = errorsAndMsg[1];
-      break;
-    default:
-      return 'Unknown step';
+  checkForErrors(step) {
+    let thereAreErrors;
+    let msg = "Some fields are required";
+    switch (step) {
+      case 0:
+        thereAreErrors = validateDemographicData(this.getDemographicPayload());
+        break;
+      case 1:
+        thereAreErrors = validateHabitsData(this.getHabitsPayload());
+        break;
+      case 2:
+        const keysInNeeds = R.keys(this.state.needs);
+        thereAreErrors = validateThereIsAtLeastOneNeed(R.length(keysInNeeds));
+        msg = "Please select at least one preference";
+        break;
+      case 3:
+        const keysInChallenges = R.keys(this.state.challenges);
+        thereAreErrors = validateThereIsAtLeastOneChallenge(
+          R.length(keysInChallenges)
+        );
+        msg = "Please select at least one challenge";
+        break;
+      case 4:
+        const keysInPainConditions = R.keys(this.state.painConditions);
+        const errorsAndMsg = validatePainConditionData(
+          R.length(keysInPainConditions),
+          this.getPainConditionPayload()
+        );
+        thereAreErrors = errorsAndMsg[0];
+        msg = errorsAndMsg[1];
+        break;
+      default:
+        return "Unknown step";
+    }
+    let errorsAndMsg = [thereAreErrors, msg];
+    return errorsAndMsg;
   }
-  let errorsAndMsg=[thereAreErrors, msg];
-  return errorsAndMsg;
-}
   /**
    * handleNext - sets active step in the state and sends Firebase payload on
    * last step
    * @returns {void}
    */
-   handleNext = () => {
+  handleNext = () => {
     if (this.state.activeStep === this.getSteps().length - 1) {
       //We need to review if there are changes in the session status
       firebase.auth().onAuthStateChanged(user => {
         user && writeNewPatient(user.uid, this.getFirebasePayload());
       });
     }
-    let errorsAndMsg=this.checkForErrors(this.state.activeStep);
+    let errorsAndMsg = this.checkForErrors(this.state.activeStep);
     !errorsAndMsg[0]
       ? this.setState({
           activeStep: this.state.activeStep + 1,
@@ -601,7 +603,11 @@ class VerticalLinearStepper extends Component {
 
     return firebase.auth().currentUser ? (
       <div>
-        <Stepper activeStep={activeStep} orientation="vertical" className={classes.root}>
+        <Stepper
+          activeStep={activeStep}
+          orientation="vertical"
+          className={classes.root}
+        >
           {steps.map((label, index) => {
             return (
               <Step key={label}>

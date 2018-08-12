@@ -60,7 +60,7 @@ class Disclaimer extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange() {
     this.setState({
       chkDisclaimer: !this.state.chkDisclaimer
     });
