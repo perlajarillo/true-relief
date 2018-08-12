@@ -33,7 +33,7 @@ const styles = theme => ({
     }
   },
   heroImg: {
-    background: "url(" + `${backgroundImg}` + ")",
+    background: "url(" + backgroundImg + ")",
     backgroundPosition: "center 10%",
     backgroundSize: "cover",
     width: "100%",

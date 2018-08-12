@@ -33,7 +33,7 @@ class App extends Component {
             </Switch>
           </main>
           <footer>
-            {/* <Footer /> */}
+            <Footer />
           </footer>
         </MuiThemeProvider>
       </div>

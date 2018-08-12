@@ -1,37 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Paper, Typography } from "@material-ui/core";
 
 const styles = theme => ({
   root: {
-    marginTop: 30,
-    marginBottom: 0
+    marginTop: theme.spacing.unit * 6
   },
   paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: "center",
-    color: theme.palette.text.primary,
+    padding: theme.spacing.unit * 6,
     backgroundColor: theme.palette.primary.main
   },
+  textColor: {
+    color: theme.palette.primary.contrastText,
+  }
 });
+
 function Footer(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
-      <Grid container spacing={24}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}><Typography variant="title" color="inherit" className={classes.flex}>
-            True Relief
-          </Typography></Paper>
-        </Grid>
-      </Grid>
-  </div>
-  )
+      <Paper className={classes.paper} elevation={0}>
+        <Typography variant="title" align="center" className={classes.textColor}>
+          True Relief
+        </Typography>
+      </Paper>
+    </div>
+  );
 }
 
 Footer.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Footer);
