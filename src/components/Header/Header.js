@@ -143,7 +143,7 @@ class Header extends Component {
                   <List><Button tabIndex="-1" color="inherit" component={Link} to="/">
                     Profile
                   </Button></List>
-                  <List><Button tabIndex="-1" color="inherit" component={Link} to="/">
+                  <List><Button tabIndex="-1" color="inherit" component={Link} to="/trackPain">
                     Track pain
                   </Button></List>
                   <List><Button tabIndex="-1" color="inherit" component={Link} to="/">

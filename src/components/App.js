@@ -12,6 +12,7 @@ import Disclaimer from "./SignUp/Disclaimer/Disclaimer";
 import Policy from "./SignUp/Policy/policy";
 import LogIn from "./LogIn/LogIn";
 import Registration from "./Registration/Registration";
+import TrackPain from "./TrackPain/TrackPain";
 import theme from "./theme";
 
 class App extends Component {
@@ -30,6 +31,7 @@ class App extends Component {
               <Route path="/policy" component={Policy} />
               <Route path="/disclaimer" component={Disclaimer} />
               <Route path="/registration" component={Registration} />
+              <Route path="/trackPain" component={TrackPain} />
             </Switch>
           </main>
           <footer>
