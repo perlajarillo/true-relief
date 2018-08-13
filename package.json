@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^1.2.0",
     "@material-ui/icons": "^1.1.0",
+    "@material-ui/lab": "^1.0.0-alpha.10",
     "date-fns": "^2.0.0-alpha.7",
     "firebase": "^5.0.4",
     "material-ui-pickers": "^1.0.0-rc.10",
