@@ -26,6 +26,8 @@ import { validateThereIsAtLeastOneChallenge } from "../Validations.js";
 import { validateThereIsAtLeastOneNeed } from "../Validations.js";
 import { validateAge } from "../Validations.js";
 import { Redirect } from "react-router-dom";
+import { getActiveUser } from "../FirebaseOperations.js";
+import { userStatus } from "../UserStatus.js";
 
 const styles = theme => ({
   root: {
@@ -46,6 +48,7 @@ const styles = theme => ({
   }
 });
 
+const ACTIVE_USER = userStatus();
 const HABITS = ["smoke", "alcohol", "coffee"];
 const PAIN_CONDITIONS = [
   "medicationName",
@@ -593,15 +596,24 @@ class VerticalLinearStepper extends Component {
     });
   };
 
+/*   componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ user });
+      }
+    });
+  } */
+
   render() {
     const { classes } = this.props;
     const steps = this.getSteps();
     const { activeStep } = this.state;
+    const { userId } = this.state;
     const { from } = this.props.location.state || {
       from: { pathname: "/log-in" }
     };
-
-    return firebase.auth().currentUser ? (
+  alert(ACTIVE_USER);
+  return ACTIVE_USER ? (
       <div>
         <Stepper
           activeStep={activeStep}
