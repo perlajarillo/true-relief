@@ -26,8 +26,6 @@ import { validateThereIsAtLeastOneChallenge } from "../Validations.js";
 import { validateThereIsAtLeastOneNeed } from "../Validations.js";
 import { validateAge } from "../Validations.js";
 import { Redirect } from "react-router-dom";
-import { getActiveUser } from "../FirebaseOperations.js";
-import { userStatus } from "../UserStatus.js";
 
 const styles = theme => ({
   root: {
@@ -48,7 +46,6 @@ const styles = theme => ({
   }
 });
 
-const ACTIVE_USER = userStatus();
 const HABITS = ["smoke", "alcohol", "coffee"];
 const PAIN_CONDITIONS = [
   "medicationName",
@@ -62,7 +59,6 @@ const PAIN_CONDITIONS = [
 class VerticalLinearStepper extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       activeStep: 0,
       needs: [],
@@ -86,6 +82,7 @@ class VerticalLinearStepper extends Component {
       errorSection: "",
       errorcupsOfCoffee: "",
       errordrinksOfAlcohol: "",
+      user: true,
       open: false
     };
 
@@ -595,26 +592,41 @@ class VerticalLinearStepper extends Component {
       activeStep: 0
     });
   };
-
-/*   componentDidMount() {
+  componentDidMount() {
+    this.authListener();
+  }
+  authListener() {
+    this.unregisterAuthObserver =
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({ user });
+        this.setState({ user: user });
+      }
+      else
+      {
+        this.setState({ user: null });
       }
     });
-  } */
+  }
+
+   /* In order to avoid a memory leak whe need to un-register Firebase observers when the component unmounts */
+  componentWillUnmount()
+  {
+    this.unregisterAuthObserver();
+  }
+
 
   render() {
     const { classes } = this.props;
     const steps = this.getSteps();
     const { activeStep } = this.state;
-    const { userId } = this.state;
+    const { user } = this.state;
     const { from } = this.props.location.state || {
       from: { pathname: "/log-in" }
     };
-  alert(ACTIVE_USER);
-  return ACTIVE_USER ? (
-      <div>
+
+  return user ? (
+    <div>
+
         <Stepper
           activeStep={activeStep}
           orientation="vertical"

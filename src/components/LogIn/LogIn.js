@@ -14,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 import firebase from "../firebase.js";
 // importing route Components
 import { Link, Redirect } from "react-router-dom";
-
 import logo from "../../images/logo.png"
 
 const styles = theme => ({
@@ -50,6 +49,7 @@ class LogIn extends React.Component {
     this.state = {
       email: "",
       password: "",
+      user: false,
       error: ""
     };
 
@@ -68,24 +68,27 @@ class LogIn extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const { email, password } = this.state;
-    //Attempting to signIn with email and password and creating a promise to manage the error
-    const promise = firebase.auth().signInWithEmailAndPassword(email, password);
-
+    /*Attempting to signIn with email and password and creating a promise to
+    manage the error*/
+    this.promise = firebase.auth().signInWithEmailAndPassword(email, password);
     /*If there is an error, we will capture it and change the state of error
     to inform the user something went wrong*/
-    promise.catch(e =>
-      this.setState({
-        error: e.message
-      })
-    );
-    //Adding an observer for changes to the user's sign-in state.
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+      this.promise.then(user =>
         this.setState({
           user: user
-        });
-      }
-    });
+        })
+      ).
+        catch(e =>
+          this.setState({
+            error: e.message
+          })
+        );
+  }
+
+   /* In order to avoid a memory leak we need to clear the promise
+    when the component unmounts */
+  componentWillUnmount() {
+    this.promise = null;
   }
 
   render() {

@@ -37,7 +37,7 @@ class Header extends Component {
     super(props);
 
     this.state = {
-      user: null,
+      user: true,
       mobileOpen: false
     };
 
@@ -47,28 +47,34 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    this.authListener();
+      this.authListener();
   }
 
   authListener() {
-    //Adding an observer for changes to the user's sign-in state.
-    firebase.auth().onAuthStateChanged(user => {
+    this.unregisterAuthObserver =
+      firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({
-          user: user
-        });
+        this.setState({ user: user });
+      }
+      else {
+        this.setState({ user: null });
       }
     });
+  }
+  /* In order to avoid a memory leak whe need to un-register Firebase observers when the component unmounts */
+  componentWillUnmount() {
+    this.unregisterAuthObserver();
   }
 
   authLogOut() {
     /*If there is a currentUser means the user press logOut in an active session.
     we will close the session and change state.*/
-    if (firebase.auth().currentUser) {
-      firebase.auth().signOut();
-      this.setState({
-        user: null
-      });
+    if (this.state.user) {
+      firebase.auth().signOut().then(
+        this.setState({
+          user: null
+        })
+       );
     }
   }
 
@@ -103,7 +109,7 @@ class Header extends Component {
               Home
             </Button>
 
-            {!user && (<div name="defaultMenus" id="defaultMenus">
+            {!user  && (<div name="defaultMenus" id="defaultMenus">
                 <Button
                   tabIndex="-1"
                   color="inherit"
