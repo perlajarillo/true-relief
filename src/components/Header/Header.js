@@ -61,7 +61,7 @@ class Header extends Component {
       }
     });
   }
-  /* In order to avoid a memory leak whe need to un-register Firebase observers when the component unmounts */
+  /* In order to avoid a memory leak we need to un-register Firebase observers when the component unmounts */
   componentWillUnmount() {
     this.unregisterAuthObserver();
   }
