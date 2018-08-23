@@ -11,7 +11,21 @@ import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsPr
 import DateTimePicker from "material-ui-pickers/DateTimePicker";
 import { format } from "date-fns";
 import distanceInWordsStrict from "date-fns/formatDistanceStrict";
+import compareAsc from "date-fns/compareAsc";
 import Canvas from "./Canvas";
+import trackPainData from "./literals/trackPainData.js";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import TextField from '@material-ui/core/TextField';
+import Button from "@material-ui/core/Button";
+import { writeNewTrackPain } from "../FirebaseOperations";
+import firebase from "../firebase.js";
+import { Redirect } from "react-router-dom";
+import * as R from "ramda";
+import { validateTrackPainData } from "../Validations.js"
+import { validateSelectedValue } from "../Validations.js"
 
 const styles = theme => ({
   root: {
@@ -33,8 +47,28 @@ const styles = theme => ({
   slider: {
     maxWidth: 400,
     margin: theme.spacing.unit * 3
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2
+  },
+  formControl: {
+    margin: theme.spacing.unit * 3,
+    minWidth: 120
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 400,
+  },
+  button: {
+    marginTop: theme.spacing.unit * 2
   }
 });
+
+const {
+  moodState,
+  painDescription
+} = trackPainData;
 
 class TrackPain extends Component {
   constructor(props) {
@@ -44,15 +78,83 @@ class TrackPain extends Component {
       startDate: new Date(),
       endDate: new Date(),
       eventDuration: "Duration: 00",
-      painIntensity: 0
+      painIntensity: 0,
+      description: "",
+      mood: "",
+      user: true,
+      datesError: "",
+      sectionError: "",
+      descriptionError: "",
+      painIntensityError: "",
+      moodError: "",
+      notes: "",
+      painIsIn:""
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.setEventDuration = this.setEventDuration.bind(this);
+    this.compareDates = this.compareDates.bind(this);
     this.setPainIntensity = this.setPainIntensity.bind(this);
+    this.getFirebasePayload = this.getFirebasePayload.bind(this);
+    this.reviewSelectedValue = this.reviewSelectedValue.bind(this);
+    this.updateParentState = this.updateParentState.bind(this);
+    this.clearParentState = this.clearParentState.bind(this);
   }
 
+  /**
+   * updateParentState - sets painIsIn in the state
+   * @param {Object} body part and (x,y) points
+   * @return {void}
+   */
+  updateParentState(bodyPart, x, y) {
+    const xLens = R.lensProp(bodyPart);
+    this.setState({
+      painIsIn: R.set(xLens, { "x": x, "y": y }, this.state.painIsIn)
+    });
+  };
+
+/**
+   * clearParentState - sets the empty string in painIsIn
+   * @param {void}
+   * @return {void}
+   */
+  clearParentState() {
+    this.setState({
+      painIsIn: ""
+    });
+  };
+  /**
+   * reviewSelectedValue - sets an error if the field is null
+   * @returns {void}
+   */
+  reviewSelectedValue = name => event =>{
+    const formControl = name + "Error";
+    const value = this.state[name];
+    this.setState({
+      [formControl]: validateSelectedValue(value)
+    });
+  };
+  /**
+   * getFirebasePayload - returns the data to send to Firebase
+   * @returns {Object} the Firebase payload
+   */
+getFirebasePayload() {
+  return R.pick(
+    [
+      "startDate",
+      "endDate",
+      "eventDuration",
+      "painIntensity",
+      "description",
+      "mood",
+      "notes",
+      "multiline",
+      "painIsIn"
+    ],
+    this.state);
+}
   /**
    * componentDidMount – sets in the state today's date and format it
    * @returns {void}
@@ -62,8 +164,33 @@ class TrackPain extends Component {
     this.setState({
       today: today
     });
+    this.authListener();
   }
-
+  /**
+   * authListener – sets in the state the user session status
+   * @returns {void}
+   */
+  authListener() {
+    this.unregisterAuthObserver =
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+        this.setState({ user: user });
+        }
+        else
+        {
+          this.setState({ user: null });
+        }
+      });
+  }
+/**
+   * componentWillUnmount – In order to avoid a memory leak whe need
+   * to un-register Firebase observers when the component unmounts
+   * @returns {void}
+   */
+  componentWillUnmount()
+  {
+    this.unregisterAuthObserver();
+  }
   /**
    * handleStartDateChange – the handleStartDateChange sets a start date for a
    * pain event
@@ -71,9 +198,11 @@ class TrackPain extends Component {
    * @return {void}
    */
   handleStartDateChange = date => {
-    this.setState({ startDate: date });
+    this.setState({ startDate: date },() =>
+    (this.state.endDate !== "") &&
+      this.setEventDuration()
+    );
   };
-
   /**
    * handleEndDateChange – the handleEndDateChange sets a end date for a
    * pain event
@@ -83,7 +212,42 @@ class TrackPain extends Component {
   handleEndDateChange = date => {
     this.setState({ endDate: date }, () => this.setEventDuration());
   };
-
+  /**
+   * handleChange – the handleChange sets the value selected in a select list
+   * or a multiline text
+   * @param {Object} the object name and event
+   * @return {void}
+   */
+  handleChange(event) {
+    const { target } = event;
+    const { value, name } = target;
+    const formControl = name + "Error";
+    this.setState({
+      [name]: value,
+      [formControl]: ""
+    });
+  }
+  /**
+   * compareDates – sets in the state datesError. compareAsc will compare the
+   * two dates and return 1 if the first date is after the second, -1 if the
+   * first date is before the second or 0 if dates are equal.
+   * @returns {Object} result of comparing the dates with compareAsc
+   */
+  compareDates() {
+    const { endDate, startDate } = this.state;
+    const datesComparison = compareAsc(startDate, endDate);
+    (datesComparison === 1) ? (
+      this.setState({
+        datesError: "First date must be before to the second.",
+        eventDuration: "Duration: 00"
+      })
+    ) : (
+      this.setState({
+        datesError: ""
+      })
+      )
+    return datesComparison;
+}
   /**
    * setEventDuration – setEventDuration calculates the difference between start and end dates
    * @return {void}
@@ -91,12 +255,13 @@ class TrackPain extends Component {
   setEventDuration = () => {
     const { endDate, startDate } = this.state;
     let eventDuration = distanceInWordsStrict(endDate, startDate, "h");
-    this.setState({
-      eventDuration:
-      eventDuration === "0 seconds"
+    (this.compareDates() != 1) &&
+      this.setState({
+        eventDuration:
+          eventDuration === "0 seconds"
           ? "Duration: 00"
           : "Duration: " + eventDuration
-    });
+      })
   };
 
   /**
@@ -107,15 +272,47 @@ class TrackPain extends Component {
    */
   setPainIntensity(event, value) {
     this.setState({
-      painIntensity: value
+      painIntensity: value,
+      painIntensityError: validateSelectedValue(value)
     });
   }
 
+  /**
+   * handleSubmit - sends Firebase payload
+   * @returns {void}
+   */
+  handleSubmit = () => {
+    const thereAreErrors = validateTrackPainData(this.getFirebasePayload());
+    if (thereAreErrors) {
+      this.setState({
+        sectionError: "The fields with * are required"
+      });
+    }
+    else if (this.state.painIsIn == ""){
+      this.setState({
+        sectionError: "Draw in the human body image where do/did you feel the pain"
+      });
+    }
+    else {
+      firebase.auth().onAuthStateChanged(user => {
+        user && writeNewTrackPain(user.uid, this.getFirebasePayload());
+      });
+      this.setState({
+        sectionError: ""
+      });
+    }
+  };
+
   render() {
     const { classes } = this.props;
-    const { today, startDate, endDate, painIntensity, eventDuration } = this.state;
+    const { today, startDate, endDate, painIntensity, eventDuration, mood,
+      description, notes, user, sectionError, datesError, painIntensityError,
+    descriptionError, moodError} = this.state;
+    const { from } = this.props.location.state || {
+      from: { pathname: "/log-in" }
+    };
 
-    return (
+    return user ? (
       <div className={classes.root}>
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -130,23 +327,30 @@ class TrackPain extends Component {
                 <DateTimePicker
                   value={startDate}
                   onChange={this.handleStartDateChange}
+                  onBlur={this.compareDates}
                   label="Start"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
                   disableOpenOnEnter
                   disableFuture={true}
                   className={classes.dpMargin}
+                  required
                 />
                 <DateTimePicker
                   value={endDate}
                   onChange={this.handleEndDateChange}
+                  onBlur={this.compareDates}
                   label="End"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
                   disableOpenOnEnter
                   disableFuture={true}
                   className={classes.dpMargin}
+                  required
                 />
+                <FormHelperText error={true}>
+                  {datesError}
+                </FormHelperText>
               </MuiPickersUtilsProvider>
               <Typography variant="title" className={classes.sectionMargin}>
                 {eventDuration}
@@ -158,24 +362,118 @@ class TrackPain extends Component {
                 pain at all and 10 the worst pain imaginable
               </Typography>
               <div className={classes.slider}>
-                <Typography id="label">Pain Intensity: ({painIntensity})</Typography>
+                <Typography id="label">Pain Intensity: ({painIntensity}) *</Typography>
                 <Slider
                   value={painIntensity}
                   min={0}
                   max={10}
                   step={1}
+                  id="painIntensity"
+                  name="painInsensity"
                   onChange={this.setPainIntensity}
+                  onBlur={this.reviewSelectedValue('painIntensity')}
                 />
+                <FormHelperText error={true}>
+                  {painIntensityError}
+                </FormHelperText>
               </div>
+            </div>
+            <div>
+              <FormControl required className={classes.formControl}>
+                <FormLabel component="legend">
+                  What word describe better your pain?
+                </FormLabel>
+                <Select
+                  value={description}
+                  onChange={this.handleChange}
+                  onBlur={this.reviewSelectedValue('description')}
+                  name="description"
+                  id="description"
+                  displayEmpty
+                  className={classes.selectEmpty}
+                >
+                  <MenuItem value="" disabled>
+                    Select one option
+                  </MenuItem>
+                  {painDescription.map(description => (
+                    <MenuItem key={description.value} value={description.label}>
+                      {description.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText error={true}>
+                  {descriptionError}
+                </FormHelperText>
+              </FormControl>
+            </div>
+            <div>
+              <FormControl required className={classes.formControl}>
+                <FormLabel component="legend">
+                  How is your mood like?
+                </FormLabel>
+                <Select
+                  value={mood}
+                  onChange={this.handleChange}
+                  onBlur={this.reviewSelectedValue('mood')}
+                  name="mood"
+                  id="mood"
+                  displayEmpty
+                  className={classes.selectEmpty}
+                  required
+                >
+                  <MenuItem value="" disabled>
+                    Select one option
+                  </MenuItem>
+                  {moodState.map(mood => (
+                    <MenuItem key={mood.value} value={mood.label}>
+                      {mood.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText error={true}>
+                  {moodError}
+                </FormHelperText>
+              </FormControl>
+            </div>
+            <div>
+              <TextField
+                id="notes"
+                name="notes"
+                label="Include here any notes related to the pain"
+                multiline
+                rowsMax="4"
+                value={notes}
+                onChange={this.handleChange}
+                className={classes.textField}
+                margin="normal"
+              />
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.handleSubmit}
+                className={classes.button}
+              >
+                Register pain event
+              </Button>
+              <FormHelperText error={true}>
+                {sectionError}
+              </FormHelperText>
             </div>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
-              <Canvas />
+              <Canvas
+                updateParentState={this.updateParentState}
+                clearParentState={this.clearParentState}
+              />
             </div>
           </Grid>
         </Grid>
       </div>
+      ): (
+        <Redirect to={from} />
     );
   }
 }
