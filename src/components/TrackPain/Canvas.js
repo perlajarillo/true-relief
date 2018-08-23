@@ -3,7 +3,7 @@ import body from "../../images/Body-Pictures.jpg";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-
+import trackPainData from "./literals/trackPainData.js";
 const colors = ["#4caf50", "#ffd95b", "#ff7043", "#c41c00"];
 
 const styles = theme => ({
@@ -18,6 +18,9 @@ const styles = theme => ({
     border: "2px solid #ccc"
   }
 });
+const {
+  humanBodyData
+} = trackPainData;
 
 class Canvas extends Component {
   constructor(props) {
@@ -34,6 +37,30 @@ class Canvas extends Component {
     this.stopDrawing = this.stopDrawing.bind(this);
     this.clearCanvas = this.clearCanvas.bind(this);
     this.setColor = this.setColor.bind(this);
+    this.getBodyPartTerminology = this.getBodyPartTerminology.bind(this);
+  }
+
+ /**
+   *getBodyPartTerminology – compare the coordinates the user has
+   clicked in the screen and compared them with the ranges we have, then
+   the humanBody part and coordinates are set in the parent state
+   * @param {Number} coordinates X and Y
+   * @return {void} body part name
+   */
+  getBodyPartTerminology(x, y) {
+    humanBodyData.map( bodyData=> {
+      let bodyPart = bodyData.bodyPart;
+      let xStart = bodyData.xStart;
+      let yStart = bodyData.yStart;
+      let xEnd = bodyData.xEnd;
+      let yEnd = bodyData.yEnd;
+      /**Compare the given coordinates with the ranges for every body name*/
+      const isOnRange = (x >= parseInt(xStart) && x <= parseInt(xEnd))
+        && (y >= parseInt(yStart) && y <= parseInt(yEnd));
+      /**If there are coincidences the parentState is updated*/
+      isOnRange &&
+          this.props.updateParentState(bodyPart, x, y);
+    });
   }
 
   /**
@@ -88,13 +115,12 @@ class Canvas extends Component {
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
     ctx.lineWidth = 20;
-
     let nextX = startX;
     let nextY = startY;
     ctx.beginPath();
     // start from
     ctx.moveTo(startX, startY);
-    // go to
+    this.getBodyPartTerminology(nextX, nextY);
     ctx.lineTo(nextX, nextY);
     ctx.stroke();
   };
@@ -116,6 +142,7 @@ class Canvas extends Component {
     const ctx = this.canvas.current.getContext("2d");
     this.activeColor = null;
     ctx.clearRect(0, 0, this.canvas.current.width, this.canvas.current.height);
+    this.props.clearParentState();
   };
 
   render() {
