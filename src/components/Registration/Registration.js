@@ -59,7 +59,6 @@ const PAIN_CONDITIONS = [
 class VerticalLinearStepper extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       activeStep: 0,
       needs: [],
@@ -83,6 +82,7 @@ class VerticalLinearStepper extends Component {
       errorSection: "",
       errorcupsOfCoffee: "",
       errordrinksOfAlcohol: "",
+      user: true,
       open: false
     };
 
@@ -592,17 +592,41 @@ class VerticalLinearStepper extends Component {
       activeStep: 0
     });
   };
+  componentDidMount() {
+    this.authListener();
+  }
+  authListener() {
+    this.unregisterAuthObserver =
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ user: user });
+      }
+      else
+      {
+        this.setState({ user: null });
+      }
+    });
+  }
+
+   /* In order to avoid a memory leak we need to un-register Firebase observers when the component unmounts */
+  componentWillUnmount()
+  {
+    this.unregisterAuthObserver();
+  }
+
 
   render() {
     const { classes } = this.props;
     const steps = this.getSteps();
     const { activeStep } = this.state;
+    const { user } = this.state;
     const { from } = this.props.location.state || {
       from: { pathname: "/log-in" }
     };
 
-    return firebase.auth().currentUser ? (
-      <div>
+  return user ? (
+    <div>
+
         <Stepper
           activeStep={activeStep}
           orientation="vertical"
