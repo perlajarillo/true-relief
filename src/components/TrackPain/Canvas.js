@@ -171,8 +171,8 @@ class Canvas extends Component {
         </div>
         <canvas
           ref={this.canvas}
-          width={300}
-          height={550}
+          width={455}
+          height={548}
           className={classes.bgImage}
           onMouseDown={this.startDrawing}
           onMouseMove={this.draw}
