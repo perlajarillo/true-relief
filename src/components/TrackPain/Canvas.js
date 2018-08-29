@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import body from "../../images/Body-Pictures.jpg";
+import front from "../../images/front.jpg";
+import back from "../../images/back.jpg";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -13,19 +14,27 @@ const styles = theme => ({
   input: {
     display: "none"
   },
-  bgImage: {
-    background: "url(" + body + ")",
+  front: {
+    background: "url(" + front + ")",
+    border: "2px solid #ccc"
+  },
+  back: {
+    background: "url(" + back + ")",
     border: "2px solid #ccc"
   }
 });
 const {
-  humanBodyData
+  humanBodyFrontData,
+  humanBodyBackData
 } = trackPainData;
 
 class Canvas extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      front: true,
+      btnText: "Show back"
+    };
     this.isDrawing = false;
     this.isMouseDown = false;
     this.activeColor = null;
@@ -38,6 +47,7 @@ class Canvas extends Component {
     this.clearCanvas = this.clearCanvas.bind(this);
     this.setColor = this.setColor.bind(this);
     this.getBodyPartTerminology = this.getBodyPartTerminology.bind(this);
+    this.switchSilhouette = this.switchSilhouette.bind(this);
   }
 
  /**
@@ -48,21 +58,62 @@ class Canvas extends Component {
    * @return {void} body part name
    */
   getBodyPartTerminology(x, y) {
-    humanBodyData.map( bodyData=> {
-      let bodyPart = bodyData.bodyPart;
-      let xStart = bodyData.xStart;
-      let yStart = bodyData.yStart;
-      let xEnd = bodyData.xEnd;
-      let yEnd = bodyData.yEnd;
-      /**Compare the given coordinates with the ranges for every body name*/
-      const isOnRange = (x >= parseInt(xStart) && x <= parseInt(xEnd))
-        && (y >= parseInt(yStart) && y <= parseInt(yEnd));
-      /**If there are coincidences the parentState is updated*/
-      isOnRange &&
+    this.state.front ? (
+      humanBodyFrontData.map(bodyData => {
+        let bodyPart = bodyData.bodyPart;
+        let xStart = bodyData.xStart;
+        let yStart = bodyData.yStart;
+        let xEnd = bodyData.xEnd;
+        let yEnd = bodyData.yEnd;
+        /**Compare the given coordinates with the ranges for every body name*/
+        const isOnRange = (x >= parseInt(xStart) && x <= parseInt(xEnd))
+          && (y >= parseInt(yStart) && y <= parseInt(yEnd));
+        /**If there are coincidences the parentState is updated*/
+        isOnRange &&
           this.props.updateParentState(bodyPart, x, y);
-    });
+      })
+    ) :
+      (
+        humanBodyBackData.map(bodyData => {
+          let bodyPart = bodyData.bodyPart;
+          let xStart = bodyData.xStart;
+          let yStart = bodyData.yStart;
+          let xEnd = bodyData.xEnd;
+          let yEnd = bodyData.yEnd;
+          /**Compare the given coordinates with the ranges for every body name*/
+          const isOnRange = (x >= parseInt(xStart) && x <= parseInt(xEnd))
+            && (y >= parseInt(yStart) && y <= parseInt(yEnd));
+          /**If there are coincidences the parentState is updated*/
+          isOnRange &&
+            this.props.updateParentState(bodyPart, x, y);
+        })
+      );
   }
-
+ /**
+   *switchSilhouette – change between the front and back silhouette pictures
+   * and set the state with the text for the bottom and the value of front.
+   * When front is true the picture with the front of the human body will appear,
+   * when front is false the picture with the back of the human body will appear.
+   * @param {void}
+   * @return {void}
+   */
+  switchSilhouette() {
+    const ctx = this.canvas.current.getContext("2d");
+    this.activeColor = null;
+    ctx.clearRect(0, 0, this.canvas.current.width, this.canvas.current.height);
+    this.state.front ?
+      (
+        this.setState({
+          front: false,
+          btnText: "Show front"
+        })
+      ) : (
+        this.setState({
+          front: true,
+          btnText: "Show back"
+        })
+      )
+  }
   /**
    * getCoords – gets coordinates from where the user has clicked the screen
    * @param {Object} event
@@ -147,6 +198,7 @@ class Canvas extends Component {
 
   render() {
     const { classes } = this.props;
+    const { front, btnText } = this.state;
     return (
       <div>
         <div>
@@ -169,17 +221,32 @@ class Canvas extends Component {
             </Button>
           ))}
         </div>
-        <canvas
-          ref={this.canvas}
-          width={455}
-          height={548}
-          className={classes.bgImage}
-          onMouseDown={this.startDrawing}
-          onMouseMove={this.draw}
-          onMouseUp={this.stopDrawing}
-          onMouseLeave={this.stopDrawing}
-        />
+        {front ?
+          (
+            <canvas
+              ref={this.canvas}
+              width={250}
+              height={550}
+              className={classes.front}
+              onMouseDown={this.startDrawing}
+              onMouseMove={this.draw}
+              onMouseUp={this.stopDrawing}
+              onMouseLeave={this.stopDrawing}
+            />
+          ) : (
+            <canvas
+              ref={this.canvas}
+              width={250}
+              height={550}
+              className={classes.back}
+              onMouseDown={this.startDrawing}
+              onMouseMove={this.draw}
+              onMouseUp={this.stopDrawing}
+              onMouseLeave={this.stopDrawing}
+            />
+          )}
         <div>
+
           <Button
             variant="contained"
             color="primary"
@@ -188,6 +255,15 @@ class Canvas extends Component {
             onClick={this.clearCanvas}
           >
             Clear
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            size="medium"
+            className={classes.button}
+            onClick={this.switchSilhouette}
+          >
+            {btnText}
           </Button>
         </div>
       </div>
