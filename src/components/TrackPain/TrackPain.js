@@ -1,10 +1,9 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import Icon from "@material-ui/core/Icon";
 import Slider from "@material-ui/lab/Slider";
 import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
 import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
@@ -20,12 +19,10 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
-import { writeNewTrackPain } from "../FirebaseOperations";
-import firebase from "../firebase.js";
-import { Redirect } from "react-router-dom";
+import { writeNewTrackPain } from "../../firebase/operations";
 import * as R from "ramda";
 import { validateTrackPainData } from "../Validations.js"
-import { validateSelectedValue } from "../Validations.js"
+import { validateSelectedValue } from "../Validations.js";
 
 const styles = theme => ({
   root: {
@@ -73,7 +70,6 @@ const {
 class TrackPain extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       startDate: new Date(),
       endDate: new Date(),
@@ -81,7 +77,6 @@ class TrackPain extends Component {
       painIntensity: 0,
       description: "",
       mood: "",
-      user: true,
       datesError: "",
       sectionError: "",
       descriptionError: "",
@@ -90,6 +85,7 @@ class TrackPain extends Component {
       notes: "",
       painIsIn:""
     };
+    console.log(this.state, props);
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
@@ -164,33 +160,8 @@ getFirebasePayload() {
     this.setState({
       today: today
     });
-    this.authListener();
   }
-  /**
-   * authListener – sets in the state the user session status
-   * @returns {void}
-   */
-  authListener() {
-    this.unregisterAuthObserver =
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-        this.setState({ user: user });
-        }
-        else
-        {
-          this.setState({ user: null });
-        }
-      });
-  }
-/**
-   * componentWillUnmount – In order to avoid a memory leak whe need
-   * to un-register Firebase observers when the component unmounts
-   * @returns {void}
-   */
-  componentWillUnmount()
-  {
-    this.unregisterAuthObserver();
-  }
+
   /**
    * handleStartDateChange – the handleStartDateChange sets a start date for a
    * pain event
@@ -203,6 +174,7 @@ getFirebasePayload() {
       this.setEventDuration()
     );
   };
+
   /**
    * handleEndDateChange – the handleEndDateChange sets a end date for a
    * pain event
@@ -212,6 +184,7 @@ getFirebasePayload() {
   handleEndDateChange = date => {
     this.setState({ endDate: date }, () => this.setEventDuration());
   };
+
   /**
    * handleChange – the handleChange sets the value selected in a select list
    * or a multiline text
@@ -227,6 +200,7 @@ getFirebasePayload() {
       [formControl]: ""
     });
   }
+
   /**
    * compareDates – sets in the state datesError. compareAsc will compare the
    * two dates and return 1 if the first date is after the second, -1 if the
@@ -247,7 +221,8 @@ getFirebasePayload() {
       })
       )
     return datesComparison;
-}
+  }
+
   /**
    * setEventDuration – setEventDuration calculates the difference between start and end dates
    * @return {void}
@@ -255,7 +230,7 @@ getFirebasePayload() {
   setEventDuration = () => {
     const { endDate, startDate } = this.state;
     let eventDuration = distanceInWordsStrict(endDate, startDate, "h");
-    (this.compareDates() != 1) &&
+    (this.compareDates() !== 1) &&
       this.setState({
         eventDuration:
           eventDuration === "0 seconds"
@@ -288,15 +263,13 @@ getFirebasePayload() {
         sectionError: "The fields with * are required"
       });
     }
-    else if (this.state.painIsIn == ""){
+    else if (this.state.painIsIn === "") {
       this.setState({
         sectionError: "Draw in the human body image where do/did you feel the pain"
       });
     }
     else {
-      firebase.auth().onAuthStateChanged(user => {
-        user && writeNewTrackPain(user.uid, this.getFirebasePayload());
-      });
+      writeNewTrackPain(/* authUser.uid,  */this.getFirebasePayload());
       this.setState({
         sectionError: ""
       });
@@ -306,13 +279,10 @@ getFirebasePayload() {
   render() {
     const { classes } = this.props;
     const { today, startDate, endDate, painIntensity, eventDuration, mood,
-      description, notes, user, sectionError, datesError, painIntensityError,
+      description, notes, sectionError, datesError, painIntensityError,
     descriptionError, moodError} = this.state;
-    const { from } = this.props.location.state || {
-      from: { pathname: "/log-in" }
-    };
 
-    return user ? (
+    return (
       <div className={classes.root}>
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -472,8 +442,6 @@ getFirebasePayload() {
           </Grid>
         </Grid>
       </div>
-      ): (
-        <Redirect to={from} />
     );
   }
 }

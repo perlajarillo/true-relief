@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
@@ -6,17 +6,12 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
+
 import { auth } from "../../firebase";
-
-// importing route Components
-import { Link } from "react-router-dom";
-
-import logo from "../../images/logo.png";
 
 const styles = theme => ({
   formControl: {
@@ -35,92 +30,70 @@ const styles = theme => ({
     margin: "50px auto",
     backgroundColor: "#fafafa"
   },
-  pos: {
-    marginBottom: 24
-  },
   media: {
     height: 0,
     paddingTop: "56.25%"
   }
 });
 
-class LogIn extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-
+class PasswordChange extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      email: "",
       password: "",
-      error: ""
-    };
+      confirmPassword: "",
+      error: null,
+      successMsg: null
+    }
+
   }
 
   handleChange = event => {
     const { target } = event;
     const { value, name } = target;
+
     this.setState({
       [name]: value
     });
   };
 
   handleSubmit = event => {
+    const { password } = this.state;
     event.preventDefault();
-    const { email, password } = this.state;
-    const { history } = this.props;
 
-    auth
-      .onLogIn(email, password)
+    auth.onUpdatePassword(password)
       .then(() => {
         this.setState({
-          email: email,
-          password: password
+          password: password,
+          successMsg: "Your Password has been change successfully"
         });
-        history.push("/");
       })
       .catch(error => {
         this.setState({
           error: error.message
         });
-      });
-  };
+      })
+  }
 
   render() {
+    const { password, confirmPassword, error, successMsg } = this.state;
     const { classes } = this.props;
-    const { email, password } = this.state;
 
     return (
       <div>
-        <Card className={classes.card} elevation={0}>
-          <CardMedia
-            className={classes.media}
-            image={logo}
-            title="True Relief"
-          />
+        <Card className={(classes.root, classes.card)} elevation={0}>
+          <Typography variant="title" className={classes.text}>
+            Change Password
+          </Typography>
           <form onSubmit={this.handleSubmit}>
             <CardContent>
-              <FormControl
+            <FormControl
                 className={classes.formControl}
                 fullWidth
                 aria-describedby="required"
                 aria-required="true"
               >
-                <InputLabel htmlFor="email">E-mail</InputLabel>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={this.handleChange}
-                />
-                <FormHelperText id="required">Required*</FormHelperText>
-              </FormControl>
-              <FormControl
-                className={classes.formControl}
-                fullWidth
-                aria-describedby="required"
-                aria-required="true"
-              >
-                <InputLabel htmlFor="password">Password</InputLabel>
+                <InputLabel htmlFor="password">New Password</InputLabel>
                 <Input
                   id="password"
                   name="password"
@@ -130,6 +103,32 @@ class LogIn extends React.Component {
                 />
                 <FormHelperText id="required">Required*</FormHelperText>
               </FormControl>
+              <FormControl
+                className={classes.formControl}
+                fullWidth
+                aria-describedby="required"
+                aria-required="true"
+              >
+                <InputLabel htmlFor="confirmPassword">
+                  Confirm New Password
+                </InputLabel>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="Password"
+                  value={confirmPassword}
+                  onChange={this.handleChange}
+                />
+                <FormHelperText id="required">Required*</FormHelperText>
+              </FormControl>
+              <FormHelperText
+                id="error"
+                name="error"
+                value={error}
+                onChange={this.handleChange}
+              >
+                {error ? error : successMsg}
+              </FormHelperText>
               <Button
                 variant="contained"
                 type="submit"
@@ -137,42 +136,11 @@ class LogIn extends React.Component {
                 fullWidth
                 className={classes.button}
               >
-                Log In
+                Change Password
               </Button>
-              <Button
-                variant="outlined"
-                type="submit"
-                color="primary"
-                fullWidth
-                component={Link}
-                to="/password-reset"
-                className={classes.button}
-              >
-                Forgot your password?
-              </Button>
-              <FormHelperText
-                id="error"
-                name="error"
-                value={this.state.error}
-                onChange={this.handleChange}
-              >
-                {this.state.error}
-              </FormHelperText>
             </CardContent>
           </form>
-          <Typography className={classes.text} variant="body1">
-            Not registered yet?
-          </Typography>
           <CardActions>
-            <Button
-              variant="outlined"
-              color="primary"
-              fullWidth
-              component={Link}
-              to="/disclaimer"
-            >
-              Create an account
-            </Button>
           </CardActions>
         </Card>
       </div>
@@ -180,8 +148,8 @@ class LogIn extends React.Component {
   }
 }
 
-LogIn.propTypes = {
+PasswordChange.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(LogIn);
+export default withStyles(styles)(PasswordChange);

@@ -14,9 +14,8 @@ import Preferences from "./Preferences";
 import Challenges from "./Challenges";
 import PainHistory from "./PainHistory";
 import MoreConditions from "./MoreConditions";
-import { writeNewPatient } from "../FirebaseOperations.js";
+import { writeNewPatient } from "../../firebase/operations";
 import * as R from "ramda";
-import firebase from "../firebase.js";
 import { validateString } from "../Validations.js";
 import { validateFreeInput } from "../Validations.js";
 import { validateDemographicData } from "../Validations.js";
@@ -25,7 +24,6 @@ import { validatePainConditionData } from "../Validations.js";
 import { validateThereIsAtLeastOneChallenge } from "../Validations.js";
 import { validateThereIsAtLeastOneNeed } from "../Validations.js";
 import { validateAge } from "../Validations.js";
-import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -558,9 +556,8 @@ class VerticalLinearStepper extends Component {
   handleNext = () => {
     if (this.state.activeStep === this.getSteps().length - 1) {
       //We need to review if there are changes in the session status
-      firebase.auth().onAuthStateChanged(user => {
-        user && writeNewPatient(user.uid, this.getFirebasePayload());
-      });
+      /* writeNewPatient(authUser.user.uid, this.getFirebasePayload()); */
+
     }
     let errorsAndMsg = this.checkForErrors(this.state.activeStep);
     !errorsAndMsg[0]
@@ -597,11 +594,7 @@ class VerticalLinearStepper extends Component {
     const { classes } = this.props;
     const steps = this.getSteps();
     const { activeStep } = this.state;
-    const { from } = this.props.location.state || {
-      from: { pathname: "/log-in" }
-    };
-
-    return firebase.auth().currentUser ? (
+    return (
       <div>
         <Stepper
           activeStep={activeStep}
@@ -649,8 +642,6 @@ class VerticalLinearStepper extends Component {
           </Paper>
         )}
       </div>
-    ) : (
-      <Redirect to={from} />
     );
   }
 }
