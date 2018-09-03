@@ -24,6 +24,7 @@ import { validatePainConditionData } from "../Validations.js";
 import { validateThereIsAtLeastOneChallenge } from "../Validations.js";
 import { validateThereIsAtLeastOneNeed } from "../Validations.js";
 import { validateAge } from "../Validations.js";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -80,8 +81,8 @@ class VerticalLinearStepper extends Component {
       errorSection: "",
       errorcupsOfCoffee: "",
       errordrinksOfAlcohol: "",
-      user: true,
-      open: false
+      open: false,
+      submitted: false
     };
 
     this.updateParentState = this.updateParentState.bind(this);
@@ -553,11 +554,13 @@ class VerticalLinearStepper extends Component {
    * last step
    * @returns {void}
    */
-  handleNext = () => {
+  handleNext = authUser => {
     if (this.state.activeStep === this.getSteps().length - 1) {
       //We need to review if there are changes in the session status
-      /* writeNewPatient(authUser.user.uid, this.getFirebasePayload()); */
-
+      writeNewPatient(authUser.uid, this.getFirebasePayload());
+      this.setState({
+        submitted: true
+      });
     }
     let errorsAndMsg = this.checkForErrors(this.state.activeStep);
     !errorsAndMsg[0]
@@ -613,48 +616,48 @@ class VerticalLinearStepper extends Component {
 
 
   render() {
-    const { classes } = this.props;
+    const { classes, authUser } = this.props;
     const steps = this.getSteps();
-    const { activeStep } = this.state;
-    return (
+    const { activeStep,submitted } = this.state;
+    return !submitted ? (
       <div>
-        <Stepper
-          activeStep={activeStep}
-          orientation="vertical"
-          className={classes.root}
-        >
-          {steps.map((label, index) => {
-            return (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-                <StepContent>
-                  {this.getStepContent(index)}
-                  <div className={classes.actionsContainer}>
-                    <div>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={activeStep === 0}
-                        onClick={this.handleBack}
-                        className={classes.button}
-                      >
-                        Back
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleNext}
-                        className={classes.button}
-                      >
-                        {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                      </Button>
-                    </div>
-                  </div>
-                </StepContent>
-              </Step>
-            );
-          })}
-        </Stepper>
+            <Stepper
+              activeStep={activeStep}
+              orientation="vertical"
+              className={classes.root}
+            >
+              {steps.map((label, index) => {
+                return (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                    <StepContent>
+                      {this.getStepContent(index)}
+                      <div className={classes.actionsContainer}>
+                        <div>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={activeStep === 0}
+                            onClick={this.handleBack}
+                            className={classes.button}
+                          >
+                            Back
+                        </Button>
+                          {<Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => this.handleNext(authUser)}
+                            className={classes.button}
+                          >
+                            {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                          </Button>}
+                        </div>
+                      </div>
+                    </StepContent>
+                  </Step>
+                );
+              })}
+            </Stepper>
         {activeStep === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>All steps completed - you&quot;re finished</Typography>
@@ -664,7 +667,8 @@ class VerticalLinearStepper extends Component {
           </Paper>
         )}
       </div>
-    );
+    )
+    : (<Redirect to="/trackPain"/>);
   }
 }
 
