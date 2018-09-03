@@ -12,9 +12,9 @@ import Disclaimer from "./SignUp/Disclaimer/Disclaimer";
 import Policy from "./SignUp/Policy/policy";
 import LogIn from "./LogIn/LogIn";
 import PasswordForget from "./PasswordForget/PasswordForget";
-import Registration from "./Registration/Registration";
+import Registration from "./Registration";
 import Settings from "./Settings/Settings";
-import TrackPain from "./TrackPain/TrackPain";
+import TrackPain from "./TrackPain";
 import theme from "./theme";
 import withAuthentication from "./WithAuthentication";
 

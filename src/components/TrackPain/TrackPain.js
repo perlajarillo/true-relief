@@ -83,9 +83,9 @@ class TrackPain extends Component {
       painIntensityError: "",
       moodError: "",
       notes: "",
-      painIsIn:""
+      painIsIn: "",
+      successMsg: ""
     };
-    console.log(this.state, props);
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
@@ -256,7 +256,7 @@ getFirebasePayload() {
    * handleSubmit - sends Firebase payload
    * @returns {void}
    */
-  handleSubmit = () => {
+  handleSubmit = authUser => {
     const thereAreErrors = validateTrackPainData(this.getFirebasePayload());
     if (thereAreErrors) {
       this.setState({
@@ -269,18 +269,19 @@ getFirebasePayload() {
       });
     }
     else {
-      writeNewTrackPain(/* authUser.uid,  */this.getFirebasePayload());
+      writeNewTrackPain(authUser.uid, this.getFirebasePayload());
       this.setState({
-        sectionError: ""
+        sectionError: "",
+        successMsg: "Your entry was submitted"
       });
     }
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, authUser } = this.props;
     const { today, startDate, endDate, painIntensity, eventDuration, mood,
       description, notes, sectionError, datesError, painIntensityError,
-    descriptionError, moodError} = this.state;
+    descriptionError, moodError, successMsg} = this.state;
 
     return (
       <div className={classes.root}>
@@ -422,13 +423,13 @@ getFirebasePayload() {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={this.handleSubmit}
+                onClick={() => this.handleSubmit(authUser)}
                 className={classes.button}
               >
                 Register pain event
               </Button>
               <FormHelperText error={true}>
-                {sectionError}
+                {sectionError ? sectionError : successMsg}
               </FormHelperText>
             </div>
           </Grid>
