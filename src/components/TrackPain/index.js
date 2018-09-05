@@ -3,9 +3,9 @@ import TrackPain from "./TrackPain";
 import AuthUserContext from "../AuthUserContext";
 
 
-const TrackPainWithContext = () => <AuthUserContext.Consumer>
-  {authUser => <TrackPain authUser={authUser}/>}
-</AuthUserContext.Consumer>
+const TrackPainWithContext = (props) => (<AuthUserContext.Consumer>
+  {authUser => <TrackPain {...props} authUser={authUser} />}
+</AuthUserContext.Consumer>);
 
 
 export default TrackPainWithContext;

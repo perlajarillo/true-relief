@@ -149,6 +149,7 @@ class TrackPain extends Component {
       this.state
     );
   }
+
   /**
    * componentDidMount – sets in the state today's date and format it
    * @returns {void}
@@ -167,10 +168,7 @@ class TrackPain extends Component {
    * @return {void}
    */
   handleStartDateChange = date => {
-    this.setState(
-      { startDate: date },
-      () => this.state.endDate !== "" && this.setEventDuration()
-    );
+    this.setState({ startDate: date });
   };
 
   /**
@@ -311,7 +309,6 @@ class TrackPain extends Component {
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
                   format={"d MMM YYYY h:mm a"}
-
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
@@ -324,7 +321,6 @@ class TrackPain extends Component {
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
                   format={"d MMM YYYY h:mm a"}
-
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
