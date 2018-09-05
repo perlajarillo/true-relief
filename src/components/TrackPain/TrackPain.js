@@ -17,11 +17,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { writeNewTrackPain } from "../../firebase/operations";
 import * as R from "ramda";
-import { validateTrackPainData } from "../Validations.js"
+import { validateTrackPainData } from "../Validations.js";
 import { validateSelectedValue } from "../Validations.js";
 
 const styles = theme => ({
@@ -55,17 +55,14 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 400,
+    width: 400
   },
   button: {
     marginTop: theme.spacing.unit * 2
   }
 });
 
-const {
-  moodState,
-  painDescription
-} = trackPainData;
+const { moodState, painDescription } = trackPainData;
 
 class TrackPain extends Component {
   constructor(props) {
@@ -107,11 +104,11 @@ class TrackPain extends Component {
   updateParentState(bodyPart, x, y) {
     const xLens = R.lensProp(bodyPart);
     this.setState({
-      painIsIn: R.set(xLens, { "x": x, "y": y }, this.state.painIsIn)
+      painIsIn: R.set(xLens, { x: x, y: y }, this.state.painIsIn)
     });
-  };
+  }
 
-/**
+  /**
    * clearParentState - sets the empty string in painIsIn
    * @param {void}
    * @return {void}
@@ -120,12 +117,12 @@ class TrackPain extends Component {
     this.setState({
       painIsIn: ""
     });
-  };
+  }
   /**
    * reviewSelectedValue - sets an error if the field is null
    * @returns {void}
    */
-  reviewSelectedValue = name => event =>{
+  reviewSelectedValue = name => event => {
     const formControl = name + "Error";
     const value = this.state[name];
     this.setState({
@@ -136,31 +133,32 @@ class TrackPain extends Component {
    * getFirebasePayload - returns the data to send to Firebase
    * @returns {Object} the Firebase payload
    */
-getFirebasePayload() {
-  return R.pick(
-    [
-      "startDate",
-      "endDate",
-      "eventDuration",
-      "painIntensity",
-      "description",
-      "mood",
-      "notes",
-      "multiline",
-      "painIsIn"
-    ],
-    this.state);
-}
+  getFirebasePayload() {
+    return R.pick(
+      [
+        "startDate",
+        "endDate",
+        "eventDuration",
+        "painIntensity",
+        "description",
+        "mood",
+        "notes",
+        "multiline",
+        "painIsIn"
+      ],
+      this.state
+    );
+  }
   /**
    * componentDidMount – sets in the state today's date and format it
    * @returns {void}
    */
   componentDidMount = () => {
-    const today = format(new Date(), "dddd MMMM D[,] YYYY h[:]mm a");
+    const today = format(new Date(), "EEEE MMMM d, YYYY h:mm a");
     this.setState({
       today: today
     });
-  }
+  };
 
   /**
    * handleStartDateChange – the handleStartDateChange sets a start date for a
@@ -169,9 +167,9 @@ getFirebasePayload() {
    * @return {void}
    */
   handleStartDateChange = date => {
-    this.setState({ startDate: date },() =>
-    (this.state.endDate !== "") &&
-      this.setEventDuration()
+    this.setState(
+      { startDate: date },
+      () => this.state.endDate !== "" && this.setEventDuration()
     );
   };
 
@@ -210,16 +208,14 @@ getFirebasePayload() {
   compareDates() {
     const { endDate, startDate } = this.state;
     const datesComparison = compareAsc(startDate, endDate);
-    (datesComparison === 1) ? (
-      this.setState({
-        datesError: "First date must be before to the second.",
-        eventDuration: "Duration: 00"
-      })
-    ) : (
-      this.setState({
-        datesError: ""
-      })
-      )
+    datesComparison === 1
+      ? this.setState({
+          datesError: "First date must be before to the second.",
+          eventDuration: "Duration: 00"
+        })
+      : this.setState({
+          datesError: ""
+        });
     return datesComparison;
   }
 
@@ -230,13 +226,13 @@ getFirebasePayload() {
   setEventDuration = () => {
     const { endDate, startDate } = this.state;
     let eventDuration = distanceInWordsStrict(endDate, startDate, "h");
-    (this.compareDates() !== 1) &&
+    this.compareDates() !== 1 &&
       this.setState({
         eventDuration:
           eventDuration === "0 seconds"
-          ? "Duration: 00"
-          : "Duration: " + eventDuration
-      })
+            ? "Duration: 00"
+            : "Duration: " + eventDuration
+      });
   };
 
   /**
@@ -262,13 +258,12 @@ getFirebasePayload() {
       this.setState({
         sectionError: "The fields with * are required"
       });
-    }
-    else if (this.state.painIsIn === "") {
+    } else if (this.state.painIsIn === "") {
       this.setState({
-        sectionError: "Draw in the human body image where do/did you feel the pain"
+        sectionError:
+          "Draw in the human body image where do/did you feel the pain"
       });
-    }
-    else {
+    } else {
       writeNewTrackPain(authUser.uid, this.getFirebasePayload());
       this.setState({
         sectionError: "",
@@ -279,9 +274,22 @@ getFirebasePayload() {
 
   render() {
     const { classes, authUser } = this.props;
-    const { today, startDate, endDate, painIntensity, eventDuration, mood,
-      description, notes, sectionError, datesError, painIntensityError,
-    descriptionError, moodError, successMsg} = this.state;
+    const {
+      today,
+      startDate,
+      endDate,
+      painIntensity,
+      eventDuration,
+      mood,
+      description,
+      notes,
+      sectionError,
+      datesError,
+      painIntensityError,
+      descriptionError,
+      moodError,
+      successMsg
+    } = this.state;
 
     return (
       <div className={classes.root}>
@@ -299,10 +307,11 @@ getFirebasePayload() {
                   value={startDate}
                   onChange={this.handleStartDateChange}
                   onBlur={this.compareDates}
-                  label="Start"
+                  label="Start date"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
-                  disableOpenOnEnter
+                  format={"d MMM YYYY h:mm a"}
+
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
@@ -311,17 +320,16 @@ getFirebasePayload() {
                   value={endDate}
                   onChange={this.handleEndDateChange}
                   onBlur={this.compareDates}
-                  label="End"
+                  label="End date"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
-                  disableOpenOnEnter
+                  format={"d MMM YYYY h:mm a"}
+
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
                 />
-                <FormHelperText error={true}>
-                  {datesError}
-                </FormHelperText>
+                <FormHelperText error={true}>{datesError}</FormHelperText>
               </MuiPickersUtilsProvider>
               <Typography variant="title" className={classes.sectionMargin}>
                 {eventDuration}
@@ -333,7 +341,9 @@ getFirebasePayload() {
                 pain at all and 10 the worst pain imaginable
               </Typography>
               <div className={classes.slider}>
-                <Typography id="label">Pain Intensity: ({painIntensity}) *</Typography>
+                <Typography id="label">
+                  Pain Intensity: ({painIntensity}) *
+                </Typography>
                 <Slider
                   value={painIntensity}
                   min={0}
@@ -342,7 +352,7 @@ getFirebasePayload() {
                   id="painIntensity"
                   name="painInsensity"
                   onChange={this.setPainIntensity}
-                  onBlur={this.reviewSelectedValue('painIntensity')}
+                  onBlur={this.reviewSelectedValue("painIntensity")}
                 />
                 <FormHelperText error={true}>
                   {painIntensityError}
@@ -357,7 +367,7 @@ getFirebasePayload() {
                 <Select
                   value={description}
                   onChange={this.handleChange}
-                  onBlur={this.reviewSelectedValue('description')}
+                  onBlur={this.reviewSelectedValue("description")}
                   name="description"
                   id="description"
                   displayEmpty
@@ -372,20 +382,16 @@ getFirebasePayload() {
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText error={true}>
-                  {descriptionError}
-                </FormHelperText>
+                <FormHelperText error={true}>{descriptionError}</FormHelperText>
               </FormControl>
             </div>
             <div>
               <FormControl required className={classes.formControl}>
-                <FormLabel component="legend">
-                  How is your mood like?
-                </FormLabel>
+                <FormLabel component="legend">How is your mood like?</FormLabel>
                 <Select
                   value={mood}
                   onChange={this.handleChange}
-                  onBlur={this.reviewSelectedValue('mood')}
+                  onBlur={this.reviewSelectedValue("mood")}
                   name="mood"
                   id="mood"
                   displayEmpty
@@ -401,9 +407,7 @@ getFirebasePayload() {
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText error={true}>
-                  {moodError}
-                </FormHelperText>
+                <FormHelperText error={true}>{moodError}</FormHelperText>
               </FormControl>
             </div>
             <div>
