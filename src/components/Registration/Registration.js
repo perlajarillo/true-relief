@@ -597,7 +597,7 @@ class VerticalLinearStepper extends Component {
   render() {
     const { classes, authUser } = this.props;
     const steps = this.getSteps();
-    const { activeStep,submitted } = this.state;
+    const { activeStep, submitted } = this.state;
     return !submitted ? (
       <div>
             <Stepper

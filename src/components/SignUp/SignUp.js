@@ -46,7 +46,7 @@ const styles = theme => ({
 class SignUp extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
+
     this.state = {
       email: "",
       password: "",

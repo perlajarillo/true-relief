@@ -92,7 +92,7 @@ class PasswordForgetForm extends Component {
             Reset your password
           </Typography>
             <Typography variant="subheading" className={classes.text}>
-            Enter your email address and we will sed you a link to reset your password
+            Enter your email address and we will send you a link to reset your password
           </Typography>
           <form onSubmit={this.handleSubmit}>
             <CardContent>
