@@ -12,3 +12,8 @@ export function writeNewTrackPain(userId,data) {
   updates['/patients/' + userId+ '/trackPain/'+ newTrackPainKey] = data;
   return db.ref().update(updates);
 }
+
+export function getPainEntries(userId) {
+  const entries = db.ref('patients/' + userId + '/trackPain')
+  return entries.once("value");
+}

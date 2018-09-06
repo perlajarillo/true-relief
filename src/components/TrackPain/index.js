@@ -1,5 +1,6 @@
 import React from "react";
 import TrackPain from "./TrackPain";
+import NewPainEntry from "./NewPainEntry";
 import AuthUserContext from "../AuthUserContext";
 
 
