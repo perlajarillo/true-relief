@@ -11,9 +11,9 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import firebase from "../firebase.js";
+import { auth } from "../../firebase";
 // import route Components
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import logo from "../../images/logo.png";
 
@@ -53,64 +53,63 @@ class SignUp extends Component {
       confirmPassword: "",
       error: ""
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = event => {
     const { target } = event;
     const { value, name } = target;
 
     this.setState({
       [name]: value
     });
-  }
+  };
 
-  handleSubmit(e) {
-    e.preventDefault();
+  isValid = () => {
     const { email, password, confirmPassword } = this.state;
-
-    //password and password confirmation must be equal
-    if (password === confirmPassword) {
-      //Trying to create a new account with the information provided by the user
-      const promise = firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
-      //If there are any errors during creating the account we inform the user about it
-      promise.catch(e =>
-        this.setState({
-          password: "",
-          confirmPassword: "",
-          error: e.message
-        })
-      );
-      //If no errors where founded the user will be redirected to the registration module
-      promise.then(user => {
-        this.setState({
-          user: user
-        });
-      });
-    } else {
+    if (email === "" || password === "" || confirmPassword === "") {
       this.setState({
-        password: "",
-        confirmPassword: "",
-        error: "The passwords must be equal."
+        error: "All fields are required"
       });
+      return false;
     }
-  }
+
+    if (password !== confirmPassword) {
+      this.setState({
+        error: "The passwords must be equal"
+      });
+      return false;
+    }
+    return true;
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const { email, password } = this.state;
+    const { history } = this.props;
+
+    this.isValid() &&
+      auth
+        .onCreateAccount(email, password)
+        .then(authUser => {
+          this.setState({
+            email: email,
+            password: password
+          });
+          history.push("/registration");
+        })
+        .catch(error => {
+          this.setState({
+            error: error.message
+          })
+        });
+  };
 
   render() {
-    const { from } = this.props.location.state || {
-      from: { pathname: "/registration" }
-    };
-    const { user, email, password, confirmPassword, error } = this.state;
+    const { email, password, confirmPassword, error } = this.state;
     const { classes } = this.props;
 
     return (
       <div>
-        {user && <Redirect to={from} />}
-
         <Card className={(classes.root, classes.card)} elevation={0}>
           <CardMedia
             className={classes.media}
@@ -200,7 +199,13 @@ class SignUp extends Component {
             Are You already registered?
           </Typography>
           <CardActions>
-            <Button variant="outlined" fullWidth color="primary" component={Link} to="/log-in">
+            <Button
+              variant="outlined"
+              fullWidth
+              color="primary"
+              component={Link}
+              to="/log-in"
+            >
               Log In
             </Button>
           </CardActions>

@@ -1,18 +1,14 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Icon from "@material-ui/core/Icon";
 import backgroundImg from "../../images/background.jpg";
 import logo from "../../images/logo.png";
 import dailyTips from "../../images/dailyTips.png";
 import doctorVisit from "../../images/doctorVisit.png";
 import journal from "../../images/journal.png";
 import painTrack from "../../images/painTrack.png";
-import tools from "./literals/tools";
 
 const styles = theme => ({
   sectionStyles: {
