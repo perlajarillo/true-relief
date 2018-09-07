@@ -81,7 +81,9 @@ class NewPainEntry extends Component {
       moodError: "",
       notes: "",
       painIsIn: "",
-      successMsg: ""
+      successMsg: "",
+      btnText: "Register pain event",
+      key: ""
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -95,6 +97,26 @@ class NewPainEntry extends Component {
     this.updateParentState = this.updateParentState.bind(this);
     this.clearParentState = this.clearParentState.bind(this);
   }
+  /**
+    * areThereParameters – sets the state whit the parameters sent via url
+    * @returns {void}
+    *
+    */
+  areThereParameters = entries => {
+      const { key } = this.props.location.state;
+      this.authUser = this.props.location.state.authUser;
+      this.setState({
+        startDate: entries.startDate,
+        endDate: entries.endDate,
+        description: entries.description,
+        mood: entries.mood,
+        notes: entries.notes,
+        painIntensity: entries.painIntensity,
+        painIsIn: entries.painIsIn,
+        btnText: "Modify pain event",
+        key: key
+      });
+  };
 
   /**
    * updateParentState - sets painIsIn in the state
@@ -155,10 +177,15 @@ class NewPainEntry extends Component {
    * @returns {void}
    */
   componentDidMount = () => {
-    const today = format(new Date(), "EEEE MMMM d, YYYY h:mm a");
+    const today = format(new Date(), "MMMM d, YYYY h:mm a");
     this.setState({
       today: today
-    });
+      });
+    if (this.props.location.state)
+    {
+        const { entries } = this.props.location.state;
+        this.areThereParameters(entries);
+    }
   };
 
   /**
@@ -250,7 +277,7 @@ class NewPainEntry extends Component {
    * handleSubmit - sends Firebase payload
    * @returns {void}
    */
-  handleSubmit = authUser => {
+    handleSubmit = authUser => {
     const thereAreErrors = validateTrackPainData(this.getFirebasePayload());
     if (thereAreErrors) {
       this.setState({
@@ -262,7 +289,7 @@ class NewPainEntry extends Component {
           "Draw in the human body image where do/did you feel the pain"
       });
     } else {
-      writeNewTrackPain(authUser.uid, this.getFirebasePayload());
+      writeNewTrackPain(authUser, this.getFirebasePayload(), this.state.key);
       this.setState({
         sectionError: "",
         successMsg: "Your entry was submitted"
@@ -271,7 +298,8 @@ class NewPainEntry extends Component {
   };
 
   render() {
-    const { classes, authUser } = this.props;
+    const { classes } = this.props;
+    let { authUser }= this.props;
     const {
       today,
       startDate,
@@ -286,7 +314,8 @@ class NewPainEntry extends Component {
       painIntensityError,
       descriptionError,
       moodError,
-      successMsg
+      successMsg,
+      btnText
     } = this.state;
 
     return (
@@ -423,10 +452,10 @@ class NewPainEntry extends Component {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => this.handleSubmit(authUser)}
+                onClick={() => this.handleSubmit(this.authUser)}
                 className={classes.button}
               >
-                Register pain event
+                {btnText}
               </Button>
               <FormHelperText error={true}>
                 {sectionError ? sectionError : successMsg}
