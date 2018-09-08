@@ -104,13 +104,13 @@ class NewPainEntry extends Component {
     */
   areThereParameters = entries => {
       const { key } = this.props.location.state;
-      this.authUser = this.props.location.state.authUser;
       this.setState({
         startDate: entries.startDate,
         endDate: entries.endDate,
         description: entries.description,
         mood: entries.mood,
         notes: entries.notes,
+        eventDuration: entries.eventDuration,
         painIntensity: entries.painIntensity,
         painIsIn: entries.painIsIn,
         btnText: "Modify pain event",
@@ -181,11 +181,13 @@ class NewPainEntry extends Component {
     this.setState({
       today: today
       });
-    if (this.props.location.state)
+    this.authUser = this.props.location.state.authUser;
+    if (this.props.location.state.entries)
     {
         const { entries } = this.props.location.state;
         this.areThereParameters(entries);
     }
+
   };
 
   /**

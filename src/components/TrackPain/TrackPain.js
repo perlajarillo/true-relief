@@ -10,6 +10,11 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom"
+import Grid from "@material-ui/core/Grid";
+import AddIcon from '@material-ui/icons/Add';
+import Icon from '@material-ui/core/Icon';
+
+
 const styles = {
   card: {
     minWidth: 275
@@ -30,51 +35,65 @@ const styles = {
 
 const EntriesList = ({ entries, uid }, classes) => {
   return (
-    <div>
-      <Typography variant="title">All Pain Entries</Typography>
-      {entries &&
-        Object.keys(entries).map(key => {
-				let formatedStartDate, formatedEndDate;
-				let painIsIn = entries[key].painIsIn;
-				let keysInPainIsIn = Object.keys(painIsIn).map(key => {
-					let c = " - ";
-					return c += key;
-				});
-          formatedStartDate = format(
-            entries[key].startDate,
-            "d MMM YYYY h:mm a"
-          );
-          formatedEndDate = format(entries[key].endDate, "d MMM YYYY h:mm a");
+      <div>
+          <Grid container spacing={16}>
+          <Grid item xs={10}>
+                <Typography variant="title">All Pain Entries </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Button size="small" variant="fab" color="primary" aria-label="Add" className={classes.button} component={Link} to={{
+            pathname: '/newPainEntry',
+            state: {
+                authUser: uid
+            }
+            }}>
+            <AddIcon />
+            </Button>
 
-        return (
-            <Card className={classes.card} key={key}>
-              <CardContent>
-                <p>Start Date: {formatedStartDate}</p>
-                <p>End date: {formatedEndDate}</p>
-                <p>Duration: {entries[key].eventDuration}</p>
-                <p>My mood was: {entries[key].mood}</p>
-                <p>Pain intensity was: {entries[key].painIntensity}</p>
-							<p>Pain was in: {keysInPainIsIn}</p>
+        </Grid>
+        </Grid>
+          {entries ?
+              (Object.keys(entries).map(key => {
+                  let formatedStartDate, formatedEndDate;
+                  let painIsIn = entries[key].painIsIn;
+                  let keysInPainIsIn = Object.keys(painIsIn).map(key => {
+                      let c = " - ";
+                      return c += key;
+                  });
+                  formatedStartDate = format(
+                      entries[key].startDate,
+                      "d MMM YYYY h:mm a"
+                  );
+                  formatedEndDate = format(entries[key].endDate, "d MMM YYYY h:mm a");
 
-                <p>Notes: {entries[key].notes}</p>
-              </CardContent>
-              <CardActions>
-                      <Link
-                      to={{
-                            pathname: '/newPainEntry',
-                              state: {
-                                  entries: entries[key],
-                                  key: key,
-                                  authUser: uid
-                            }
-                          }}
-                      >
-                <Button size="small">Edit</Button>
-              </Link>
-              </CardActions>
-            </Card>
-          );
-        })}
+                  return (
+                      <Card className={classes.card} key={key}>
+                          <CardContent>
+                          <Typography variant="subheading">Start Date: {formatedStartDate}</Typography>
+                          <Typography variant="subheading">End date: {formatedEndDate}</Typography>
+                          <Typography variant="body1">Pain was in: {keysInPainIsIn}</Typography>
+                           <Typography variant="body1">Pain intensity was: {entries[key].painIntensity}  |  {entries[key].eventDuration} </Typography>
+                          <Typography variant="body1">Mood was: {entries[key].mood}</Typography>
+                          <Typography variant="caption">Notes: {entries[key].notes}</Typography>
+                          </CardContent>
+                          <CardActions>
+                                <Button size="small" color="primary" component={Link} to={{
+                                    pathname: '/newPainEntry',
+                                    state: {
+                                        entries: entries[key],
+                                        key: key,
+                                        authUser: uid
+                                    }}}>
+                                  <Icon>edit_icon</Icon>Edit
+                                </Button>
+                          </CardActions>
+                      </Card>
+                  );
+              })) : (
+                <Typography variant="headline"> You don't have any entries yet, to register a new event clic in the button above (+)</Typography>
+              )
+    }
+
     </div>
   );
 };
@@ -105,7 +124,7 @@ class TrackPain extends Component {
 		const { classes } = this.props;
     return (
       <div>
-        <h1>Track Pain</h1>
+        <Typography variant="headline">Track Pain</Typography>
         <EntriesList classes={classes} entries={entries} uid={uid}/>
       </div>
     );
