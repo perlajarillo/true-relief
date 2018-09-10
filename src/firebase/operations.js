@@ -5,13 +5,17 @@ export function writeNewPatient(userId,data) {
     db.ref().child("patients").child(userId).set(data);
 }
 
-export function writeNewTrackPain(userId,data,newTrackPainKey) {
-    if (newTrackPainKey == "") {
-        newTrackPainKey = db.ref().child("patients")
+export function writeNewTrackPain(userId,data) {
+   const newTrackPainKey = db.ref().child("patients")
         .child(userId).child("trackPain").push().key;
-  }
   const updates = {};
   updates['/patients/' + userId+ '/trackPain/'+ newTrackPainKey] = data;
+  return db.ref().update(updates);
+}
+
+export function editTrackPain(userId,data,trackPainKey) {
+  const updates = {};
+  updates['/patients/' + userId+ '/trackPain/'+ trackPainKey] = data;
   return db.ref().update(updates);
 }
 

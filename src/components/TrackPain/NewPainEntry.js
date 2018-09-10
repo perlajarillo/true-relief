@@ -20,6 +20,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { writeNewTrackPain } from "../../firebase/operations";
+import { editTrackPain } from "../../firebase/operations";
 import * as R from "ramda";
 import { validateTrackPainData } from "../Validations";
 import { validateSelectedValue } from "../Validations";
@@ -84,7 +85,7 @@ class NewPainEntry extends Component {
       painIsIn: "",
       successMsg: "",
       btnText: "Register pain event",
-      key: ""
+      key: null
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -118,7 +119,13 @@ class NewPainEntry extends Component {
         btnText: "Modify pain event",
         key: key
       });
-  };
+    };
+
+      /**
+    * painIsInData – returns to the child te data saved in painIsIn
+    * @returns {painIsIn}
+    *
+    */
     painIsInData(){
         return this.state.painIsIn;
     }
@@ -285,6 +292,7 @@ class NewPainEntry extends Component {
    */
     handleSubmit = authUser => {
     const thereAreErrors = validateTrackPainData(this.getFirebasePayload());
+        const key = this.state.key;
     if (thereAreErrors) {
       this.setState({
         sectionError: "The fields with * are required"
@@ -295,7 +303,14 @@ class NewPainEntry extends Component {
           "Draw in the human body image where do/did you feel the pain"
       });
     } else {
-      writeNewTrackPain(authUser, this.getFirebasePayload(), this.state.key);
+        !key ?
+        (
+            //it does not exist a key, so we are going to add a new entrie
+            writeNewTrackPain(authUser, this.getFirebasePayload())
+        ) :(
+            //it does exist a key, so we are going to edit an entrie
+            editTrackPain(authUser, this.getFirebasePayload(), key)
+      );
       this.setState({
         sectionError: "",
         successMsg: "Your entry was submitted"

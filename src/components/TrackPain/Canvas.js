@@ -64,8 +64,13 @@ componentWillReceiveProps(){
             const y = painIsIn[key].y;
             const color=painIsIn[key].color;
             this.drawFromParent(x, y, color);
+            let btnText;
+            painIsIn[key].front ?
+                (btnText = "Show back")
+                : (btnText = "Show front");
             this.setState({
-                front: painIsIn[key].front
+                front: painIsIn[key].front,
+                btnText: btnText
             });
         });
     }
