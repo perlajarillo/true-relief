@@ -23,6 +23,7 @@ import { writeNewTrackPain } from "../../firebase/operations";
 import * as R from "ramda";
 import { validateTrackPainData } from "../Validations";
 import { validateSelectedValue } from "../Validations";
+import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
   root: {
@@ -96,6 +97,7 @@ class NewPainEntry extends Component {
     this.reviewSelectedValue = this.reviewSelectedValue.bind(this);
     this.updateParentState = this.updateParentState.bind(this);
     this.clearParentState = this.clearParentState.bind(this);
+    this.painIsInData = this.painIsInData.bind(this);
   }
   /**
     * areThereParameters – sets the state whit the parameters sent via url
@@ -117,16 +119,18 @@ class NewPainEntry extends Component {
         key: key
       });
   };
-
+    painIsInData(){
+        return this.state.painIsIn;
+    }
   /**
    * updateParentState - sets painIsIn in the state
    * @param {Object} body part and (x,y) points
    * @return {void}
    */
-  updateParentState(bodyPart, x, y) {
+  updateParentState(bodyPart, x, y, front, color) {
     const xLens = R.lensProp(bodyPart);
     this.setState({
-      painIsIn: R.set(xLens, { x: x, y: y }, this.state.painIsIn)
+      painIsIn: R.set(xLens, { x: x, y: y, front: front, color: color }, this.state.painIsIn)
     });
   }
 
@@ -301,7 +305,7 @@ class NewPainEntry extends Component {
 
   render() {
     const { classes } = this.props;
-    let { authUser }= this.props;
+      let { authUser } = this.props;
     const {
       today,
       startDate,
@@ -317,9 +321,13 @@ class NewPainEntry extends Component {
       descriptionError,
       moodError,
       successMsg,
-      btnText
+      btnText,
+      painIsIn
     } = this.state;
-
+      let keysInPainIsIn = Object.keys(painIsIn).map(key => {
+      let c ="- ";
+      return c += key;
+    });
     return (
       <div className={classes.root}>
         <Grid container spacing={16}>
@@ -469,8 +477,17 @@ class NewPainEntry extends Component {
               <Canvas
                 updateParentState={this.updateParentState}
                 clearParentState={this.clearParentState}
+                painIsInData={this.painIsInData}
               />
-            </div>
+                <Paper elevation={1}>
+                <Typography variant="body2" component="h3">
+                Parts of your body affected.
+                </Typography>
+                <Typography component="p">
+               {keysInPainIsIn}
+                </Typography>
+            </Paper>
+         </div>
           </Grid>
         </Grid>
       </div>
