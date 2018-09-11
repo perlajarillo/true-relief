@@ -20,6 +20,6 @@ export function editTrackPain(userId,data,trackPainKey) {
 }
 
 export function getPainEntries(userId) {
-  const entries = db.ref('patients/' + userId + '/trackPain')
+  const entries = db.ref('patients/' + userId + '/trackPain').orderByChild("endDate");
   return entries.once("value");
 }

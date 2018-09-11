@@ -98,7 +98,6 @@ class NewPainEntry extends Component {
     this.reviewSelectedValue = this.reviewSelectedValue.bind(this);
     this.updateParentState = this.updateParentState.bind(this);
     this.clearParentState = this.clearParentState.bind(this);
-    this.painIsInData = this.painIsInData.bind(this);
   }
   /**
     * areThereParameters – sets the state whit the parameters sent via url
@@ -121,14 +120,6 @@ class NewPainEntry extends Component {
       });
     };
 
-      /**
-    * painIsInData – returns to the child te data saved in painIsIn
-    * @returns {painIsIn}
-    *
-    */
-    painIsInData(){
-        return this.state.painIsIn;
-    }
   /**
    * updateParentState - sets painIsIn in the state
    * @param {Object} body part and (x,y) points
@@ -148,7 +139,7 @@ class NewPainEntry extends Component {
    */
   clearParentState() {
     this.setState({
-      painIsIn: ""
+      painIsIn: "",
     });
   }
   /**
@@ -492,7 +483,7 @@ class NewPainEntry extends Component {
               <Canvas
                 updateParentState={this.updateParentState}
                 clearParentState={this.clearParentState}
-                painIsInData={this.painIsInData}
+                painIsInData={this.state.painIsIn}
               />
                 <Paper elevation={1}>
                 <Typography variant="body2" component="h3">
