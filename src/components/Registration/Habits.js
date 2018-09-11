@@ -329,7 +329,7 @@ this.input = React.createRef();
           </FormControl>
         </div>
         <FormControl required className={classes.formControl}>
-          <FormLabel component="legend">{habitsData.title}</FormLabel>
+          <FormLabel component="legend">{habitsData.health.title}</FormLabel>
           <RadioGroup
             aria-label="health-status"
             name="healthStatus"

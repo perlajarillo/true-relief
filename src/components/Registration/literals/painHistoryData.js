@@ -1,6 +1,7 @@
 const painHistoryData = {
   text:
-    "Now are going to ask questions about your pain as well as what makes it better or worse and how you currently treated so we can come up with the best ideas for additional pain",
+        "Now are going to ask questions about your pain as well as what makes it better or worse and how you currently treated so we can come up with the best ideas for additional pain",
+  otherPainCondition: "If you have been diagnosed with other condition, you can added it when you edit your profile.",
   sections: {
     painCondition: {
       title: "What pain condition have you been diagnosed with?",

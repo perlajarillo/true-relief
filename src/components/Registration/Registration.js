@@ -13,7 +13,6 @@ import Habits from "./Habits";
 import Preferences from "./Preferences";
 import Challenges from "./Challenges";
 import PainHistory from "./PainHistory";
-import MoreConditions from "./MoreConditions";
 import { writeNewPatient } from "../../firebase/operations";
 import * as R from "ramda";
 import { validateString } from "../Validations.js";
@@ -345,8 +344,7 @@ class VerticalLinearStepper extends Component {
       "Habits",
       "Preferences",
       "Challenges",
-      "Pain History",
-      "Another condition"
+        "Pain History"
     ];
   }
 
@@ -398,13 +396,6 @@ class VerticalLinearStepper extends Component {
             handleCheckboxChange={this.handleCheckboxChange}
             handleClose={this.toggleStepContent}
             handleOpen={this.toggleStepContent}
-          />
-        );
-      case 5:
-        return (
-          <MoreConditions
-            parentState={this.state}
-            updateParentState={this.updateParentState}
           />
         );
       default:
@@ -556,14 +547,14 @@ class VerticalLinearStepper extends Component {
    * @returns {void}
    */
   handleNext = authUser => {
-    if (this.state.activeStep === this.getSteps().length - 1) {
+    let errorsAndMsg = this.checkForErrors(this.state.activeStep);
+      if ((this.state.activeStep === this.getSteps().length - 1) && !errorsAndMsg[0]) {
       //We need to review if there are changes in the session status
       writeNewPatient(authUser.uid, this.getFirebasePayload());
       this.setState({
         submitted: true
       });
     }
-    let errorsAndMsg = this.checkForErrors(this.state.activeStep);
     !errorsAndMsg[0]
       ? this.setState({
           activeStep: this.state.activeStep + 1,
