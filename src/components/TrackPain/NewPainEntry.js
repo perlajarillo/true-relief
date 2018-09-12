@@ -344,7 +344,7 @@ class NewPainEntry extends Component {
       <div className={classes.root}>
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="headline">{today}</Typography>
+            <Typography variant="title">Today: {today}</Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
