@@ -15,6 +15,7 @@ import PasswordForget from "./PasswordForget/PasswordForget";
 import Registration from "./Registration";
 import Settings from "./Settings/Settings";
 import TrackPain from "./TrackPain";
+import NewPainEntry from "./TrackPain/NewPainEntry";
 import theme from "./theme";
 import withAuthentication from "./WithAuthentication";
 
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/disclaimer" component={Disclaimer} />
           <Route path="/registration" component={Registration} />
           <Route path="/trackPain" component={TrackPain} />
+          <Route path="/newPainEntry" component={NewPainEntry} />
         </Switch>
       </main>
       <footer>

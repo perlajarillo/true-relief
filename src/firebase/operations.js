@@ -6,9 +6,20 @@ export function writeNewPatient(userId,data) {
 }
 
 export function writeNewTrackPain(userId,data) {
-  const newTrackPainKey = db.ref().child("patients")
-    .child(userId).child("trackPain").push().key;
+   const newTrackPainKey = db.ref().child("patients")
+        .child(userId).child("trackPain").push().key;
   const updates = {};
   updates['/patients/' + userId+ '/trackPain/'+ newTrackPainKey] = data;
   return db.ref().update(updates);
+}
+
+export function editTrackPain(userId,data,trackPainKey) {
+  const updates = {};
+  updates['/patients/' + userId+ '/trackPain/'+ trackPainKey] = data;
+  return db.ref().update(updates);
+}
+
+export function getPainEntries(userId) {
+  const entries = db.ref('patients/' + userId + '/trackPain').orderByChild("endDate");
+  return entries.once("value");
 }

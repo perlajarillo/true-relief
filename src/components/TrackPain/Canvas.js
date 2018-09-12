@@ -32,8 +32,8 @@ class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      front: true,
-      btnText: "Show back"
+      front: null,
+      btnText: "Show front"
     };
     this.isDrawing = false;
     this.isMouseDown = false;
@@ -48,8 +48,44 @@ class Canvas extends Component {
     this.setColor = this.setColor.bind(this);
     this.getBodyPartTerminology = this.getBodyPartTerminology.bind(this);
     this.switchSilhouette = this.switchSilhouette.bind(this);
+    this.drawFromParent = this.drawFromParent.bind(this);
   }
-
+ /**
+   *componentWillReceiveProps – when the canvas receive the props we review if there are
+  painData to pain in the canvas
+   * @param {void}
+   * @return {void} painting the canvas
+*/
+componentDidUpdate(prevProps) {
+    if (this.props.painIsInData !== prevProps.painIsInData) {
+        if (this.props.painIsInData){
+        const painIsIn = this.props.painIsInData;
+        let front = this.state.front;
+        if (front == null)
+        {
+            const firstKey=Object.keys(painIsIn)[0];
+            front = painIsIn[firstKey].front;
+        }
+        let btnText;
+        front ?
+                (btnText = "Show back")
+                : (btnText = "Show front");
+        this.setState({
+                front: front,
+                btnText: btnText
+            });
+        Object.keys(painIsIn).forEach(key => {
+            if (painIsIn[key].front == front) {
+                const x = painIsIn[key].x;
+                const y = painIsIn[key].y;
+                const color=painIsIn[key].color;
+                this.drawFromParent(x, y, color);
+            }
+        });
+    }
+    }
+}
+ 
  /**
    *getBodyPartTerminology – compare the coordinates the user has
    clicked in the screen and compared them with the ranges we have, then
@@ -57,8 +93,9 @@ class Canvas extends Component {
    * @param {Number} coordinates X and Y
    * @return {void} body part name
    */
-  getBodyPartTerminology(x, y) {
-    this.state.front ? (
+    getBodyPartTerminology(x, y) {
+      const { color, front } = this.state;
+      front ? (
       humanBodyFrontData.map(bodyData => {
         let bodyPart = bodyData.bodyPart;
         let xStart = bodyData.xStart;
@@ -70,7 +107,7 @@ class Canvas extends Component {
           && (y >= parseInt(yStart) && y <= parseInt(yEnd));
         /**If there are coincidences the parentState is updated*/
         isOnRange &&
-          this.props.updateParentState(bodyPart, x, y);
+          this.props.updateParentState(bodyPart, x, y, front, color);
       })
     ) :
       (
@@ -85,7 +122,7 @@ class Canvas extends Component {
             && (y >= parseInt(yStart) && y <= parseInt(yEnd));
           /**If there are coincidences the parentState is updated*/
           isOnRange &&
-            this.props.updateParentState(bodyPart, x, y);
+            this.props.updateParentState(bodyPart, x, y, front, color);
         })
       );
   }
@@ -101,18 +138,26 @@ class Canvas extends Component {
     const ctx = this.canvas.current.getContext("2d");
     this.activeColor = null;
     ctx.clearRect(0, 0, this.canvas.current.width, this.canvas.current.height);
-    this.state.front ?
-      (
+    const painIsIn = this.props.painIsInData;
+    if (this.state.front) {
+        Object.keys(painIsIn).forEach(key => {
+            !painIsIn[key].front &&
+                (this.drawFromParent(painIsIn[key].x, painIsIn[key].y, painIsIn[key].color));
+        });
         this.setState({
           front: false,
           btnText: "Show front"
         })
-      ) : (
+    } else {
+        Object.keys(painIsIn).forEach(key => {
+            painIsIn[key].front &&
+                (this.drawFromParent(painIsIn[key].x, painIsIn[key].y, painIsIn[key].color));
+        });
         this.setState({
           front: true,
           btnText: "Show back"
         })
-      )
+    }
   }
   /**
    * getCoords – gets coordinates from where the user has clicked the screen
@@ -148,7 +193,8 @@ class Canvas extends Component {
    * @return {String} the selected color
    */
   setColor = event => {
-    this.activeColor = event.target.value;
+      this.activeColor = event.target.value;
+      this.setState({color: this.activeColor});
     return this.activeColor;
   };
 
@@ -175,7 +221,26 @@ class Canvas extends Component {
     ctx.lineTo(nextX, nextY);
     ctx.stroke();
   };
-
+ /**
+   * drawFromParent – create the context for canvas,
+   * sets the styles to draw the coordinates in parent state
+   * @param {Object} event
+   * @return {void}
+   */
+    drawFromParent(startX, startY, color) {
+        const ctx = this.canvas.current.getContext("2d");
+        ctx.strokeStyle = color;
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.lineWidth = 20;
+        let nextX = startX;
+        let nextY = startY;
+        ctx.beginPath();
+        // start from
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(nextX, nextY);
+        ctx.stroke();
+    }
   /**
    * stopDrawing – checks if the mouse is down and stops the draw function
    * @return {void}
