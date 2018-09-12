@@ -101,7 +101,7 @@ class NewPainEntry extends Component {
   }
 
   /**
-   * areThereParameters – sets the state whit the parameters sent via url
+   * areThereParameters – sets the state whith the parameters sent via url
    * @returns {void}
    *
    */
@@ -302,10 +302,8 @@ class NewPainEntry extends Component {
       });
     } else {
       !key
-        ? //it does not exist a key, so we are going to add a new entrie
-          writeNewTrackPain(authUser, this.getFirebasePayload())
-        : //it does exist a key, so we are going to edit an entrie
-          editTrackPain(authUser, this.getFirebasePayload(), key);
+        ? writeNewTrackPain(authUser, this.getFirebasePayload())
+        : editTrackPain(authUser, this.getFirebasePayload(), key);
       this.setState({
         sectionError: "",
         successMsg: "Your entry was submitted"
