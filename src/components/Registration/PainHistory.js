@@ -33,6 +33,7 @@ const PainHistory = props => {
   const { classes, parentState, updateParentState } = props;
   const {
     text,
+    otherPainCondition,
     sections,
     painConditionData,
     medicationData,
@@ -281,6 +282,7 @@ const PainHistory = props => {
             <FormControlLabel value="no" control={<Radio />} label="No" />
           </RadioGroup>
         </FormControl>
+        <FormHelperText>{otherPainCondition} </FormHelperText>
       </div>
       {/*********** IF NON PHARMA YES ********************/}
       <div
