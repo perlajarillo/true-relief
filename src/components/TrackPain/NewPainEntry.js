@@ -101,7 +101,7 @@ class NewPainEntry extends Component {
   }
 
   /**
-   * areThereParameters – sets the state whith the parameters sent via url
+   * areThereParameters – sets the state with the parameters sent via url
    * @returns {void}
    *
    */
