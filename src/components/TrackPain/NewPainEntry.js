@@ -24,7 +24,7 @@ import { editTrackPain } from "../../firebase/operations";
 import * as R from "ramda";
 import { validateTrackPainData } from "../Validations";
 import { validateSelectedValue } from "../Validations";
-import Paper from '@material-ui/core/Paper';
+import Paper from "@material-ui/core/Paper";
 
 const styles = theme => ({
   root: {
@@ -99,26 +99,27 @@ class NewPainEntry extends Component {
     this.updateParentState = this.updateParentState.bind(this);
     this.clearParentState = this.clearParentState.bind(this);
   }
+
   /**
-    * areThereParameters – sets the state whit the parameters sent via url
-    * @returns {void}
-    *
-    */
+   * areThereParameters – sets the state with the parameters sent via url
+   * @returns {void}
+   *
+   */
   areThereParameters = entries => {
-      const { key } = this.props.location.state;
-      this.setState({
-        startDate: entries.startDate,
-        endDate: entries.endDate,
-        description: entries.description,
-        mood: entries.mood,
-        notes: entries.notes,
-        eventDuration: entries.eventDuration,
-        painIntensity: entries.painIntensity,
-        painIsIn: entries.painIsIn,
-        btnText: "Modify pain event",
-        key: key
-      });
-    };
+    const { key } = this.props.location.state;
+    this.setState({
+      startDate: entries.startDate,
+      endDate: entries.endDate,
+      description: entries.description,
+      mood: entries.mood,
+      notes: entries.notes,
+      eventDuration: entries.eventDuration,
+      painIntensity: entries.painIntensity,
+      painIsIn: entries.painIsIn,
+      btnText: "Modify pain event",
+      key: key
+    });
+  };
 
   /**
    * updateParentState - sets painIsIn in the state
@@ -128,7 +129,11 @@ class NewPainEntry extends Component {
   updateParentState(bodyPart, x, y, front, color) {
     const xLens = R.lensProp(bodyPart);
     this.setState({
-      painIsIn: R.set(xLens, { x: x, y: y, front: front, color: color }, this.state.painIsIn)
+      painIsIn: R.set(
+        xLens,
+        { x: x, y: y, front: front, color: color },
+        this.state.painIsIn
+      )
     });
   }
 
@@ -139,9 +144,10 @@ class NewPainEntry extends Component {
    */
   clearParentState() {
     this.setState({
-      painIsIn: "",
+      painIsIn: ""
     });
   }
+
   /**
    * reviewSelectedValue - sets an error if the field is null
    * @returns {void}
@@ -153,6 +159,7 @@ class NewPainEntry extends Component {
       [formControl]: validateSelectedValue(value)
     });
   };
+
   /**
    * getFirebasePayload - returns the data to send to Firebase
    * @returns {Object} the Firebase payload
@@ -182,14 +189,12 @@ class NewPainEntry extends Component {
     const today = format(new Date(), "MMMM d, YYYY h:mm a");
     this.setState({
       today: today
-      });
+    });
     this.authUser = this.props.location.state.authUser;
-    if (this.props.location.state.entries)
-    {
-        const { entries } = this.props.location.state;
-        this.areThereParameters(entries);
+    if (this.props.location.state.entries) {
+      const { entries } = this.props.location.state;
+      this.areThereParameters(entries);
     }
-
   };
 
   /**
@@ -218,6 +223,7 @@ class NewPainEntry extends Component {
    * @param {Object} the object name and event
    * @return {void}
    */
+
   handleChange(event) {
     const { target } = event;
     const { value, name } = target;
@@ -234,6 +240,7 @@ class NewPainEntry extends Component {
    * first date is before the second or 0 if dates are equal.
    * @returns {Object} result of comparing the dates with compareAsc
    */
+
   compareDates() {
     const { endDate, startDate } = this.state;
     const datesComparison = compareAsc(startDate, endDate);
@@ -281,9 +288,9 @@ class NewPainEntry extends Component {
    * handleSubmit - sends Firebase payload
    * @returns {void}
    */
-    handleSubmit = authUser => {
+  handleSubmit = authUser => {
     const thereAreErrors = validateTrackPainData(this.getFirebasePayload());
-        const key = this.state.key;
+    const key = this.state.key;
     if (thereAreErrors) {
       this.setState({
         sectionError: "The fields with * are required"
@@ -294,14 +301,9 @@ class NewPainEntry extends Component {
           "Draw in the human body image where do/did you feel the pain"
       });
     } else {
-        !key ?
-        (
-            //it does not exist a key, so we are going to add a new entrie
-            writeNewTrackPain(authUser, this.getFirebasePayload())
-        ) :(
-            //it does exist a key, so we are going to edit an entrie
-            editTrackPain(authUser, this.getFirebasePayload(), key)
-      );
+      !key
+        ? writeNewTrackPain(authUser, this.getFirebasePayload())
+        : editTrackPain(authUser, this.getFirebasePayload(), key);
       this.setState({
         sectionError: "",
         successMsg: "Your entry was submitted"
@@ -311,7 +313,7 @@ class NewPainEntry extends Component {
 
   render() {
     const { classes } = this.props;
-      let { authUser } = this.props;
+    let { authUser } = this.props;
     const {
       today,
       startDate,
@@ -330,15 +332,17 @@ class NewPainEntry extends Component {
       btnText,
       painIsIn
     } = this.state;
-      let keysInPainIsIn = Object.keys(painIsIn).map(key => {
-      let c ="- ";
-      return c += key;
+
+    let keysInPainIsIn = Object.keys(painIsIn).map(key => {
+      let c = "- ";
+      return (c += key);
     });
+
     return (
       <div className={classes.root}>
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="headline">{today}</Typography>
+            <Typography variant="title">Today: {today}</Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
@@ -485,15 +489,13 @@ class NewPainEntry extends Component {
                 clearParentState={this.clearParentState}
                 painIsInData={this.state.painIsIn}
               />
-                <Paper elevation={1}>
+              <Paper elevation={1}>
                 <Typography variant="body2" component="h3">
-                Parts of your body affected.
+                  Parts of your body affected.
                 </Typography>
-                <Typography component="p">
-               {keysInPainIsIn}
-                </Typography>
-            </Paper>
-         </div>
+                <Typography component="p">{keysInPainIsIn}</Typography>
+              </Paper>
+            </div>
           </Grid>
         </Grid>
       </div>
