@@ -153,8 +153,8 @@ class TrackPain extends Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.authUser !== prevProps.authUser) {
+  componentDidMount() {
+    if (this.props.authUser) {
       db.getPainEntries(this.props.authUser.uid).then(snapshot => {
         this.setState({
           entries: snapshot.val(),
