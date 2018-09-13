@@ -11,7 +11,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import { auth, db } from "../../firebase";
+import { auth } from "../../firebase";
 import { getPatient } from "../../firebase/operations";
 
 // importing route Components
@@ -79,9 +79,9 @@ class LogIn extends React.Component {
         });
       })
       .then(() => {
-        getPatient("50TsYW0T1MazSUXr2KnlgeFGbky2").then(snapshot => {
+        getPatient(auth.currentUserUid()).then(snapshot => {
           !snapshot.val() ? history.push("/registration") : history.push("/");
-        })
+        });
       })
       .catch(error => {
         this.setState({
