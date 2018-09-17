@@ -24,6 +24,7 @@ import { validateThereIsAtLeastOneChallenge } from "../Validations.js";
 import { validateThereIsAtLeastOneNeed } from "../Validations.js";
 import { validateAge } from "../Validations.js";
 import { Redirect } from "react-router-dom";
+import withAuthorization from "../WithAuthorization";
 
 const styles = theme => ({
   root: {
@@ -646,4 +647,7 @@ VerticalLinearStepper.propTypes = {
   classes: PropTypes.object
 };
 
-export default withStyles(styles)(VerticalLinearStepper);
+const StyledRegistration =  withStyles(styles)(VerticalLinearStepper);
+const authCondition = (authUser) => Boolean(authUser);
+
+export default withAuthorization(authCondition)(StyledRegistration);

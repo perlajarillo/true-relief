@@ -14,6 +14,7 @@ import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import Icon from "@material-ui/core/Icon";
 import compareDesc from "date-fns/compareDesc";
+import withAuthorization from "../WithAuthorization";
 
 const styles = {
   card: {
@@ -180,4 +181,6 @@ TrackPain.prototypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default TrackPain;
+const authCondition = (authUser) => Boolean(authUser);
+
+export default withAuthorization(authCondition)(TrackPain);
