@@ -54,8 +54,9 @@ const styles = theme => ({
   }
 });
 
-function Home(props) {
+const Home = (props) => {
   const { classes } = props;
+
   return (
     <Fragment>
       <section className={classes.heroImg}>

@@ -1,5 +1,6 @@
 import React from "react";
 import PasswordChange from "../PasswordChange/PasswordChange";
+import withAuthorization from "../WithAuthorization";
 
 const Settings = () =>
   <div>
@@ -7,4 +8,6 @@ const Settings = () =>
     <PasswordChange />
   </div>
 
-export default Settings;
+const authCondition = (authUser) => Boolean(authUser);
+
+export default withAuthorization(authCondition)(Settings);
