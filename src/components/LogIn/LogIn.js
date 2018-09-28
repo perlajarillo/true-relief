@@ -12,6 +12,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { auth } from "../../firebase";
+import { getPatient } from "../../firebase/operations";
 
 // importing route Components
 import { Link } from "react-router-dom";
@@ -76,7 +77,11 @@ class LogIn extends React.Component {
           email: email,
           password: password
         });
-        history.push("/");
+      })
+      .then(() => {
+        getPatient(auth.currentUserUid()).then(snapshot => {
+          !snapshot.val() ? history.push("/registration") : history.push("/");
+        });
       })
       .catch(error => {
         this.setState({

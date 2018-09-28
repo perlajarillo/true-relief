@@ -1,4 +1,4 @@
-import { db } from './firebase.js';
+import { db, auth } from './firebase.js';
 
 export function writeNewPatient(userId,data) {
     //We are using the user.uid attribute as the new key, to identify the patient
@@ -22,4 +22,10 @@ export function editTrackPain(userId,data,trackPainKey) {
 export function getPainEntries(userId) {
   const entries = db.ref('patients/' + userId + '/trackPain').orderByChild("endDate");
   return entries.once("value");
+}
+
+export function getPatient(uid) {
+  const rootRef = db.ref();
+  const userProfile = rootRef.child('patients').child(uid).once("value");
+  return userProfile;
 }
