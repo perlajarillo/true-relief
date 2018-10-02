@@ -14,7 +14,7 @@ admin.initializeApp(functions.config().firebase);
 
 const db = admin.database();
 //Place here a uid to test the action
-const userId = "OtBrzJ7EMQNtKjWPEVhrBDtpZVA3";
+const userId = "here the user id";
 
 //Managing the helper
 app.intent("actions_intent_SIGN_IN", (conv, params, signin) => {
