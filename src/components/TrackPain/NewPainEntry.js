@@ -1,30 +1,31 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Slider from "@material-ui/lab/Slider";
-import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
-import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
-import DateTimePicker from "material-ui-pickers/DateTimePicker";
-import { format } from "date-fns";
-import distanceInWordsStrict from "date-fns/formatDistanceStrict";
-import compareAsc from "date-fns/compareAsc";
-import Canvas from "./Canvas";
-import trackPainData from "./literals/trackPainData";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { writeNewTrackPain } from "../../firebase/operations";
-import { editTrackPain } from "../../firebase/operations";
-import * as R from "ramda";
-import { validateTrackPainData } from "../Validations";
-import { validateSelectedValue } from "../Validations";
-import Paper from "@material-ui/core/Paper";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Slider from '@material-ui/lab/Slider';
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import DateTimePicker from 'material-ui-pickers/DateTimePicker';
+import { format } from 'date-fns';
+import distanceInWordsStrict from 'date-fns/formatDistanceStrict';
+import compareAsc from 'date-fns/compareAsc';
+import Canvas from './Canvas';
+import trackPainData from './literals/trackPainData';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { writeNewTrackPain } from '../../firebase/operations';
+import { editTrackPain } from '../../firebase/operations';
+import * as R from 'ramda';
+import { validateTrackPainData } from '../Validations';
+import { validateSelectedValue } from '../Validations';
+import Paper from '@material-ui/core/Paper';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -32,8 +33,8 @@ const styles = theme => ({
     margin: theme.spacing.unit * 3
   },
   container: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     marginTop: theme.spacing.unit * 3
   },
   dpMargin: {
@@ -60,7 +61,8 @@ const styles = theme => ({
     width: 400
   },
   button: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit * 2,
+    marginLeft: theme.spacing.unit * 2
   }
 });
 
@@ -72,19 +74,19 @@ class NewPainEntry extends Component {
     this.state = {
       startDate: new Date(),
       endDate: new Date(),
-      eventDuration: "Duration: 00",
+      eventDuration: 'Duration: 00',
       painIntensity: 0,
-      description: "",
-      mood: "",
-      datesError: "",
-      sectionError: "",
-      descriptionError: "",
-      painIntensityError: "",
-      moodError: "",
-      notes: "",
-      painIsIn: "",
-      successMsg: "",
-      btnText: "Register pain event",
+      description: '',
+      mood: '',
+      datesError: '',
+      sectionError: '',
+      descriptionError: '',
+      painIntensityError: '',
+      moodError: '',
+      notes: '',
+      painIsIn: '',
+      successMsg: '',
+      btnText: 'Register pain event',
       key: null
     };
 
@@ -116,7 +118,7 @@ class NewPainEntry extends Component {
       eventDuration: entries.eventDuration,
       painIntensity: entries.painIntensity,
       painIsIn: entries.painIsIn,
-      btnText: "Modify pain event",
+      btnText: 'Modify pain event',
       key: key
     });
   };
@@ -144,7 +146,7 @@ class NewPainEntry extends Component {
    */
   clearParentState() {
     this.setState({
-      painIsIn: ""
+      painIsIn: ''
     });
   }
 
@@ -153,7 +155,7 @@ class NewPainEntry extends Component {
    * @returns {void}
    */
   reviewSelectedValue = name => event => {
-    const formControl = name + "Error";
+    const formControl = name + 'Error';
     const value = this.state[name];
     this.setState({
       [formControl]: validateSelectedValue(value)
@@ -167,15 +169,15 @@ class NewPainEntry extends Component {
   getFirebasePayload() {
     return R.pick(
       [
-        "startDate",
-        "endDate",
-        "eventDuration",
-        "painIntensity",
-        "description",
-        "mood",
-        "notes",
-        "multiline",
-        "painIsIn"
+        'startDate',
+        'endDate',
+        'eventDuration',
+        'painIntensity',
+        'description',
+        'mood',
+        'notes',
+        'multiline',
+        'painIsIn'
       ],
       this.state
     );
@@ -186,7 +188,7 @@ class NewPainEntry extends Component {
    * @returns {void}
    */
   componentDidMount = () => {
-    const today = format(new Date(), "MMMM d, YYYY h:mm a");
+    const today = format(new Date(), 'MMMM d, YYYY h:mm a');
     this.setState({
       today: today
     });
@@ -227,10 +229,10 @@ class NewPainEntry extends Component {
   handleChange(event) {
     const { target } = event;
     const { value, name } = target;
-    const formControl = name + "Error";
+    const formControl = name + 'Error';
     this.setState({
       [name]: value,
-      [formControl]: ""
+      [formControl]: ''
     });
   }
 
@@ -246,11 +248,11 @@ class NewPainEntry extends Component {
     const datesComparison = compareAsc(startDate, endDate);
     datesComparison === 1
       ? this.setState({
-          datesError: "First date must be before to the second.",
-          eventDuration: "Duration: 00"
+          datesError: 'First date must be before to the second.',
+          eventDuration: 'Duration: 00'
         })
       : this.setState({
-          datesError: ""
+          datesError: ''
         });
     return datesComparison;
   }
@@ -261,13 +263,13 @@ class NewPainEntry extends Component {
    */
   setEventDuration = () => {
     const { endDate, startDate } = this.state;
-    let eventDuration = distanceInWordsStrict(endDate, startDate, "h");
+    let eventDuration = distanceInWordsStrict(endDate, startDate, 'h');
     this.compareDates() !== 1 &&
       this.setState({
         eventDuration:
-          eventDuration === "0 seconds"
-            ? "Duration: 00"
-            : "Duration: " + eventDuration
+          eventDuration === '0 seconds'
+            ? 'Duration: 00'
+            : 'Duration: ' + eventDuration
       });
   };
 
@@ -293,20 +295,20 @@ class NewPainEntry extends Component {
     const key = this.state.key;
     if (thereAreErrors) {
       this.setState({
-        sectionError: "The fields with * are required"
+        sectionError: 'The fields with * are required'
       });
-    } else if (this.state.painIsIn === "") {
+    } else if (this.state.painIsIn === '') {
       this.setState({
         sectionError:
-          "Draw in the human body image where do/did you feel the pain"
+          'Draw in the human body image where do/did you feel the pain'
       });
     } else {
       !key
         ? writeNewTrackPain(authUser, this.getFirebasePayload())
         : editTrackPain(authUser, this.getFirebasePayload(), key);
       this.setState({
-        sectionError: "",
-        successMsg: "Your entry was submitted"
+        sectionError: '',
+        successMsg: 'Your entry was submitted'
       });
     }
   };
@@ -334,7 +336,7 @@ class NewPainEntry extends Component {
     } = this.state;
 
     let keysInPainIsIn = Object.keys(painIsIn).map(key => {
-      let c = "- ";
+      let c = '- ';
       return (c += key);
     });
 
@@ -355,9 +357,9 @@ class NewPainEntry extends Component {
                   onChange={this.handleStartDateChange}
                   onBlur={this.compareDates}
                   label="Start date"
-                  minDate={"2000/01/01"}
+                  minDate={'2000/01/01'}
                   maxDate={new Date()}
-                  format={"d MMM YYYY h:mm a"}
+                  format={'d MMM YYYY h:mm a'}
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
@@ -367,9 +369,9 @@ class NewPainEntry extends Component {
                   onChange={this.handleEndDateChange}
                   onBlur={this.compareDates}
                   label="End date"
-                  minDate={"2000/01/01"}
+                  minDate={'2000/01/01'}
                   maxDate={new Date()}
-                  format={"d MMM YYYY h:mm a"}
+                  format={'d MMM YYYY h:mm a'}
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
@@ -397,7 +399,7 @@ class NewPainEntry extends Component {
                   id="painIntensity"
                   name="painInsensity"
                   onChange={this.setPainIntensity}
-                  onBlur={this.reviewSelectedValue("painIntensity")}
+                  onBlur={this.reviewSelectedValue('painIntensity')}
                 />
                 <FormHelperText error={true}>
                   {painIntensityError}
@@ -412,7 +414,7 @@ class NewPainEntry extends Component {
                 <Select
                   value={description}
                   onChange={this.handleChange}
-                  onBlur={this.reviewSelectedValue("description")}
+                  onBlur={this.reviewSelectedValue('description')}
                   name="description"
                   id="description"
                   displayEmpty
@@ -436,7 +438,7 @@ class NewPainEntry extends Component {
                 <Select
                   value={mood}
                   onChange={this.handleChange}
-                  onBlur={this.reviewSelectedValue("mood")}
+                  onBlur={this.reviewSelectedValue('mood')}
                   name="mood"
                   id="mood"
                   displayEmpty
@@ -476,6 +478,18 @@ class NewPainEntry extends Component {
                 className={classes.button}
               >
                 {btnText}
+              </Button>
+
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to={{
+                  pathname: '/trackPain'
+                }}
+                className={classes.button}
+              >
+                Return
               </Button>
               <FormHelperText error={true}>
                 {sectionError ? sectionError : successMsg}
