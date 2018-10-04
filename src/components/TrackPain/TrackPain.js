@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import classNames from "classnames";
-
 import { db } from "../../firebase";
 import { format } from "date-fns";
-
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -75,6 +72,27 @@ const styles = theme => ({
   }
 });
 
+const datesSorted = entries => {
+  let sorted = Object.keys(entries)
+    .map(key => {
+      return entries[key].endDate;
+    })
+    .sort((a, b) => compareDesc(a, b));
+
+  return sorted.reduce((newEntries, date) => {
+    const entryObject = Object.keys(entries)
+      .map(key => {
+        if (entries[key].endDate === date) {
+          entries[key].entryId = key;
+          return entries[key];
+        }
+      })
+      .filter(Boolean);
+    newEntries.push(entryObject[0]);
+    return newEntries;
+  }, []);
+};
+
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -86,7 +104,7 @@ function desc(a, b, orderBy) {
 }
 
 function stableSort(array, cmp) {
-  const stabilizedThis = Object.keys(array).map(el => [el]);
+  const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
     if (order !== 0) return order;
@@ -107,7 +125,7 @@ const rows = [
     disablePadding: true,
     label: "Start date"
   },
-  { id: "endDate:", numeric: false, disablePadding: false, label: "End date" },
+  { id: "endDate", numeric: false, disablePadding: false, label: "End date" },
   {
     id: "eventDuration",
     numeric: false,
@@ -291,27 +309,6 @@ EnhancedTableToolbar.propTypes = {
 
 EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
-const datesSorted = entries => {
-  let sorted = Object.keys(entries)
-    .map(key => {
-      return entries[key].endDate;
-    })
-    .sort((a, b) => compareDesc(a, b));
-
-  return sorted.reduce((newEntries, date) => {
-    const entryObject = Object.keys(entries)
-      .map(key => {
-        if (entries[key].endDate === date) {
-          entries[key].entryId = key;
-        }
-        return entries[key];
-      })
-      .filter(Boolean);
-    newEntries.push(entryObject[0]);
-    return newEntries;
-  }, []);
-};
-
 const EntriesList = ({
   state,
   classes,
@@ -335,140 +332,146 @@ const EntriesList = ({
     entryKey,
     entry
   } = state;
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, entries.length - page * rowsPerPage);
+  const emptyRows = entries
+    ? rowsPerPage - Math.min(rowsPerPage, entries.length - page * rowsPerPage)
+    : 0;
   const sortedDates = entries ? datesSorted(entries) : [];
+  console.log(sortedDates);
   return (
     <div className={classes.root}>
-      <Grid container spacing={16}>
-        <Grid item xs={9}>
-          <Typography variant="headline">Track Pain</Typography>
-        </Grid>
-        <Grid item xs={3}>
-          <Button
-            size="small"
-            variant="fab"
-            color="primary"
-            aria-label="Add"
-            className={classes.button}
-            component={Link}
-            to={{
-              pathname: "/newPainEntry",
-              state: {
-                authUser: uid
-              }
-            }}
-          >
-            <AddIcon />
-          </Button>
-        </Grid>
-      </Grid>
-
-      <Paper className={classes.root}>
-        <EnhancedTableToolbar
-          entryKey={entryKey}
-          handleClickDeleteEntry={handleClickDeleteEntry}
-          uid={uid}
-          entry={entry}
-        />
-        <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              entryKey={entryKey}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={Object.keys(entries).length}
-            />
-            <TableBody>
-              {stableSort(entries, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(entry => {
-                  let formatedStartDate, formatedEndDate;
-                  let painIsIn = entries[entry].painIsIn;
-                  let keysInPainIsIn = Object.keys(painIsIn).map(key => {
-                    let c = " - ";
-                    return (c += key);
-                  });
-                  formatedStartDate = format(
-                    entries[entry].startDate,
-                    "d MMM YYYY h:mm a"
-                  );
-                  formatedEndDate = format(
-                    entries[entry].endDate,
-                    "d MMM YYYY h:mm a"
-                  );
-                  const itIsSelected = isSelected(entry);
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event =>
-                        handleClick(event, entry, entries[entry])
-                      }
-                      role="checkbox"
-                      aria-checked={itIsSelected}
-                      tabIndex={-1}
-                      key={entry}
-                      selected={itIsSelected}
-                      className={classes.row}
-                    >
-                      <CustomTableCell
-                        padding="checkbox"
-                        className={classes.personalizedCell}
+      <Button
+        size="small"
+        variant="extendedFab"
+        color="primary"
+        aria-label="Add"
+        className={classes.button}
+        component={Link}
+        to={{
+          pathname: "/newPainEntry",
+          state: {
+            authUser: uid
+          }
+        }}
+      >
+        <AddIcon /> Add new entry
+      </Button>
+      {entries ? (
+        <Paper className={classes.root}>
+          <EnhancedTableToolbar
+            entryKey={entryKey}
+            handleClickDeleteEntry={handleClickDeleteEntry}
+            uid={uid}
+            entry={entry}
+          />
+          <div className={classes.tableWrapper}>
+            <Table className={classes.table} aria-labelledby="tableTitle">
+              <EnhancedTableHead
+                entryKey={entryKey}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={Object.keys(entries).length}
+              />
+              <TableBody>
+                {stableSort(sortedDates, getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(entry => {
+                    let formatedStartDate, formatedEndDate;
+                    let painIsIn = entry.painIsIn;
+                    let keysInPainIsIn = Object.keys(painIsIn).map(key => {
+                      let c = " - ";
+                      return (c += key);
+                    });
+                    formatedStartDate = format(
+                      entry.startDate,
+                      "d MMM YYYY h:mm a"
+                    );
+                    formatedEndDate = format(
+                      entry.endDate,
+                      "d MMM YYYY h:mm a"
+                    );
+                    const itIsSelected = isSelected(entry);
+                    return (
+                      <TableRow
+                        hover
+                        onClick={event =>
+                          handleClick(event, entry.entryId, entry)
+                        }
+                        role="checkbox"
+                        aria-checked={itIsSelected}
+                        tabIndex={-1}
+                        key={entry.entryId}
+                        selected={itIsSelected}
+                        className={classes.row}
                       >
-                        <Radio checked={entryKey === entry} color="primary" />
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {formatedStartDate}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {formatedEndDate}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {entries[entry].eventDuration}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {keysInPainIsIn}
-                      </CustomTableCell>
-                      <CustomTableCell className={classes.personalizedCell}>
-                        {entries[entry].painIntensity}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {entries[entry].description}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {entries[entry].mood}
-                      </CustomTableCell>
-                      <CustomTableCell padding="none">
-                        {entries[entry].notes}
-                      </CustomTableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                        <CustomTableCell
+                          padding="checkbox"
+                          className={classes.personalizedCell}
+                        >
+                          <Radio
+                            checked={entryKey === entry.entryId}
+                            color="primary"
+                          />
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {formatedStartDate}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {formatedEndDate}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {entry.eventDuration}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {keysInPainIsIn}
+                        </CustomTableCell>
+                        <CustomTableCell className={classes.personalizedCell}>
+                          {entry.painIntensity}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {entry.description}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {entry.mood}
+                        </CustomTableCell>
+                        <CustomTableCell padding="none">
+                          {entry.notes}
+                        </CustomTableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 49 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <TablePagination
+            component="div"
+            count={Object.keys(entries).length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            backIconButtonProps={{
+              "aria-label": "Previous Page"
+            }}
+            nextIconButtonProps={{
+              "aria-label": "Next Page"
+            }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+      ) : (
+        <div className={classes.root}>
+          <Typography variant="headline">
+            {" "}
+            You don't have any entries yet, to register a new event click in the
+            button above (+)
+          </Typography>
         </div>
-        <TablePagination
-          component="div"
-          count={Object.keys(entries).length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            "aria-label": "Previous Page"
-          }}
-          nextIconButtonProps={{
-            "aria-label": "Next Page"
-          }}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-      </Paper>
-
+      )}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -503,8 +506,8 @@ class TrackPain extends Component {
       uid: "",
       open: false,
       entryKey: "",
-      order: "asc",
-      orderBy: "startDate",
+      order: "desc",
+      orderBy: "endDate",
       selected: [],
       page: 0,
       rowsPerPage: 5,
@@ -578,6 +581,7 @@ class TrackPain extends Component {
     const { classes } = this.props;
     return (
       <div>
+        <Typography variant="headline">Track Pain</Typography>
         <EntriesList
           classes={classes}
           state={this.state}
