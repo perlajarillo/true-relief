@@ -336,7 +336,6 @@ const EntriesList = ({
     ? rowsPerPage - Math.min(rowsPerPage, entries.length - page * rowsPerPage)
     : 0;
   const sortedDates = entries ? datesSorted(entries) : [];
-  console.log(sortedDates);
   return (
     <div className={classes.root}>
       <Button
