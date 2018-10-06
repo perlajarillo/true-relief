@@ -25,7 +25,9 @@ import * as R from "ramda";
 import { validateTrackPainData } from "../Validations";
 import { validateSelectedValue } from "../Validations";
 import Paper from "@material-ui/core/Paper";
-
+import { Link } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -60,7 +62,8 @@ const styles = theme => ({
     width: 400
   },
   button: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit * 2,
+    marginLeft: theme.spacing.unit * 2
   }
 });
 
@@ -85,7 +88,8 @@ class NewPainEntry extends Component {
       painIsIn: "",
       successMsg: "",
       btnText: "Register pain event",
-      key: null
+      key: null,
+      openSnackbarSaved: false
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -302,15 +306,24 @@ class NewPainEntry extends Component {
       });
     } else {
       !key
-        ? writeNewTrackPain(authUser, this.getFirebasePayload())
-        : editTrackPain(authUser, this.getFirebasePayload(), key);
+        ? writeNewTrackPain(authUser, this.getFirebasePayload()).then(
+            this.setState({ openSnackbarSaved: true })
+          )
+        : editTrackPain(authUser, this.getFirebasePayload(), key).then(
+            this.setState({ openSnackbarSaved: true })
+          );
       this.setState({
         sectionError: "",
         successMsg: "Your entry was submitted"
       });
     }
   };
-
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ openSnackbarSaved: false });
+  };
   render() {
     const { classes } = this.props;
     let { authUser } = this.props;
@@ -472,11 +485,23 @@ class NewPainEntry extends Component {
               <Button
                 variant="contained"
                 color="primary"
+                component={Link}
+                to={{
+                  pathname: "/trackPain"
+                }}
+                className={classes.button}
+              >
+                Return to Track Pain
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
                 onClick={() => this.handleSubmit(this.authUser)}
                 className={classes.button}
               >
                 {btnText}
               </Button>
+
               <FormHelperText error={true}>
                 {sectionError ? sectionError : successMsg}
               </FormHelperText>
@@ -498,6 +523,23 @@ class NewPainEntry extends Component {
             </div>
           </Grid>
         </Grid>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={this.state.openSnackbarSaved}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarSaved"
+          name="openSnackbarSaved"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="success"
+            message="Entry saved!"
+          />
+        </Snackbar>
       </div>
     );
   }
