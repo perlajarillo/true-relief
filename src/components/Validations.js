@@ -94,7 +94,7 @@ export function validateDemographicData(demographicData) {
     !demographicData.weight ||
     !demographicData.height ||
     !demographicData.gender ||
-    !demographicData.selectedDate ||
+    !demographicData.birth ||
     demographicData.errorweight !== "" ||
     demographicData.errorheight !== "" ||
     demographicData.errorname !== "";

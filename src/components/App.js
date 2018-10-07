@@ -18,6 +18,8 @@ import TrackPain from "./TrackPain";
 import NewPainEntry from "./TrackPain/NewPainEntry";
 import theme from "./theme";
 import withAuthentication from "./WithAuthentication";
+import EditProfile from "./EditProfile";
+
 
 const App = () => (
   <div className="App">
@@ -37,6 +39,7 @@ const App = () => (
           <Route path="/registration" component={Registration} />
           <Route path="/trackPain" component={TrackPain} />
           <Route path="/newPainEntry" component={NewPainEntry} />
+          <Route path="/editProfile" component={EditProfile} />
         </Switch>
       </main>
       <footer>

@@ -15,15 +15,18 @@ import Challenges from "./Challenges";
 import PainHistory from "./PainHistory";
 import { writeNewPatient } from "../../firebase/operations";
 import * as R from "ramda";
-import { validateString } from "../Validations.js";
-import { validateFreeInput } from "../Validations.js";
-import { validateDemographicData } from "../Validations.js";
-import { validateHabitsData } from "../Validations.js";
-import { validatePainConditionData } from "../Validations.js";
-import { validateThereIsAtLeastOneChallenge } from "../Validations.js";
-import { validateThereIsAtLeastOneNeed } from "../Validations.js";
-import { validateAge } from "../Validations.js";
+import {
+  validateString,
+  validateFreeInput,
+  validateDemographicData,
+  validateHabitsData,
+  validatePainConditionData,
+  validateThereIsAtLeastOneChallenge,
+  validateThereIsAtLeastOneNeed,
+  validateAge
+} from "../Validations.js";
 import { Redirect } from "react-router-dom";
+import { format } from "date-fns";
 import withAuthorization from "../WithAuthorization";
 
 const styles = theme => ({
@@ -60,6 +63,22 @@ class VerticalLinearStepper extends Component {
     super(props);
 
     this.state = {
+      name: "",
+      birth: "",
+      weight: "",
+      height: "",
+      gender: "",
+      smoke: "",
+      coffee: "",
+      alcohol: "",
+      kindOfCoffee: "",
+      cupsOfCoffee: "",
+      drinksOfAlcohol: "",
+      kindOfDrink: "",
+      physicalActivity: "",
+      sleepHours: "",
+      sleepQuality: "",
+      selectedDate: new Date(),
       activeStep: 0,
       needs: [],
       challenges: [],
@@ -85,47 +104,34 @@ class VerticalLinearStepper extends Component {
       open: false,
       submitted: false
     };
-
-    this.updateParentState = this.updateParentState.bind(this);
-    this.updateDateInParentState = this.updateDateInParentState.bind(this);
-    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-    this.handleNeedsCheckboxChange = this.handleNeedsCheckboxChange.bind(this);
-    this.handleChallengesCheckboxChange = this.handleChallengesCheckboxChange.bind(
-      this
-    );
-    this.toggleStepContent = this.toggleStepContent.bind(this);
-    this.clearConditionalState = this.clearConditionalState.bind(this);
-    this.setPainConditionName = this.setPainConditionName.bind(this);
-    this.setPainConditionProps = this.setPainConditionProps.bind(this);
-    this.getPropName = this.getPropName.bind(this);
-    this.getFirebasePayload = this.getFirebasePayload.bind(this);
-    this.setCheckBoxesState = this.setCheckBoxesState.bind(this);
-    this.reviewValidations = this.reviewValidations.bind(this);
   }
+
   /**
    * updateDateInParentState - sets the selected date in the state
    * @param {Object} the date object
    * @return {void}
    */
-  updateDateInParentState(date) {
+  updateDateInParentState = date => {
+    let birth = format(date, "d/MM/YYYY");
     validateAge(date)
       ? this.setState({
           selectedDate: date,
+          birth: birth,
           errorSelectedDate: ""
         })
       : this.setState({
           errorSelectedDate: "You must be older than 16 to use this web site."
         });
-  }
+  };
 
-  reviewValidations(event) {
+  reviewValidations = event => {
     const name = event.target.name;
     const value = event.target.value;
     const formControl = "error" + name;
     this.setState({
       [formControl]: validateString(name, value)
     });
-  }
+  };
 
   /**
    * updateParentState - sets values of all input except for Challenges and
@@ -133,7 +139,7 @@ class VerticalLinearStepper extends Component {
    * @param {Object} event the event object
    * @return {void}
    */
-  updateParentState(event) {
+  updateParentState = event => {
     const name = event.target.name;
     const value = event.target.value;
     const isAnHabit = HABITS.includes(name);
@@ -166,7 +172,7 @@ class VerticalLinearStepper extends Component {
           [name]: value,
           ["error" + name]: ""
         });
-  }
+  };
 
   /**
    * clearConditionalState - Helps to render conditional elements in the DOM for
@@ -174,7 +180,7 @@ class VerticalLinearStepper extends Component {
    * @param {String} name the input name
    * @return {void}
    */
-  clearConditionalState(name) {
+  clearConditionalState = name => {
     name === "medication" &&
       this.setState({
         [name]: "no",
@@ -193,7 +199,7 @@ class VerticalLinearStepper extends Component {
         nonPharmaName: "",
         nonPharmaEffectiveness: ""
       });
-  }
+  };
 
   /**
    * handleCheckboxChange - generic function to set checkbox value
@@ -269,7 +275,7 @@ class VerticalLinearStepper extends Component {
    * @param {String} name the input name
    * @return {String} the prop name
    */
-  getPropName(name) {
+  getPropName = name => {
     const names = {
       medicationName: "medications",
       medicationEffectiveness: "medications",
@@ -279,7 +285,7 @@ class VerticalLinearStepper extends Component {
       nonPharmaEffectiveness: "nonPharma"
     };
     return names[name];
-  }
+  };
 
   /**
    * setPainConditionName - Sets the selected pain condition name and the
@@ -287,7 +293,7 @@ class VerticalLinearStepper extends Component {
    * @param {String} value pain condition name
    * @return {void}
    */
-  setPainConditionName(value) {
+  setPainConditionName = value => {
     const { painConditions } = this.state;
     const updatedPainConditions = painConditions.concat({
       name: value,
@@ -299,7 +305,7 @@ class VerticalLinearStepper extends Component {
     this.setState({
       painConditions: updatedPainConditions.slice(-1)
     });
-  }
+  };
 
   /**
    * setPainConditionProps - Sets the selected values for medications,
@@ -310,7 +316,7 @@ class VerticalLinearStepper extends Component {
    * the pain condition object
    * @return {void}
    */
-  setPainConditionProps(name, value, propPath) {
+  setPainConditionProps = (name, value, propPath) => {
     const { painConditions } = this.state;
     const propLens = R.lensPath([painConditions.length - 1, propPath]);
     const props = R.view(propLens, painConditions);
@@ -324,7 +330,7 @@ class VerticalLinearStepper extends Component {
     this.setState({
       painConditions: R.set(propLens, [dataToSet], painConditions)
     });
-  }
+  };
 
   /**
    * toggleStepContent - opens and closes step contents
@@ -345,7 +351,7 @@ class VerticalLinearStepper extends Component {
       "Habits",
       "Preferences",
       "Challenges",
-        "Pain History"
+      "Pain History"
     ];
   }
 
@@ -408,14 +414,14 @@ class VerticalLinearStepper extends Component {
    * getFirebasePayload - returns the data to send to Firebase
    * @returns {Object} the Firebase payload
    */
-  getFirebasePayload() {
+  getFirebasePayload = () => {
     const nameTrimmed = this.state.name.trim();
     this.setState({ name: nameTrimmed });
     return R.pick(
       [
         "name",
         "gender",
-        "selectedDate",
+        "birth",
         "weight",
         "height",
         "smoke",
@@ -437,7 +443,7 @@ class VerticalLinearStepper extends Component {
       ],
       this.state
     );
-  }
+  };
   /**
    * getDemographicPayload - returns the data to send to validateDemographicData
    * @returns {Object} the Demographic payload
@@ -452,7 +458,7 @@ class VerticalLinearStepper extends Component {
         "errorweight",
         "errorheight",
         "errorname",
-        "selectedDate"
+        "birth"
       ],
       this.state
     );
@@ -549,7 +555,10 @@ class VerticalLinearStepper extends Component {
    */
   handleNext = authUser => {
     let errorsAndMsg = this.checkForErrors(this.state.activeStep);
-      if ((this.state.activeStep === this.getSteps().length - 1) && !errorsAndMsg[0]) {
+    if (
+      this.state.activeStep === this.getSteps().length - 1 &&
+      !errorsAndMsg[0]
+    ) {
       //We need to review if there are changes in the session status
       writeNewPatient(authUser.uid, this.getFirebasePayload());
       this.setState({
@@ -592,43 +601,45 @@ class VerticalLinearStepper extends Component {
     const { activeStep, submitted } = this.state;
     return !submitted ? (
       <div>
-            <Stepper
-              activeStep={activeStep}
-              orientation="vertical"
-              className={classes.root}
-            >
-              {steps.map((label, index) => {
-                return (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                    <StepContent>
-                      {this.getStepContent(index)}
-                      <div className={classes.actionsContainer}>
-                        <div>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            disabled={activeStep === 0}
-                            onClick={this.handleBack}
-                            className={classes.button}
-                          >
-                            Back
+        <Stepper
+          activeStep={activeStep}
+          orientation="vertical"
+          className={classes.root}
+        >
+          {steps.map((label, index) => {
+            return (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+                <StepContent>
+                  {this.getStepContent(index)}
+                  <div className={classes.actionsContainer}>
+                    <div>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                      >
+                        Back
+                      </Button>
+                      {
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => this.handleNext(authUser)}
+                          className={classes.button}
+                        >
+                          {activeStep === steps.length - 1 ? "Finish" : "Next"}
                         </Button>
-                          {<Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => this.handleNext(authUser)}
-                            className={classes.button}
-                          >
-                            {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                          </Button>}
-                        </div>
-                      </div>
-                    </StepContent>
-                  </Step>
-                );
-              })}
-            </Stepper>
+                      }
+                    </div>
+                  </div>
+                </StepContent>
+              </Step>
+            );
+          })}
+        </Stepper>
         {activeStep === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>All steps completed - you&quot;re finished</Typography>
@@ -638,8 +649,9 @@ class VerticalLinearStepper extends Component {
           </Paper>
         )}
       </div>
-    )
-    : (<Redirect to="/trackPain"/>);
+    ) : (
+      <Redirect to="/trackPain" />
+    );
   }
 }
 
@@ -647,7 +659,7 @@ VerticalLinearStepper.propTypes = {
   classes: PropTypes.object
 };
 
-const StyledRegistration =  withStyles(styles)(VerticalLinearStepper);
-const authCondition = (authUser) => Boolean(authUser);
+const StyledRegistration = withStyles(styles)(VerticalLinearStepper);
+const authCondition = authUser => Boolean(authUser);
 
 export default withAuthorization(authCondition)(StyledRegistration);

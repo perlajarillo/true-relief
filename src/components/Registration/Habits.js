@@ -8,8 +8,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Typography from "@material-ui/core/Typography";
-import habitsData from './literals/habits.js'
-import FormHelperText from '@material-ui/core/FormHelperText';
+import habitsData from "./literals/habits.js";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const styles = theme => ({
   root: {
@@ -32,7 +32,7 @@ const styles = theme => ({
 const Habits = props => {
   const { classes, parentState, updateParentState, reviewValidations } = props;
 
-this.input = React.createRef();
+  this.input = React.createRef();
 
   return (
     <Fragment>
@@ -85,7 +85,9 @@ this.input = React.createRef();
           required
           className={classes.formControl}
         >
-          <FormLabel component="legend">{habitsData.sleep.titleHours}</FormLabel>
+          <FormLabel component="legend">
+            {habitsData.sleep.titleHours}
+          </FormLabel>
           <RadioGroup
             aria-label="sleepHours"
             name="sleepHours"
@@ -108,7 +110,9 @@ this.input = React.createRef();
           required
           className={classes.formControl}
         >
-          <FormLabel component="legend">{habitsData.sleep.titleQuality}</FormLabel>
+          <FormLabel component="legend">
+            {habitsData.sleep.titleQuality}
+          </FormLabel>
           <RadioGroup
             aria-label="sleep-quality"
             name="sleepQuality"
@@ -194,16 +198,21 @@ this.input = React.createRef();
             <Input
               id="drinks-of-alcohol"
               name="drinksOfAlcohol"
+              value={parentState.drinksOfAlcohol}
               type="number"
               ref={this.input}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
                 "aria-label": "drinks-of-alcohol",
-                min: "1", max: "30", step: "1"
+                min: "1",
+                max: "30",
+                step: "1"
               }}
             />
-            <FormHelperText error={true}>{parentState.errordrinksOfAlcohol}</FormHelperText>
+            <FormHelperText error={true}>
+              {parentState.errordrinksOfAlcohol}
+            </FormHelperText>
           </FormControl>
           <FormControl required className={classes.formControl}>
             <FormLabel component="legend">
@@ -295,16 +304,21 @@ this.input = React.createRef();
             <Input
               id="cups-of-coffee"
               name="cupsOfCoffee"
+              value={parentState.cupsOfCoffee}
               type="number"
               ref={this.input}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
                 "aria-label": "cups-of-coffee",
-                min: "1", max: "30", step: "1"
+                min: "1",
+                max: "30",
+                step: "1"
               }}
             />
-            <FormHelperText error={true}>{parentState.errorcupsOfCoffee}</FormHelperText>
+            <FormHelperText error={true}>
+              {parentState.errorcupsOfCoffee}
+            </FormHelperText>
           </FormControl>
           <FormControl required className={classes.formControl}>
             <FormLabel component="legend">

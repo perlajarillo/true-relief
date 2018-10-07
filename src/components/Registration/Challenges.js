@@ -49,7 +49,7 @@ const CheckboxComponent = props => {
 };
 
 const Challenges = props => {
-  const { classes, parentGeneralState } = props;
+  const { classes, errorSection } = props;
 
   return (
     <Fragment>
@@ -69,7 +69,7 @@ const Challenges = props => {
           ))}
         </FormGroup>
       </FormControl>
-      <FormHelperText error={true}>{parentGeneralState.errorSection}</FormHelperText>
+      <FormHelperText error={true}>{errorSection}</FormHelperText>
     </Fragment>
   );
 };

@@ -10,7 +10,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
 import painHistoryData from "./literals/painHistoryData.js";
-import FormHelperText from '@material-ui/core/FormHelperText';
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const styles = theme => ({
   root: {
@@ -87,7 +87,8 @@ const PainHistory = props => {
             className={classes.formControl}
           >
             <FormLabel component="legend">
-              {sections.medication.haveTried}{parentState.painCondition}?
+              {sections.medication.haveTried}
+              {parentState.painCondition}?
             </FormLabel>
             <RadioGroup
               aria-label="medication"
@@ -112,7 +113,9 @@ const PainHistory = props => {
         }}
       >
         <FormControl required className={classes.formControl}>
-          <FormLabel component="legend">{sections.medication.whatHaveTried}</FormLabel>
+          <FormLabel component="legend">
+            {sections.medication.whatHaveTried}
+          </FormLabel>
           <Select
             value={parentState.medicationName}
             onChange={updateParentState}
@@ -181,7 +184,8 @@ const PainHistory = props => {
           className={classes.formControl}
         >
           <FormLabel component="legend">
-            {sections.procedure.haveTried}{parentState.painCondition}?
+            {sections.procedure.haveTried}
+            {parentState.painCondition}?
           </FormLabel>
           <RadioGroup
             aria-label="procedures"
@@ -205,7 +209,9 @@ const PainHistory = props => {
         }}
       >
         <FormControl required className={classes.formControl}>
-          <FormLabel component="legend">{sections.procedure.whatHaveTried}</FormLabel>
+          <FormLabel component="legend">
+            {sections.procedure.whatHaveTried}
+          </FormLabel>
           <Select
             value={parentState.procedureName}
             onChange={updateParentState}
