@@ -6,7 +6,13 @@ export function writeNewPatient(userId, data) {
     .child(userId)
     .set(data);
 }
-
+export function deletePatient(userId) {
+  return db
+    .ref()
+    .child("patients")
+    .child(userId)
+    .remove();
+}
 export function writeNewTrackPain(userId, data) {
   const newTrackPainKey = db
     .ref()

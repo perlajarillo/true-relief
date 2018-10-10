@@ -6,7 +6,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -44,8 +43,7 @@ class PasswordChange extends Component {
       confirmPassword: "",
       error: null,
       successMsg: null
-    }
-
+    };
   }
 
   handleChange = event => {
@@ -61,7 +59,8 @@ class PasswordChange extends Component {
     const { password } = this.state;
     event.preventDefault();
 
-    auth.onUpdatePassword(password)
+    auth
+      .onUpdatePassword(password)
       .then(() => {
         this.setState({
           password: password,
@@ -72,8 +71,8 @@ class PasswordChange extends Component {
         this.setState({
           error: error.message
         });
-      })
-  }
+      });
+  };
 
   render() {
     const { password, confirmPassword, error, successMsg } = this.state;
@@ -81,13 +80,10 @@ class PasswordChange extends Component {
 
     return (
       <div>
-        <Card className={(classes.root, classes.card)} elevation={0}>
-          <Typography variant="title" className={classes.text}>
-            Change Password
-          </Typography>
+        <Card className={classes.root} elevation={0}>
           <form onSubmit={this.handleSubmit}>
             <CardContent>
-            <FormControl
+              <FormControl
                 className={classes.formControl}
                 fullWidth
                 aria-describedby="required"
@@ -140,8 +136,7 @@ class PasswordChange extends Component {
               </Button>
             </CardContent>
           </form>
-          <CardActions>
-          </CardActions>
+          <CardActions />
         </Card>
       </div>
     );
