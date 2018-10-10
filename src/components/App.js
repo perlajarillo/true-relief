@@ -20,7 +20,6 @@ import theme from "./theme";
 import withAuthentication from "./WithAuthentication";
 import EditProfile from "./EditProfile";
 
-
 const App = () => (
   <div className="App">
     <MuiThemeProvider theme={theme}>

@@ -5,21 +5,18 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link } from "react-router-dom";
 import LogOut from "../LogOut/LogOut";
 import AuthUserContext from "../AuthUserContext";
+import logo from "../../images/logo-h.svg";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    position: "sticky"
-  },
-  flex: {
-    flex: 1
+    display: "flex"
   },
   menuButton: {
     marginLeft: -12
@@ -29,6 +26,18 @@ const styles = theme => ({
   },
   fullList: {
     width: "auto"
+  },
+  logoStyles: {
+    margin: "16px 0",
+    flex: 1
+  },
+  logo: {
+    width: "124px",
+    height: "45px",
+    [theme.breakpoints.up("md")]: {
+      width: "270px",
+      height: "45px"
+    }
   }
 });
 
@@ -36,7 +45,7 @@ const NavAuthUser = props => {
   const { classes, mobileOpen, toggle } = props;
   return (
     <div>
-      <AppBar className={classes.root}>
+      <AppBar className={classes.root} positionsticky="true">
         <Toolbar>
           <IconButton
             className={classes.navIconHide}
@@ -46,9 +55,9 @@ const NavAuthUser = props => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="title" color="inherit" className={classes.flex}>
-            True Relief
-          </Typography>
+          <figure className={classes.logoStyles}>
+            <img src={logo} alt="True relief" className={classes.logo} />
+          </figure>
           <Button tabIndex="-1" color="inherit" component={Link} to="/">
             Home
           </Button>
@@ -61,7 +70,12 @@ const NavAuthUser = props => {
           >
             <div className={classes.list}>
               <List>
-                <Button tabIndex="-1" color="inherit" component={Link} to="/editProfile">
+                <Button
+                  tabIndex="-1"
+                  color="inherit"
+                  component={Link}
+                  to="/editProfile"
+                >
                   Profile
                 </Button>
               </List>
@@ -108,14 +122,15 @@ const NavAuthUser = props => {
   );
 };
 
-const NavNoAuth = classes => {
+const NavNoAuth = props => {
+  const { classes } = props;
   return (
     <div>
       <AppBar className={classes.root}>
         <Toolbar>
-          <Typography variant="title" color="inherit" className={classes.flex}>
-            True Relief
-          </Typography>
+          <figure className={classes.logoStyles}>
+            <img src={logo} alt="True relief" className={classes.logo} />
+          </figure>
           <Button tabIndex="-1" color="inherit" component={Link} to="/">
             Home
           </Button>
