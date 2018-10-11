@@ -58,9 +58,6 @@ const NavAuthUser = props => {
           <Link to="/" className={classes.logoStyles}>
             <img src={logo} alt="True relief" className={classes.logo} />
           </Link>
-          <Button tabIndex="-1" color="inherit" component={Link} to="/">
-            Home
-          </Button>
           <LogOut />
           <SwipeableDrawer
             anchor="left"
@@ -128,12 +125,9 @@ const NavNoAuth = props => {
     <div>
       <AppBar className={classes.root}>
         <Toolbar>
-          <figure className={classes.logoStyles}>
+          <Link to="/" className={classes.logoStyles}>
             <img src={logo} alt="True relief" className={classes.logo} />
-          </figure>
-          <Button tabIndex="-1" color="inherit" component={Link} to="/">
-            Home
-          </Button>
+          </Link>
           <div name="defaultMenus" id="defaultMenus">
             <Button
               tabIndex="-1"

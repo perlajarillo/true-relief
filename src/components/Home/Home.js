@@ -51,6 +51,15 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing.unit
+  },
+  sectionBody: {
+    marginTop: theme.spacing.unit * -10,
+    [theme.breakpoints.up("sm")]: {
+      padding: "0 112px 0 112px"
+    },
+    [theme.breakpoints.up("md")]: {
+      padding: "0 140px 0 140px"
+    }
   }
 });
 
@@ -60,12 +69,12 @@ const Home = props => {
   return (
     <Fragment>
       <div className={classes.heroImg} />
-      <Grid container>
+      <Grid container justify="center">
         <section className={classes.sectionStyles}>
           <Grid item xs={12} sm={12} m={12} lg={8}>
             <header className={classes.pageTitle}>
               <Typography variant="display1" gutterBottom>
-              True Relief provides you with tools and strategies to track your
+                True Relief provides you with tools and strategies to track your
                 pain, to better manage your condition.
               </Typography>
               <Button
@@ -90,6 +99,8 @@ const Home = props => {
               </Button>
             </header>
           </Grid>
+        </section>
+        <section className={classes.sectionBody}>
           <Divider />
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <Typography variant="title" className={classes.tourText}>
