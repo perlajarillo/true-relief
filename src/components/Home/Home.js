@@ -64,16 +64,13 @@ const Home = props => {
         <section className={classes.sectionStyles}>
           <Grid item xs={12} sm={12} m={12} lg={8}>
             <header className={classes.pageTitle}>
-              <Typography variant="display2" gutterBottom>
-                About True Relief
-              </Typography>
-              <Typography variant="subheading" gutterBottom>
-                True Relief provides you with tools and strategies to track your
+              <Typography variant="display1" gutterBottom>
+              True Relief provides you with tools and strategies to track your
                 pain, to better manage your condition.
               </Typography>
               <Button
                 className={classes.button}
-                variant="outlined"
+                variant="contained"
                 color="primary"
                 size="large"
                 component={Link}
@@ -83,7 +80,7 @@ const Home = props => {
               </Button>
               <Button
                 className={classes.button}
-                variant="outlined"
+                variant="contained"
                 color="primary"
                 size="large"
                 component={Link}
