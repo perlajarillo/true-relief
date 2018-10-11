@@ -55,9 +55,9 @@ const NavAuthUser = props => {
           >
             <MenuIcon />
           </IconButton>
-          <figure className={classes.logoStyles}>
+          <Link to="/" className={classes.logoStyles}>
             <img src={logo} alt="True relief" className={classes.logo} />
-          </figure>
+          </Link>
           <Button tabIndex="-1" color="inherit" component={Link} to="/">
             Home
           </Button>
