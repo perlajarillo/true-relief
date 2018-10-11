@@ -13,9 +13,6 @@ import PermIcon from "@material-ui/icons/PermIdentity";
 import NotificationsIcon from "@material-ui/icons/SpeakerNotes";
 
 const styles = theme => ({
-  root: {
-    width: "100%"
-  },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular

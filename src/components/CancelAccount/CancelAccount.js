@@ -14,6 +14,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { deletePatient } from "../../firebase/operations";
 import { auth } from "../../firebase";
+import red from "@material-ui/core/colors/red";
+import blue from "@material-ui/core/colors/blue";
 
 const styles = theme => ({
   button: {
@@ -24,6 +26,20 @@ const styles = theme => ({
   },
   iconBig: {
     fontSize: 30
+  },
+  deleteButton: {
+    color: theme.palette.getContrastText(red[500]),
+    backgroundColor: red[500],
+    "&:hover": {
+      backgroundColor: red[700]
+    }
+  },
+  noButton: {
+    color: theme.palette.getContrastText(red[500]),
+    backgroundColor: theme.palette.primary.main,
+    "&:hover": {
+      backgroundColor: theme.palette.primary.light
+    }
   }
 });
 
@@ -82,8 +98,7 @@ class CancelAccount extends Component {
         <br />
         <Button
           variant="contained"
-          color="secondary"
-          className={classes.button}
+          className={classes.deleteButton}
           onClick={this.handleClickDelete}
         >
           Delete Account
@@ -107,10 +122,17 @@ class CancelAccount extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button
+              onClick={this.handleSubmit}
+              className={classes.deleteButton}
+            >
               Yes
             </Button>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
+            <Button
+              onClick={this.handleClose}
+              className={classes.noButton}
+              autoFocus
+            >
               No
             </Button>
           </DialogActions>
