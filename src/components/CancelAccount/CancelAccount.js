@@ -15,7 +15,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { deletePatient } from "../../firebase/operations";
 import { auth } from "../../firebase";
 import red from "@material-ui/core/colors/red";
-import blue from "@material-ui/core/colors/blue";
 
 const styles = theme => ({
   button: {
