@@ -3,42 +3,41 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import backgroundImg from "../../images/background.jpg";
-import logo from "../../images/logo.png";
-import dailyTips from "../../images/dailyTips.png";
-import doctorVisit from "../../images/doctorVisit.png";
-import journal from "../../images/journal.png";
-import painTrack from "../../images/painTrack.png";
+import backgroundImg from "../../images/trueRelief-image.png";
+import Button from "@material-ui/core/Button";
+import { Link } from "react-router-dom";
+import Divider from "@material-ui/core/Divider";
 
 const styles = theme => ({
   sectionStyles: {
-    textAlign: "center",
-    margin: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 3,
+    [theme.breakpoints.up("sm")]: {
+      padding: "0 112px 0 112px"
+    },
+    [theme.breakpoints.up("md")]: {
+      padding: "0 140px 0 140px"
+    },
+    height: "100vh"
   },
   pageTitle: {
-    paddingTop: theme.spacing.unit * 10,
+    paddingTop: theme.spacing.unit * 4,
     paddingBottom: theme.spacing.unit * 20
-  },
-  icon: {
-    margin: theme.spacing.unit * 2
-  },
-  iconHover: {
-    margin: theme.spacing.unit * 2,
-    "&:hover": {
-      color: "#c43e00"
-    }
   },
   heroImg: {
     background: "url(" + backgroundImg + ")",
     backgroundPosition: "center 10%",
     backgroundSize: "cover",
-    width: "100%",
-    padding: "15% 0 25% 0"
-  },
-  logoStyles: {
-    height: "100%",
-    display: "flex",
-    justifyContent: "center"
+    padding: "18% 0",
+    marginTop: "60px",
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "40px"
+    },
+    [theme.breakpoints.up("md")]: {
+      marginTop: "15px"
+    },
+    [theme.breakpoints.up("lg")]: {
+      marginTop: "5px"
+    }
   },
   tourText: {
     textAlign: "center",
@@ -47,69 +46,78 @@ const styles = theme => ({
       padding: theme.spacing.unit * 10
     }
   },
-  order: {
+  typography: {
+    useNextVariants: true
+  },
+  button: {
+    margin: theme.spacing.unit
+  },
+  sectionBody: {
+    marginTop: theme.spacing.unit * -10,
     [theme.breakpoints.up("sm")]: {
-      order: 1
+      padding: "0 112px 0 112px"
+    },
+    [theme.breakpoints.up("md")]: {
+      padding: "0 140px 0 140px"
     }
   }
 });
 
-const Home = (props) => {
+const Home = props => {
   const { classes } = props;
 
   return (
     <Fragment>
-      <section className={classes.heroImg}>
-        <figure className={classes.logoStyles}>
-          <img src={logo} alt="" />
-        </figure>
-      </section>
-      <section className={classes.sectionStyles}>
-        <Grid container>
-          <Grid item xs={12} sm={12} m={12} lg={12}>
+      <div className={classes.heroImg} />
+      <Grid container justify="center">
+        <section className={classes.sectionStyles}>
+          <Grid item xs={12} sm={12} m={12} lg={8}>
             <header className={classes.pageTitle}>
-              <Typography variant="display3">About True Relief App</Typography>
-              <Typography variant="subheading">
-                This App has a number of tools and strategies to help you best
-                control your pain.
+              <Typography variant="display1" gutterBottom>
+                True Relief provides you with tools and strategies to track your
+                pain, to better manage your condition.
               </Typography>
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                size="large"
+                component={Link}
+                to="/log-in"
+              >
+                Log In
+              </Button>
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                size="large"
+                component={Link}
+                to="/disclaimer"
+              >
+                Sign Up
+              </Button>
             </header>
           </Grid>
-          <Grid item xs={12} sm={4} md={4} lg={6} xl={6}>
+        </section>
+        <section className={classes.sectionBody}>
+          <Divider />
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <Typography variant="title" className={classes.tourText}>
               Tools to help you manage your pain
             </Typography>
           </Grid>
-          <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
-            <img src={dailyTips} alt="" width="100%" />
-          </Grid>
-          <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
-            <img src={painTrack} alt="" width="100%" />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={4}
-            md={4}
-            lg={6}
-            xl={6}
-            className={classes.order}
-          >
+          <Divider />
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <Typography variant="title" className={classes.tourText}>
               Strategies to know more about your pain
             </Typography>
           </Grid>
-          <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
-            <img src={journal} alt="" width="100%" />
-          </Grid>
-          <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
-            <img src={doctorVisit} alt="" width="100%" />
-          </Grid>
-        </Grid>
-      </section>
+        </section>
+      </Grid>
     </Fragment>
   );
-}
+};
 
 Home.propTypes = {
   classes: PropTypes.object.isRequired
