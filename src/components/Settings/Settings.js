@@ -16,6 +16,10 @@ const styles = theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular
+  },
+  iconStyle: {
+    marginRight: theme.spacing.unit * 3,
+    color: theme.palette.primary.main
   }
 });
 
@@ -30,7 +34,7 @@ class Settings extends React.Component {
         <br />
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <PermIcon />
+            <PermIcon className={classes.iconStyle} />
             <Typography className={classes.heading}>Change password</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
@@ -39,7 +43,7 @@ class Settings extends React.Component {
         </ExpansionPanel>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <NotificationsIcon />
+            <NotificationsIcon className={classes.iconStyle} />
             <Typography className={classes.heading}>Notifications</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
@@ -50,7 +54,7 @@ class Settings extends React.Component {
         </ExpansionPanel>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <DeleteIcon />
+            <DeleteIcon className={classes.iconStyle} />
             <Typography className={classes.heading}>Cancel account</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
