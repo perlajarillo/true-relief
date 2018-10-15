@@ -13,6 +13,10 @@ const styles = theme => ({
     flexFlow: "column wrap",
     maxWidth: 250
   },
+  wrapper: {
+    margin: "80px 0",
+    minHeight: "80vh"
+  },
   formControl: {
     margin: theme.spacing.unit * 3,
     minWidth: 120
@@ -35,7 +39,7 @@ const EditDialog = props => {
   const { classes, parentState, updateParentState } = props;
 
   return (
-    <div>
+    <main className={classes.wrapper}>
       <FormControl required className={classes.formControl}>
         <FormLabel component="legend">{sections.painCondition.title}</FormLabel>
         <Select
@@ -163,7 +167,7 @@ const EditDialog = props => {
           ))}
         </Select>
       </FormControl>
-    </div>
+    </main>
   );
 };
 

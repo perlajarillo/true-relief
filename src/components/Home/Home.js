@@ -9,6 +9,9 @@ import { Link } from "react-router-dom";
 import Divider from "@material-ui/core/Divider";
 
 const styles = theme => ({
+  wrapper: {
+    margin: "80px 0"
+  },
   sectionStyles: {
     padding: theme.spacing.unit * 3,
     [theme.breakpoints.up("sm")]: {
@@ -16,8 +19,7 @@ const styles = theme => ({
     },
     [theme.breakpoints.up("md")]: {
       padding: "0 140px 0 140px"
-    },
-    height: "100vh"
+    }
   },
   pageTitle: {
     paddingTop: theme.spacing.unit * 4,
@@ -51,15 +53,6 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing.unit
-  },
-  sectionBody: {
-    marginTop: theme.spacing.unit * -10,
-    [theme.breakpoints.up("sm")]: {
-      padding: "0 112px 0 112px"
-    },
-    [theme.breakpoints.up("md")]: {
-      padding: "0 140px 0 140px"
-    }
   }
 });
 
@@ -67,12 +60,12 @@ const Home = props => {
   const { classes } = props;
 
   return (
-    <Fragment>
+    <main className={classes.wrapper}>
       <div className={classes.heroImg} />
       <Grid container justify="center">
         <section className={classes.sectionStyles}>
           <Grid item xs={12} sm={12} m={12} lg={8}>
-            <header className={classes.pageTitle}>
+            <div className={classes.pageTitle}>
               <Typography variant="display1" gutterBottom>
                 True Relief provides you with tools and strategies to track your
                 pain, to better manage your condition.
@@ -97,10 +90,8 @@ const Home = props => {
               >
                 Sign Up
               </Button>
-            </header>
+            </div>
           </Grid>
-        </section>
-        <section className={classes.sectionBody}>
           <Divider />
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <Typography variant="title" className={classes.tourText}>
@@ -115,7 +106,7 @@ const Home = props => {
           </Grid>
         </section>
       </Grid>
-    </Fragment>
+    </main>
   );
 };
 

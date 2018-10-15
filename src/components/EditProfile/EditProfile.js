@@ -38,11 +38,25 @@ import { format } from "date-fns";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 const styles = theme => ({
+  wrapper: {
+    margin: "80px 0",
+    minHeight: "80vh"
+  },
   title: {
     marginBottom: 16,
     fontSize: 14
   },
   root: {
+    padding: theme.spacing.unit,
+    marginTop: "30%",
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "20%",
+      padding: theme.spacing.unit * 3
+    },
+    [theme.breakpoints.up("md")]: {
+      marginTop: "10%",
+      padding: theme.spacing.unit * 3
+    },
     width: "100%"
   },
   heading: {
@@ -78,10 +92,18 @@ const styles = theme => ({
     transform: "rotate(180deg)"
   },
   icons: {
-    marginLeft: "auto",
+    marginLeft: "auto"
+  },
+  actions: {
+    display: "flex",
+    padding: theme.spacing.unit,
+    justifyContent: "space-between",
     [theme.breakpoints.up("sm")]: {
-      marginRight: -650
+      padding: theme.spacing.unit * 2
     }
+  },
+  panel: {
+    padding: theme.spacing.unit
   }
 });
 
@@ -817,259 +839,272 @@ class EditProfile extends Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
-        <Typography variant="title">Edit Profile </Typography>
-        <ExpansionPanel
-          expanded={expanded === "panel1"}
-          onChange={this.handleChange("panel1")}
-        >
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Demographic</Typography>
-            <Typography className={classes.secondaryHeading}>
-              Date of birth, gender, height, weight.
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <div>
-              <Demographic
-                parentState={this.state}
-                updateParentState={this.updateParentState}
-                reviewValidations={this.reviewValidations}
-                updateDateInParentState={this.updateDateInParentState}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={this.updateDemographic}
-              >
-                Save changes
-              </Button>
-            </div>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel
-          expanded={expanded === "panel2"}
-          onChange={this.handleChange("panel2")}
-        >
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Habits</Typography>
-            <Typography className={classes.secondaryHeading}>
-              Level of activity, alcohol and coffee drinking.
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <div>
-              <Habits
-                parentState={this.state}
-                updateParentState={this.updateParentState}
-                reviewValidations={this.reviewValidations}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={this.updateHabits}
-              >
-                Save changes
-              </Button>
-            </div>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel
-          expanded={expanded === "panel3"}
-          onChange={this.handleChange("panel3")}
-        >
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Preferences</Typography>
-            <Typography className={classes.secondaryHeading}>
-              Personalize the information you are getting from us.
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <div>
-              <Preferences
-                parentState={this.state.needs}
-                errorSection={this.state.errorSection}
-                updateParentState={this.handleNeedsCheckboxChange}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={this.updatePreferences}
-              >
-                Save changes
-              </Button>
-            </div>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel
-          expanded={expanded === "panel4"}
-          onChange={this.handleChange("panel4")}
-        >
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Challenges</Typography>
-            <Typography className={classes.secondaryHeading}>
-              Your biggest challenges.
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <div>
-              <Challenges
-                parentState={this.state.challenges}
-                errorSection={this.state.errorSection}
-                updateParentState={this.handleChallengesCheckboxChange}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={this.updateChallenges}
-              >
-                Save changes
-              </Button>
-            </div>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel
-          expanded={expanded === "panel5"}
-          onChange={this.handleChange("panel5")}
-        >
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Pain Condition</Typography>
-            <Typography className={classes.secondaryHeading}>
-              Pain conditions you have been diagnosed with.
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <div>
-              {painConditions &&
-                Object.keys(painConditions).map(condition => {
-                  return (
-                    <div key={condition}>
-                      <Card className={classes.card}>
-                        <CardActions
-                          className={classes.actions}
-                          disableActionSpacing
-                        >
-                          <Typography className={classes.heading}>
-                            {painConditions[condition].name}
-                          </Typography>
-
-                          <IconButton
-                            className={classes.icons}
-                            aria-label="Delete pain condition"
-                            onClick={() =>
-                              this.deleteCurrentCondition(condition)
-                            }
+      <main className={classes.wrapper}>
+        <div className={classes.root}>
+          <Typography variant="headline" gutterBottom>
+            Edit Profile{" "}
+          </Typography>
+          <ExpansionPanel
+            expanded={expanded === "panel1"}
+            onChange={this.handleChange("panel1")}
+          >
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>Demographic</Typography>
+              <Typography className={classes.secondaryHeading}>
+                Date of birth, gender, height, weight.
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <div>
+                <Demographic
+                  parentState={this.state}
+                  updateParentState={this.updateParentState}
+                  reviewValidations={this.reviewValidations}
+                  updateDateInParentState={this.updateDateInParentState}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={this.updateDemographic}
+                >
+                  Save changes
+                </Button>
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel
+            expanded={expanded === "panel2"}
+            onChange={this.handleChange("panel2")}
+          >
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>Habits</Typography>
+              <Typography className={classes.secondaryHeading}>
+                Level of activity, alcohol and coffee drinking.
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <div>
+                <Habits
+                  parentState={this.state}
+                  updateParentState={this.updateParentState}
+                  reviewValidations={this.reviewValidations}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={this.updateHabits}
+                >
+                  Save changes
+                </Button>
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel
+            expanded={expanded === "panel3"}
+            onChange={this.handleChange("panel3")}
+          >
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>Preferences</Typography>
+              <Typography className={classes.secondaryHeading}>
+                Personalize the information you are getting from us.
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <div>
+                <Preferences
+                  parentState={this.state.needs}
+                  errorSection={this.state.errorSection}
+                  updateParentState={this.handleNeedsCheckboxChange}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={this.updatePreferences}
+                >
+                  Save changes
+                </Button>
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel
+            expanded={expanded === "panel4"}
+            onChange={this.handleChange("panel4")}
+          >
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>Challenges</Typography>
+              <Typography className={classes.secondaryHeading}>
+                Your biggest challenges.
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <div>
+                <Challenges
+                  parentState={this.state.challenges}
+                  errorSection={this.state.errorSection}
+                  updateParentState={this.handleChallengesCheckboxChange}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={this.updateChallenges}
+                >
+                  Save changes
+                </Button>
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel
+            expanded={expanded === "panel5"}
+            onChange={this.handleChange("panel5")}
+          >
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                Pain Condition
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                Pain conditions you have been diagnosed with.
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails className={classes.panel}>
+              <div>
+                {painConditions &&
+                  Object.keys(painConditions).map(condition => {
+                    return (
+                      <div key={condition}>
+                        <Card className={classes.card}>
+                          <CardActions
+                            className={classes.actions}
+                            disableActionSpacing
                           >
-                            <DeleteIcon />
-                          </IconButton>
-                          <IconButton
-                            className={classnames(classes.expand, {
-                              [classes.expandOpen]: key === condition
-                            })}
-                            onClick={() => this.handleClickOpen(condition)}
-                            aria-expanded={key === condition}
-                            aria-label="Edit pain condition"
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </CardActions>
-                        <Collapse
-                          key={condition}
-                          in={key === condition}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          {key === condition && (
-                            <Fragment>
-                              <EditCondition
-                                parentState={this.state.currentCondition}
-                                updateParentState={this.updateCurrentCondition}
-                                handleClose={this.handleClose}
-                              />
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                className={classes.button}
-                                onClick={() => this.updateCondition(condition)}
+                            <div>
+                              <Typography className={classes.heading}>
+                                {painConditions[condition].name}
+                              </Typography>
+                            </div>
+                            <div>
+                              <IconButton
+                                className={classes.icons}
+                                aria-label="Delete pain condition"
+                                onClick={() =>
+                                  this.deleteCurrentCondition(condition)
+                                }
                               >
-                                Save changes
-                              </Button>
-                            </Fragment>
-                          )}
-                          <CardContent />
-                        </Collapse>
-                      </Card>
-                      <br />
+                                <DeleteIcon />
+                              </IconButton>
+                              <IconButton
+                                className={classnames(classes.expand, {
+                                  [classes.expandOpen]: key === condition
+                                })}
+                                onClick={() => this.handleClickOpen(condition)}
+                                aria-expanded={key === condition}
+                                aria-label="Edit pain condition"
+                              >
+                                <EditIcon />
+                              </IconButton>
+                            </div>
+                          </CardActions>
+                          <Collapse
+                            key={condition}
+                            in={key === condition}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            {key === condition && (
+                              <Fragment>
+                                <EditCondition
+                                  parentState={this.state.currentCondition}
+                                  updateParentState={
+                                    this.updateCurrentCondition
+                                  }
+                                  handleClose={this.handleClose}
+                                />
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  className={classes.button}
+                                  onClick={() =>
+                                    this.updateCondition(condition)
+                                  }
+                                >
+                                  Save changes
+                                </Button>
+                              </Fragment>
+                            )}
+                            <CardContent />
+                          </Collapse>
+                        </Card>
+                        <br />
+                      </div>
+                    );
+                  })}
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<AddIcon />}>
+                    <Typography className={classes.heading}>
+                      Add a new Pain Condition
+                    </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <div>
+                      <PainHistory
+                        parentState={this.state}
+                        updateParentState={this.updateParentState}
+                        handleCheckboxChange={this.handleCheckboxChange}
+                      />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={() => this.addNewCondition()}
+                      >
+                        Add new pain condition
+                      </Button>
                     </div>
-                  );
-                })}
-              <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<AddIcon />}>
-                  <Typography className={classes.heading}>
-                    Add a new Pain Condition
-                  </Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <div>
-                    <PainHistory
-                      parentState={this.state}
-                      updateParentState={this.updateParentState}
-                      handleCheckboxChange={this.handleCheckboxChange}
-                    />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={() => this.addNewCondition()}
-                    >
-                      Add new pain condition
-                    </Button>
-                  </div>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            </div>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={this.state.openSnackbarSaved}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarSaved"
-          name="openSnackbarSaved"
-        >
-          <SnackbarContentWrapper
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={this.state.openSnackbarSaved}
+            autoHideDuration={3000}
             onClose={this.handleSnackbarClose}
-            variant="success"
-            message="Changes saved!"
-          />
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={this.state.openSnackbarDeleted}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          id="openSnackbarDeleted"
-          name="openSnackbarDeleted"
-        >
-          <SnackbarContentWrapper
-            variant="warning"
-            className={classes.margin}
-            message="Pain condition deleted!"
-          />
-        </Snackbar>
-        <br />
-      </div>
+            id="openSnackbarSaved"
+            name="openSnackbarSaved"
+          >
+            <SnackbarContentWrapper
+              onClose={this.handleSnackbarClose}
+              variant="success"
+              message="Changes saved!"
+            />
+          </Snackbar>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={this.state.openSnackbarDeleted}
+            autoHideDuration={3000}
+            onClose={this.handleSnackbarClose}
+            id="openSnackbarDeleted"
+            name="openSnackbarDeleted"
+          >
+            <SnackbarContentWrapper
+              variant="warning"
+              className={classes.margin}
+              message="Pain condition deleted!"
+            />
+          </Snackbar>
+          <br />
+        </div>
+      </main>
     );
   }
 }

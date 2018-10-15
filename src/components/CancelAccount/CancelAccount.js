@@ -24,7 +24,8 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit
   },
   iconBig: {
-    fontSize: 30
+    fontSize: 30,
+    marginRight: theme.spacing.unit * 2
   },
   deleteButton: {
     color: theme.palette.getContrastText(red[500]),
@@ -88,7 +89,7 @@ class CancelAccount extends Component {
 
     return (
       <div>
-        <Typography>
+        <Typography paragraph>
           <AlertIcon className={classes.iconBig} />
           This operation can NOT be undone. If you delete your account you will
           not be able to use True Relief's tools, like Tracking Pain, Local
