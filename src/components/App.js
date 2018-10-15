@@ -20,30 +20,32 @@ import theme from "./theme";
 import withAuthentication from "./WithAuthentication";
 import EditProfile from "./EditProfile";
 
+const styles = {
+  marginTop: "80px",
+  height: "100vh"
+};
+
 const App = () => (
   <div className="App">
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <Header />
 
-      <main>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/settings" component={Settings} />
-          <Route path="/sign-up" component={SignUp} />
-          <Route path="/log-in" component={LogIn} />
-          <Route path="/password-reset" component={PasswordForget} />
-          <Route path="/policy" component={Policy} />
-          <Route path="/disclaimer" component={Disclaimer} />
-          <Route path="/registration" component={Registration} />
-          <Route path="/trackPain" component={TrackPain} />
-          <Route path="/newPainEntry" component={NewPainEntry} />
-          <Route path="/editProfile" component={EditProfile} />
-        </Switch>
-      </main>
-      <footer>
-        <Footer />
-      </footer>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/settings" component={Settings} />
+        <Route path="/sign-up" component={SignUp} />
+        <Route path="/log-in" component={LogIn} />
+        <Route path="/password-reset" component={PasswordForget} />
+        <Route path="/policy" component={Policy} />
+        <Route path="/disclaimer" component={Disclaimer} />
+        <Route path="/registration" component={Registration} />
+        <Route path="/trackPain" component={TrackPain} />
+        <Route path="/newPainEntry" component={NewPainEntry} />
+        <Route path="/editProfile" component={EditProfile} />
+      </Switch>
+
+      <Footer />
     </MuiThemeProvider>
   </div>
 );

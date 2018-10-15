@@ -12,11 +12,10 @@ export default createMuiTheme({
       light: "#c7c7c7",
       main: "#969696",
       dark: "#686868",
-      contrastText: "#000",
+      contrastText: "#000"
     }
   },
   typography: {
     fontSize: 16
-  },
+  }
 });
-

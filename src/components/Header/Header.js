@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -32,11 +32,14 @@ const styles = theme => ({
     flex: 1
   },
   logo: {
-    width: "124px",
+    width: "140px",
     height: "45px",
-    [theme.breakpoints.up("md")]: {
-      width: "270px",
+    [theme.breakpoints.up("sm")]: {
+      width: "150px",
       height: "45px"
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "270px"
     }
   }
 });
@@ -44,7 +47,7 @@ const styles = theme => ({
 const NavAuthUser = props => {
   const { classes, mobileOpen, toggle } = props;
   return (
-    <div>
+    <Fragment>
       <AppBar className={classes.root} positionsticky="true">
         <Toolbar>
           <IconButton
@@ -115,7 +118,7 @@ const NavAuthUser = props => {
           </SwipeableDrawer>
         </Toolbar>
       </AppBar>
-    </div>
+    </Fragment>
   );
 };
 

@@ -12,12 +12,19 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import { auth } from "../../firebase";
-// import route Components
 import { Link } from "react-router-dom";
-
-import logo from "../../images/logo.png";
+import logo from "../../images/logo-h-blue.svg";
 
 const styles = theme => ({
+  wrapper: {
+    margin: "80px 0"
+  },
+  container: {
+    paddingTop: theme.spacing.unit * 3,
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing.unit * 3
+    }
+  },
   formControl: {
     margin: theme.spacing.unit
   },
@@ -30,16 +37,20 @@ const styles = theme => ({
     color: theme.palette.text.secondary
   },
   card: {
-    width: "350px",
+    width: "300px",
     margin: "50px auto",
-    backgroundColor: "#fafafa"
+    paddingBottom: "1%",
+    [theme.breakpoints.up("sm")]: {
+      width: "350px"
+    }
   },
   pos: {
     marginBottom: theme.spacing.unit * 3
   },
   media: {
-    height: 0,
-    paddingTop: "56.25%"
+    height: "64px",
+    paddingTop: "25%",
+    backgroundSize: "350px"
   }
 });
 
@@ -100,7 +111,7 @@ class SignUp extends Component {
         .catch(error => {
           this.setState({
             error: error.message
-          })
+          });
         });
   };
 
@@ -109,108 +120,110 @@ class SignUp extends Component {
     const { classes } = this.props;
 
     return (
-      <div>
-        <Card className={(classes.root, classes.card)} elevation={0}>
-          <CardMedia
-            className={classes.media}
-            image={logo}
-            title="True Relief"
-          />
-          <Typography variant="body1" className={classes.text}>
-            The information you provide in this web site is for educational
-            purposes only and it is not intended to prevent diagnose of treat
-            any medical conditions.
-          </Typography>
-          <Typography variant="body1" className={classes.text}>
-            Your information will be kept private.
-          </Typography>
-          <form onSubmit={this.handleSubmit}>
-            <CardContent>
-              <FormControl
-                className={classes.formControl}
-                fullWidth
-                aria-describedby="required"
-                aria-required="true"
-              >
-                <InputLabel htmlFor="email">E-mail</InputLabel>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={email}
+      <main className={classes.wrapper}>
+        <div className={classes.container}>
+          <Card className={(classes.root, classes.card)} elevation={0}>
+            <CardMedia
+              className={classes.media}
+              image={logo}
+              title="True Relief"
+            />
+            <Typography variant="body1" className={classes.text}>
+              The information you provide in this web site is for educational
+              purposes only and it is not intended to prevent diagnose of treat
+              any medical conditions.
+            </Typography>
+            <Typography variant="body1" className={classes.text}>
+              Your information will be kept private.
+            </Typography>
+            <form onSubmit={this.handleSubmit}>
+              <CardContent>
+                <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="email">E-mail</InputLabel>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={email}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="Password"
+                    value={password}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <FormControl
+                  className={classes.formControl}
+                  fullWidth
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="confirmPassword">
+                    Confirm Password
+                  </InputLabel>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="Password"
+                    value={confirmPassword}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  color="primary"
+                  fullWidth
+                  className={classes.button}
+                >
+                  Create an Account
+                </Button>
+                <FormHelperText
+                  id="error"
+                  name="error"
+                  value={error}
                   onChange={this.handleChange}
-                />
-                <FormHelperText id="required">Required*</FormHelperText>
-              </FormControl>
-              <FormControl
-                className={classes.formControl}
-                fullWidth
-                aria-describedby="required"
-                aria-required="true"
-              >
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input
-                  id="password"
-                  name="password"
-                  type="Password"
-                  value={password}
-                  onChange={this.handleChange}
-                />
-                <FormHelperText id="required">Required*</FormHelperText>
-              </FormControl>
-              <FormControl
-                className={classes.formControl}
-                fullWidth
-                aria-describedby="required"
-                aria-required="true"
-              >
-                <InputLabel htmlFor="confirmPassword">
-                  Confirm Password
-                </InputLabel>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="Password"
-                  value={confirmPassword}
-                  onChange={this.handleChange}
-                />
-                <FormHelperText id="required">Required*</FormHelperText>
-              </FormControl>
+                >
+                  {error}
+                </FormHelperText>
+              </CardContent>
+            </form>
+            <Typography className={classes.text} variant="body1">
+              Are You already registered?
+            </Typography>
+            <CardActions>
               <Button
-                variant="contained"
-                type="submit"
-                color="primary"
+                variant="outlined"
                 fullWidth
-                className={classes.button}
+                color="primary"
+                component={Link}
+                to="/log-in"
               >
-                Create an Account
+                Log In
               </Button>
-              <FormHelperText
-                id="error"
-                name="error"
-                value={error}
-                onChange={this.handleChange}
-              >
-                {error}
-              </FormHelperText>
-            </CardContent>
-          </form>
-          <Typography className={classes.text} variant="body1">
-            Are You already registered?
-          </Typography>
-          <CardActions>
-            <Button
-              variant="outlined"
-              fullWidth
-              color="primary"
-              component={Link}
-              to="/log-in"
-            >
-              Log In
-            </Button>
-          </CardActions>
-        </Card>
-      </div>
+            </CardActions>
+          </Card>
+        </div>
+      </main>
     );
   }
 }

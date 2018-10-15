@@ -13,6 +13,20 @@ import PermIcon from "@material-ui/icons/PermIdentity";
 import NotificationsIcon from "@material-ui/icons/SpeakerNotes";
 
 const styles = theme => ({
+  wrapper: {
+    margin: "80px 0",
+    minHeight: "80vh"
+  },
+  sectionStyles: {
+    padding: theme.spacing.unit * 3,
+    marginTop: "30%",
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "20%"
+    },
+    [theme.breakpoints.up("md")]: {
+      marginTop: "10%"
+    }
+  },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular
@@ -28,42 +42,48 @@ class Settings extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
-        <Typography variant="headline">Settings</Typography>
-        <br />
-        <br />
-        <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <PermIcon className={classes.iconStyle} />
-            <Typography className={classes.heading}>Change password</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <PasswordChange />
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <NotificationsIcon className={classes.iconStyle} />
-            <Typography className={classes.heading}>Notifications</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Specify how often do you want to receive reminders.
-            </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <DeleteIcon className={classes.iconStyle} />
-            <Typography className={classes.heading}>Cancel account</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <CancelAccount />
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <br />
-        <br />
-      </div>
+      <main className={classes.wrapper}>
+        <section className={classes.sectionStyles}>
+          <Typography variant="headline">Settings</Typography>
+          <br />
+          <br />
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <PermIcon className={classes.iconStyle} />
+              <Typography className={classes.heading}>
+                Change password
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <PasswordChange />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <NotificationsIcon className={classes.iconStyle} />
+              <Typography className={classes.heading}>Notifications</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>
+                Specify how often do you want to receive reminders.
+              </Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <DeleteIcon className={classes.iconStyle} />
+              <Typography className={classes.heading}>
+                Cancel account
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <CancelAccount />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <br />
+          <br />
+        </section>
+      </main>
     );
   }
 }

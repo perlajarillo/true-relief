@@ -59,11 +59,19 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 400
+    width: 300,
+    padding: "10px",
+    [theme.breakpoints.up("sm")]: {
+      width: 400
+    }
   },
   button: {
     marginTop: theme.spacing.unit * 2,
     marginLeft: theme.spacing.unit * 2
+  },
+  paperPadding: {
+    padding: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 2
   }
 });
 
@@ -514,9 +522,9 @@ class NewPainEntry extends Component {
                 clearParentState={this.clearParentState}
                 painIsInData={this.state.painIsIn}
               />
-              <Paper elevation={1}>
+              <Paper className={classes.paperPadding} elevation={1}>
                 <Typography variant="body2" component="h3">
-                  Parts of your body affected.
+                  Parts of your body affected:
                 </Typography>
                 <Typography component="p">{keysInPainIsIn}</Typography>
               </Paper>

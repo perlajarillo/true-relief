@@ -34,6 +34,20 @@ import { lighten } from "@material-ui/core/styles/colorManipulator";
 import Radio from "@material-ui/core/Radio";
 
 const styles = theme => ({
+  wrapper: {
+    margin: "80px 0",
+    minHeight: "80vh"
+  },
+  sectionStyles: {
+    padding: theme.spacing.unit * 3,
+    marginTop: "30%",
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "20%"
+    },
+    [theme.breakpoints.up("md")]: {
+      marginTop: "10%"
+    }
+  },
   bullet: {
     display: "inline-block",
     margin: "0 2px",
@@ -48,9 +62,9 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
+    marginTop: theme.spacing.unit * 3,
     marginLeft: "1%",
     width: "98%",
-    marginTop: theme.spacing.unit * 3,
     overflowX: "auto"
   },
   table: {
@@ -64,7 +78,15 @@ const styles = theme => ({
       backgroundColor: theme.palette.background.default
     }
   },
-
+  titleRow: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    margin: theme.spacing.unit * 2,
+    [theme.breakpoints.up("sm")]: {
+      justifyContent: "space-between"
+    }
+  },
   personalizedCell: {
     width: "7px",
     align: "center",
@@ -338,22 +360,25 @@ const EntriesList = ({
   const sortedDates = entries ? datesSorted(entries) : [];
   return (
     <div className={classes.root}>
-      <Button
-        size="small"
-        variant="extendedFab"
-        color="primary"
-        aria-label="Add"
-        className={classes.button}
-        component={Link}
-        to={{
-          pathname: "/newPainEntry",
-          state: {
-            authUser: uid
-          }
-        }}
-      >
-        <AddIcon /> Add new entry
-      </Button>
+      <div className={classes.titleRow}>
+        <Typography variant="headline">Track Pain</Typography>
+        <Button
+          size="small"
+          variant="contained"
+          color="primary"
+          aria-label="Add"
+          className={classes.button}
+          component={Link}
+          to={{
+            pathname: "/newPainEntry",
+            state: {
+              authUser: uid
+            }
+          }}
+        >
+          <AddIcon /> Add new entry
+        </Button>
+      </div>
       {entries ? (
         <Paper className={classes.root}>
           <EnhancedTableToolbar
@@ -466,8 +491,8 @@ const EntriesList = ({
         <div className={classes.root}>
           <Typography variant="headline">
             {" "}
-            You don't have any entries yet, to register a new event click in the
-            button above (+)
+            You don't have any entries yet. To register a new event, click on
+            the button above (+)
           </Typography>
         </div>
       )}
@@ -556,6 +581,7 @@ class TrackPain extends Component {
   };
   getPainEntries = () => {
     db.getPainEntries(this.props.authUser.uid).then(snapshot => {
+      console.log("trackpain", this.props.authUser.uid);
       this.setState({
         entries: snapshot.val(),
         uid: this.props.authUser.uid
@@ -579,22 +605,23 @@ class TrackPain extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
-        <Typography variant="headline">Track Pain</Typography>
-        <EntriesList
-          classes={classes}
-          state={this.state}
-          handleClickDeleteEntry={this.handleClickDeleteEntry}
-          handleClose={this.handleClose}
-          handleDeleteEntry={this.handleDeleteEntry}
-          isSelected={this.isSelected}
-          handleClick={this.handleClick}
-          handleSelectAllClick={this.handleSelectAllClick}
-          handleRequestSort={this.handleRequestSort}
-          handleChangePage={this.handleChangePage}
-          handleChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-      </div>
+      <main className={classes.wrapper}>
+        <div className={classes.sectionStyles}>
+          <EntriesList
+            classes={classes}
+            state={this.state}
+            handleClickDeleteEntry={this.handleClickDeleteEntry}
+            handleClose={this.handleClose}
+            handleDeleteEntry={this.handleDeleteEntry}
+            isSelected={this.isSelected}
+            handleClick={this.handleClick}
+            handleSelectAllClick={this.handleSelectAllClick}
+            handleRequestSort={this.handleRequestSort}
+            handleChangePage={this.handleChangePage}
+            handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+        </div>
+      </main>
     );
   }
 }

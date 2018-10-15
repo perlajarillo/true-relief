@@ -10,14 +10,21 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-// importing route Components
 import { Redirect } from "react-router-dom";
-
-import logo from "../../../images/logo.png";
+import logo from "../../../images/logo-h-blue.svg";
 
 const styles = theme => ({
+  wrapper: {
+    margin: "80px 0"
+  },
+  container: {
+    paddingTop: theme.spacing.unit * 3,
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing.unit * 3
+    }
+  },
   formControl: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unitSVGAnimatedBoolean
   },
   button: {
     marginTop: theme.spacing.unit
@@ -27,16 +34,20 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2
   },
   card: {
-    width: "350px",
+    width: "300px",
     margin: "50px auto",
-    backgroundColor: "#fafafa"
+    paddingBottom: "1%",
+    [theme.breakpoints.up("sm")]: {
+      width: "350px"
+    }
   },
   pos: {
     marginBottom: 24
   },
   media: {
-    height: 0,
-    paddingTop: "56.25%"
+    height: "64px",
+    paddingTop: "25%",
+    backgroundSize: "350px"
   }
 });
 
@@ -87,46 +98,47 @@ class Disclaimer extends Component {
     const { classes } = this.props;
 
     return (
-      <div>
-        {redirectToSignUp && <Redirect to={from} />}
+      <main className={classes.wrapper}>
+        <div className={classes.container}>
+          {redirectToSignUp && <Redirect to={from} />}
 
-        <Card className={classes.card} elevation={0}>
-          <CardMedia
-            className={classes.media}
-            image={logo}
-            title="True Relief"
-          />
-          <Typography className={classes.text} variant="subheading">
-            Please read and agree with the{" "}
-            <a href="/policy" target="_blank" style={aTagStyles}>
-              terms and conditions{" "}
-            </a>{" "}
-            in order to continue.
-          </Typography>
-          <form onSubmit={this.handleSubmit}>
-            <CardContent>
-              <FormControlLabel
-                className={classes.formControl}
-                control={
-                  <Checkbox
-                    value="chkDisclaimer"
-                    checked={chkDisclaimer}
-                    onChange={this.handleChange}
-                    required
-                  />
-                }
-                label="I have read terms and conditions and I agree with them."
-              />
-              <FormHelperText
-                id="error"
-                name="error"
-                value={error}
-                onChange={this.handleChange}
-              >
-                {error}
-              </FormHelperText>
-            </CardContent>
-            <CardActions className={classes.pos}>
+          <Card className={classes.card} elevation={0}>
+            <CardMedia
+              className={classes.media}
+              image={logo}
+              title="True Relief"
+            />
+            <Typography className={classes.text} variant="subheading">
+              Please read and agree with the{" "}
+              <a href="/policy" target="_blank" style={aTagStyles}>
+                terms and conditions{" "}
+              </a>{" "}
+              in order to continue.
+            </Typography>
+            <form onSubmit={this.handleSubmit}>
+              <CardContent>
+                <FormControlLabel
+                  className={classes.formControl}
+                  control={
+                    <Checkbox
+                      value="chkDisclaimer"
+                      checked={chkDisclaimer}
+                      onChange={this.handleChange}
+                      required
+                    />
+                  }
+                  label="I have read terms and conditions and I agree with them."
+                />
+                <FormHelperText
+                  id="error"
+                  name="error"
+                  value={error}
+                  onChange={this.handleChange}
+                >
+                  {error}
+                </FormHelperText>
+              </CardContent>
+              <CardActions className={classes.pos}>
                 <Button
                   variant="contained"
                   type="submit"
@@ -136,10 +148,11 @@ class Disclaimer extends Component {
                 >
                   Continue
                 </Button>
-            </CardActions>
-          </form>
-        </Card>
-      </div>
+              </CardActions>
+            </form>
+          </Card>
+        </div>
+      </main>
     );
   }
 }
