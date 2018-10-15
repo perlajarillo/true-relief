@@ -5,27 +5,34 @@ import { Paper, Typography } from "@material-ui/core";
 
 const styles = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 6
+    marginTop: theme.spacing.unit * 6,
+    bottom: 0,
+    width: "100vw"
   },
   paper: {
     padding: theme.spacing.unit * 6,
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: 0
   },
   textColor: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.contrastText
   }
 });
 
 function Footer(props) {
   const { classes } = props;
   return (
-    <div className={classes.root}>
+    <footer className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
-        <Typography variant="title" align="center" className={classes.textColor}>
+        <Typography
+          variant="title"
+          align="center"
+          className={classes.textColor}
+        >
           True Relief
         </Typography>
       </Paper>
-    </div>
+    </footer>
   );
 }
 

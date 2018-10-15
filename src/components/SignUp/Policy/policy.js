@@ -5,8 +5,8 @@ import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 6,
+    margin: "80px 24px",
+    padding: theme.spacing.unit * 6
   },
   marginBottom: {
     marginBottom: theme.spacing.unit * 2
@@ -17,9 +17,13 @@ function Policy(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
-      <Typography variant="display1" gutterBottom>TERMS OF SERVICE</Typography >
+      <Typography variant="display1" gutterBottom>
+        TERMS OF SERVICE
+      </Typography>
 
-      <Typography variant="title" gutterBottom>OVERVIEW</Typography>
+      <Typography variant="title" gutterBottom>
+        OVERVIEW
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         This website is operated by True Relief. Throughout the site, the terms
@@ -65,7 +69,9 @@ function Policy(props) {
         you.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 1 - ONLINE STORE TERMS</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 1 - ONLINE STORE TERMS
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         By agreeing to these Terms of Service, you represent that you are at
@@ -91,7 +97,9 @@ function Policy(props) {
         termination of your Services.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 2 - GENERAL CONDITIONS</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 2 - GENERAL CONDITIONS
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         Any information/data derived from the site should be discussed by you
@@ -166,7 +174,9 @@ function Policy(props) {
         modification, suspension or discontinuance of the Service.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 5 - SERVICES</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 5 - SERVICES
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         We have made every effort to display as accurately as possible the
@@ -175,7 +185,9 @@ function Policy(props) {
         accurate.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 6 - OPTIONAL TOOLS</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 6 - OPTIONAL TOOLS
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         We may provide you with access to third-party tools over which we
@@ -204,7 +216,9 @@ function Policy(props) {
         Service.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 7 - THIRD-PARTY LINKS</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 7 - THIRD-PARTY LINKS
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         Certain content, products and services available via our Service may
@@ -267,7 +281,9 @@ function Policy(props) {
         liability for any comments posted by you or any third-party.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 9 - PERSONAL INFORMATION</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 9 - PERSONAL INFORMATION
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         Your submission of personal information through the store is governed by
@@ -298,7 +314,9 @@ function Policy(props) {
         website has been modified or updated.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 11 - PROHIBITED USES</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 11 - PROHIBITED USES
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         In addition to other prohibitions as set forth in the Terms of Service,
@@ -385,7 +403,9 @@ function Policy(props) {
         permitted by law.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 13 - INDEMNIFICATION</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 13 - INDEMNIFICATION
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         You agree to indemnify, defend and hold harmless True Relief and our
@@ -398,7 +418,9 @@ function Policy(props) {
         a third-party.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 14 - SEVERABILITY</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 14 - SEVERABILITY
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         In the event that any provision of these Terms of Service is determined
@@ -409,7 +431,9 @@ function Policy(props) {
         enforceability of any other remaining provisions.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 15 - TERMINATION</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 15 - TERMINATION
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         The obligations and liabilities of the parties incurred prior to the
@@ -433,7 +457,9 @@ function Policy(props) {
         thereof).
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 16 - ENTIRE AGREEMENT</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 16 - ENTIRE AGREEMENT
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         The failure of us to exercise or enforce any right or provision of these
@@ -456,7 +482,9 @@ function Policy(props) {
         not be construed against the drafting party.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 17 - GOVERNING LAW</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 17 - GOVERNING LAW
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         These Terms of Service and any separate agreements whereby we provide
@@ -482,7 +510,9 @@ function Policy(props) {
         Service constitutes acceptance of those changes.
       </Typography>
 
-      <Typography variant="title" gutterBottom>SECTION 19 - CONTACT INFORMATION</Typography>
+      <Typography variant="title" gutterBottom>
+        SECTION 19 - CONTACT INFORMATION
+      </Typography>
 
       <Typography variant="body1" className={classes.marginBottom}>
         Questions about the Terms of Service should be sent to us at

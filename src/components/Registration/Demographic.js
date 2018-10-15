@@ -54,7 +54,7 @@ const Demographic = props => {
           <Input
             id="adornment-name"
             name="name"
-            defaultValue=""
+            value={parentState.name}
             ref={this.input}
             onChange={updateParentState}
             onBlur={reviewValidations}
@@ -74,7 +74,7 @@ const Demographic = props => {
             <DatePicker
               keyboard={false}
               label=""
-              format="DD/MM/YYYY"
+              format="d/MM/YYYY"
               placeholder="10/10/2018"
               mask={value =>
                 value
@@ -89,7 +89,9 @@ const Demographic = props => {
               maxDate="2050/01/01"
             />
           </MuiPickersUtilsProvider>
-          <FormHelperText error={true}>{parentState.errorSelectedDate}</FormHelperText>
+          <FormHelperText error={true}>
+            {parentState.errorSelectedDate}
+          </FormHelperText>
         </FormControl>
         <FormControl
           component="fieldset"
@@ -111,7 +113,9 @@ const Demographic = props => {
             />
             <FormControlLabel value="male" control={<Radio />} label="Male" />
           </RadioGroup>
-          <FormHelperText error={true}>{parentState.errorgender}</FormHelperText>
+          <FormHelperText error={true}>
+            {parentState.errorgender}
+          </FormHelperText>
         </FormControl>
         <FormControl
           required={true}
@@ -123,6 +127,7 @@ const Demographic = props => {
             id="adornment-weight"
             name="weight"
             type="number"
+            value={parentState.weight}
             ref={this.input}
             onChange={updateParentState}
             onBlur={reviewValidations}
@@ -134,7 +139,9 @@ const Demographic = props => {
               step: "0.5"
             }}
           />
-          <FormHelperText error={true}>{parentState.errorweight}</FormHelperText>
+          <FormHelperText error={true}>
+            {parentState.errorweight}
+          </FormHelperText>
         </FormControl>
         <FormControl
           required={true}
@@ -145,11 +152,14 @@ const Demographic = props => {
           <Input
             id="adornment-height"
             name="height"
+            value={parentState.height}
             type="number"
             ref={this.input}
             onChange={updateParentState}
             onBlur={reviewValidations}
-            endAdornment={<InputAdornment position="end">ft</InputAdornment>}
+            endAdornment={
+              <InputAdornment position="end">ft+inch</InputAdornment>
+            }
             inputProps={{
               "aria-label": "Height",
               min: "4",
@@ -157,7 +167,9 @@ const Demographic = props => {
               step: "0.5"
             }}
           />
-          <FormHelperText error={true}>{parentState.errorheight}</FormHelperText>
+          <FormHelperText error={true}>
+            {parentState.errorheight}
+          </FormHelperText>
         </FormControl>
         <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
       </div>

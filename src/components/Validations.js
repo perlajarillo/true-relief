@@ -94,7 +94,7 @@ export function validateDemographicData(demographicData) {
     !demographicData.weight ||
     !demographicData.height ||
     !demographicData.gender ||
-    !demographicData.selectedDate ||
+    !demographicData.birth ||
     demographicData.errorweight !== "" ||
     demographicData.errorheight !== "" ||
     demographicData.errorname !== "";
@@ -173,4 +173,25 @@ export function validatePainConditionData(
   }
   const errorsAndMsg = [errors, msg];
   return errorsAndMsg;
+}
+
+export function validateTrackPainData(trackPainData) {
+  const errors =
+    !trackPainData.startDate ||
+    !trackPainData.endDate ||
+    !trackPainData.eventDuration ||
+    !trackPainData.painIntensity ||
+    !trackPainData.description ||
+    !trackPainData.mood;
+  return errors;
+}
+
+export function validateSelectedValue(stringToValidate) {
+  stringToValidate = stringToValidate.toString();
+  if (stringToValidate === "" || stringToValidate === "0") {
+    return "Please select a value.";
+  }
+  else {
+    return "";
+  }
 }

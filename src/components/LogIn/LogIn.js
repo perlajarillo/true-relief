@@ -9,15 +9,23 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from '@material-ui/core/CardMedia';
+import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import firebase from "../firebase.js";
-// importing route Components
-import { Link, Redirect } from "react-router-dom";
-
-import logo from "../../images/logo.png"
+import { auth } from "../../firebase";
+import { getPatient } from "../../firebase/operations";
+import { Link } from "react-router-dom";
+import logo from "../../images/logo-h-blue.svg";
 
 const styles = theme => ({
+  wrapper: {
+    margin: "80px 0"
+  },
+  container: {
+    paddingTop: theme.spacing.unit * 3,
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing.unit * 3
+    }
+  },
   formControl: {
     margin: theme.spacing.unit
   },
@@ -30,17 +38,21 @@ const styles = theme => ({
     color: theme.palette.text.secondary
   },
   card: {
-    width: "350px",
+    width: "300px",
     margin: "50px auto",
-    backgroundColor: "#fafafa"
+    paddingBottom: "1%",
+    [theme.breakpoints.up("sm")]: {
+      width: "350px"
+    }
   },
   pos: {
-    marginBottom: 24,
+    marginBottom: 24
   },
   media: {
-    height: 0,
-    paddingTop: '56.25%',
-  },
+    height: "64px",
+    paddingTop: "25%",
+    backgroundSize: "350px"
+  }
 });
 
 class LogIn extends React.Component {
@@ -50,115 +62,124 @@ class LogIn extends React.Component {
     this.state = {
       email: "",
       password: "",
+      user: false,
       error: ""
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = event => {
     const { target } = event;
     const { value, name } = target;
     this.setState({
       [name]: value
     });
-  }
+  };
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handleSubmit = event => {
+    event.preventDefault();
     const { email, password } = this.state;
-    //Attempting to signIn with email and password and creating a promise to manage the error
-    const promise = firebase.auth().signInWithEmailAndPassword(email, password);
+    const { history } = this.props;
 
-    /*If there is an error, we will capture it and change the state of error
-    to inform the user something went wrong*/
-    promise.catch(e =>
-      this.setState({
-        error: e.message
-      })
-    );
-    //Adding an observer for changes to the user's sign-in state.
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+    auth
+      .onLogIn(email, password)
+      .then(() => {
         this.setState({
-          user: user
+          email: email,
+          password: password
         });
-      }
-    });
-  }
+      })
+      .then(() => {
+        getPatient(auth.currentUserUid()).then(snapshot => {
+          !snapshot.val() ? history.push("/registration") : history.push("/");
+        });
+      })
+      .catch(error => {
+        this.setState({
+          error: error.message
+        });
+      });
+  };
 
   render() {
     const { classes } = this.props;
-    const { from } = this.props.location.state || {
-      from: { pathname: "/registration" }
-    };
-    const { user, email, password } = this.state;
+    const { email, password } = this.state;
 
-    return user ? (
-      <Redirect to={from} />
-    ) : (
-        <div>
+    return (
+      <main className={classes.wrapper}>
+        <div className={classes.container}>
           <Card className={classes.card} elevation={0}>
-        <CardMedia
-          className={classes.media}
-          image={logo}
-          title="True Relief"
-        />
+            <CardMedia
+              className={classes.media}
+              image={logo}
+              title="True Relief"
+            />
             <form onSubmit={this.handleSubmit}>
-          <CardContent>
-              <FormControl
+              <CardContent>
+                <FormControl
                   className={classes.formControl}
                   fullWidth
-                aria-describedby="required"
-                aria-required="true"
-              >
-                <InputLabel htmlFor="email">E-mail</InputLabel>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={this.handleChange}
-                />
-                <FormHelperText id="required">Required*</FormHelperText>
-              </FormControl>
-              <FormControl
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="email">E-mail</InputLabel>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={email}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <FormControl
                   className={classes.formControl}
                   fullWidth
-                aria-describedby="required"
-                aria-required="true"
-              >
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input
-                  id="password"
-                  name="password"
-                  type="Password"
-                  value={password}
+                  aria-describedby="required"
+                  aria-required="true"
+                >
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="Password"
+                    value={password}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="required">Required*</FormHelperText>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  color="primary"
+                  fullWidth
+                  className={classes.button}
+                >
+                  Log In
+                </Button>
+                <Button
+                  variant="outlined"
+                  type="submit"
+                  color="primary"
+                  fullWidth
+                  component={Link}
+                  to="/password-reset"
+                  className={classes.button}
+                >
+                  Forgot your password?
+                </Button>
+                <FormHelperText
+                  id="error"
+                  name="error"
+                  value={this.state.error}
                   onChange={this.handleChange}
-                />
-                <FormHelperText id="required">Required*</FormHelperText>
-              </FormControl>
-              <Button
-                variant="contained"
-                type="submit"
-                color="primary"
-                fullWidth
-                className={classes.button}
-              >
-                Log In
-              </Button>
-            <FormHelperText
-              id="error"
-              name="error"
-              value={this.state.error}
-              onChange={this.handleChange}
-            >
-              {this.state.error}
+                >
+                  {this.state.error}
                 </FormHelperText>
               </CardContent>
-              </form>
-            <Typography className={classes.text} variant="body1">Not registered yet?</Typography>
+            </form>
+            <Typography className={classes.text} variant="body1">
+              Not registered yet?
+            </Typography>
             <CardActions>
               <Button
                 variant="outlined"
@@ -167,11 +188,12 @@ class LogIn extends React.Component {
                 component={Link}
                 to="/disclaimer"
               >
-              Create an account
+                Create an account
               </Button>
-          </CardActions>
-        </Card>
-      </div>
+            </CardActions>
+          </Card>
+        </div>
+      </main>
     );
   }
 }
