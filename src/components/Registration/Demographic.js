@@ -74,7 +74,7 @@ const Demographic = props => {
             <DatePicker
               keyboard={false}
               label=""
-              format="d/MM/YYYY"
+              format="MM/d/yyyy"
               placeholder="10/10/2018"
               mask={value =>
                 value

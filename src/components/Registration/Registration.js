@@ -31,10 +31,12 @@ import withAuthorization from "../WithAuthorization";
 
 const styles = theme => ({
   root: {
-    width: "60%",
+    width: "90%",
     margin: "0 auto",
     marginTop: "20px",
-    backgroundColor: "#fafafa"
+    [theme.breakpoints.up("sm")]: {
+      width: "60%"
+    }
   },
   button: {
     marginTop: theme.spacing.unit,
@@ -45,6 +47,9 @@ const styles = theme => ({
   },
   resetContainer: {
     padding: theme.spacing.unit * 3
+  },
+  wrapper: {
+    margin: "120px 0"
   }
 });
 
@@ -112,7 +117,7 @@ class VerticalLinearStepper extends Component {
    * @return {void}
    */
   updateDateInParentState = date => {
-    let birth = format(date, "d/MM/YYYY");
+    let birth = format(date, "MM/d/yyyy");
     validateAge(date)
       ? this.setState({
           selectedDate: date,
@@ -600,7 +605,7 @@ class VerticalLinearStepper extends Component {
     const steps = this.getSteps();
     const { activeStep, submitted } = this.state;
     return !submitted ? (
-      <div>
+      <div className={classes.wrapper}>
         <Stepper
           activeStep={activeStep}
           orientation="vertical"
