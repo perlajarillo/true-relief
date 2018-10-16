@@ -117,7 +117,7 @@ class VerticalLinearStepper extends Component {
    * @return {void}
    */
   updateDateInParentState = date => {
-    let birth = format(date, "d/MM/YYYY");
+    let birth = format(date, "MM/d/yyyy");
     validateAge(date)
       ? this.setState({
           selectedDate: date,

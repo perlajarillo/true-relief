@@ -198,7 +198,7 @@ class NewPainEntry extends Component {
    * @returns {void}
    */
   componentDidMount = () => {
-    const today = format(new Date(), "MMMM d, YYYY h:mm a");
+    const today = format(new Date(), "MMMM d, yyyy h:mm a");
     this.setState({
       today: today
     });
@@ -378,7 +378,7 @@ class NewPainEntry extends Component {
                   label="Start date"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
-                  format={"d MMM YYYY h:mm a"}
+                  format={"MMM d yyyy h:mm a"}
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
@@ -390,7 +390,7 @@ class NewPainEntry extends Component {
                   label="End date"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
-                  format={"d MMM YYYY h:mm a"}
+                  format={"MMM d yyyy h:mm a"}
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
