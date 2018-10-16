@@ -24,3 +24,4 @@ yarn-error.log*
 
 # firebase
 database.rules.json
+src\firebase\firebase.js
