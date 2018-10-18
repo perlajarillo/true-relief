@@ -9,6 +9,8 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 
 import { auth } from "../../firebase";
 
@@ -45,7 +47,9 @@ class PasswordChange extends Component {
       password: "",
       confirmPassword: "",
       error: null,
-      successMsg: null
+      successMsg: null,
+      openSnackbarSaved: false,
+      openSnackbarError: false
     };
   }
 
@@ -59,26 +63,56 @@ class PasswordChange extends Component {
   };
 
   handleSubmit = event => {
-    const { password } = this.state;
+    const { password, confirmPassword } = this.state;
     event.preventDefault();
+    password === confirmPassword
+      ? auth
+          .onUpdatePassword(password)
+          .then(() => {
+            this.setState({
+              password: password,
+              successMsg: "Your Password has been change successfully",
+              openSnackbarSaved: true
+            });
+          })
+          .catch(error => {
+            this.setState({
+              error: error.message,
+              openSnackbarError: true
+            });
+          })
+      : this.setState({
+          error: "Password and confirmation password do not match",
+          openSnackbarError: true
+        });
+  };
 
-    auth
-      .onUpdatePassword(password)
-      .then(() => {
-        this.setState({
-          password: password,
-          successMsg: "Your Password has been change successfully"
-        });
-      })
-      .catch(error => {
-        this.setState({
-          error: error.message
-        });
-      });
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.state.openSnackbarSaved
+      ? this.setState({
+          openSnackbarSaved: false
+        })
+      : this.setState({ openSnackbarError: false });
   };
 
   render() {
-    const { password, confirmPassword, error, successMsg } = this.state;
+    const {
+      password,
+      confirmPassword,
+      error,
+      successMsg,
+      openSnackbarError,
+      openSnackbarSaved
+    } = this.state;
     const { classes } = this.props;
 
     return (
@@ -120,14 +154,7 @@ class PasswordChange extends Component {
                 />
                 <FormHelperText id="required">Required*</FormHelperText>
               </FormControl>
-              <FormHelperText
-                id="error"
-                name="error"
-                value={error}
-                onChange={this.handleChange}
-              >
-                {error ? error : successMsg}
-              </FormHelperText>
+
               <Button
                 variant="contained"
                 type="submit"
@@ -141,6 +168,40 @@ class PasswordChange extends Component {
           </form>
           <CardActions />
         </Card>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarSaved}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarSaved"
+          name="openSnackbarSaved"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="success"
+            message={successMsg}
+          />
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarError}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarError"
+          name="openSnackbarError"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={error}
+          />
+        </Snackbar>
       </div>
     );
   }

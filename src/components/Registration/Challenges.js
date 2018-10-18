@@ -8,8 +8,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import challengesData from "./literals/challenges";
-import FormHelperText from '@material-ui/core/FormHelperText';
-
 
 const styles = theme => ({
   formControl: {
@@ -49,7 +47,7 @@ const CheckboxComponent = props => {
 };
 
 const Challenges = props => {
-  const { classes, errorSection } = props;
+  const { classes } = props;
 
   return (
     <Fragment>
@@ -69,7 +67,6 @@ const Challenges = props => {
           ))}
         </FormGroup>
       </FormControl>
-      <FormHelperText error={true}>{errorSection}</FormHelperText>
     </Fragment>
   );
 };
