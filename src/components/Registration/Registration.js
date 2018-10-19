@@ -28,6 +28,8 @@ import {
 import { Redirect } from "react-router-dom";
 import { format } from "date-fns";
 import withAuthorization from "../WithAuthorization";
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 
 const styles = theme => ({
   root: {
@@ -107,7 +109,8 @@ class VerticalLinearStepper extends Component {
       errorcupsOfCoffee: "",
       errordrinksOfAlcohol: "",
       open: false,
-      submitted: false
+      submitted: false,
+      openSnackbarError: false
     };
   }
 
@@ -576,7 +579,8 @@ class VerticalLinearStepper extends Component {
           errorSection: ""
         })
       : this.setState({
-          errorSection: errorsAndMsg[1]
+          errorSection: errorsAndMsg[1],
+          openSnackbarError: true
         });
   };
 
@@ -600,10 +604,29 @@ class VerticalLinearStepper extends Component {
     });
   };
 
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ openSnackbarError: false });
+  };
+
   render() {
     const { classes, authUser } = this.props;
     const steps = this.getSteps();
-    const { activeStep, submitted } = this.state;
+    const {
+      activeStep,
+      submitted,
+      openSnackbarError,
+      errorSection
+    } = this.state;
     return !submitted ? (
       <div className={classes.wrapper}>
         <Stepper
@@ -645,6 +668,23 @@ class VerticalLinearStepper extends Component {
             );
           })}
         </Stepper>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarError}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarError"
+          name="openSnackbarError"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={errorSection}
+          />
+        </Snackbar>
         {activeStep === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>All steps completed - you&quot;re finished</Typography>

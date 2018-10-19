@@ -8,7 +8,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import needsData from "./literals/preferences";
-import FormHelperText from "@material-ui/core/FormHelperText";
 
 const styles = theme => ({
   formControl: {
@@ -48,7 +47,7 @@ const CheckboxComponent = props => {
 };
 
 const Preferences = props => {
-  const { classes, errorSection } = props;
+  const { classes } = props;
 
   return (
     <Fragment>
@@ -66,7 +65,6 @@ const Preferences = props => {
           ))}
         </FormGroup>
       </FormControl>
-      <FormHelperText error={true}>{errorSection}</FormHelperText>
     </Fragment>
   );
 };

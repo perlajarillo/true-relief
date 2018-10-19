@@ -14,6 +14,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import { auth } from "../../firebase";
 import { Link } from "react-router-dom";
 import logo from "../../images/logo-h-blue.svg";
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 
 const styles = theme => ({
   wrapper: {
@@ -62,7 +64,8 @@ class SignUp extends Component {
       email: "",
       password: "",
       confirmPassword: "",
-      error: ""
+      error: "",
+      openSnackbarError: false
     };
   }
 
@@ -79,14 +82,16 @@ class SignUp extends Component {
     const { email, password, confirmPassword } = this.state;
     if (email === "" || password === "" || confirmPassword === "") {
       this.setState({
-        error: "All fields are required"
+        error: "All fields are required",
+        openSnackbarError: true
       });
       return false;
     }
 
     if (password !== confirmPassword) {
       this.setState({
-        error: "The passwords must be equal"
+        error: "The passwords must be equal",
+        openSnackbarError: true
       });
       return false;
     }
@@ -110,13 +115,34 @@ class SignUp extends Component {
         })
         .catch(error => {
           this.setState({
-            error: error.message
+            error: error.message,
+            openSnackbarError: true
           });
         });
   };
 
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ openSnackbarError: false });
+  };
+
   render() {
-    const { email, password, confirmPassword, error } = this.state;
+    const {
+      email,
+      password,
+      confirmPassword,
+      error,
+      openSnackbarError
+    } = this.state;
     const { classes } = this.props;
 
     return (
@@ -197,14 +223,6 @@ class SignUp extends Component {
                 >
                   Create an Account
                 </Button>
-                <FormHelperText
-                  id="error"
-                  name="error"
-                  value={error}
-                  onChange={this.handleChange}
-                >
-                  {error}
-                </FormHelperText>
               </CardContent>
             </form>
             <Typography className={classes.text} variant="body1">
@@ -223,6 +241,23 @@ class SignUp extends Component {
             </CardActions>
           </Card>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarError}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarError"
+          name="openSnackbarError"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={error}
+          />
+        </Snackbar>
       </main>
     );
   }

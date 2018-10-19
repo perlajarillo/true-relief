@@ -10,7 +10,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
 import painHistoryData from "./literals/painHistoryData.js";
-import FormHelperText from "@material-ui/core/FormHelperText";
 
 const styles = theme => ({
   root: {
@@ -33,7 +32,6 @@ const PainHistory = props => {
   const { classes, parentState, updateParentState } = props;
   const {
     text,
-    otherPainCondition,
     sections,
     painConditionData,
     medicationData,
@@ -288,7 +286,6 @@ const PainHistory = props => {
             <FormControlLabel value="no" control={<Radio />} label="No" />
           </RadioGroup>
         </FormControl>
-        <FormHelperText>{otherPainCondition} </FormHelperText>
       </div>
       {/*********** IF NON PHARMA YES ********************/}
       <div
@@ -357,7 +354,6 @@ const PainHistory = props => {
           </Select>
         </FormControl>
       </div>
-      <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
     </Fragment>
   );
 };

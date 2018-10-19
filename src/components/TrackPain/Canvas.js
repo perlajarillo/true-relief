@@ -262,6 +262,7 @@ class Canvas extends Component {
     this.activeColor = null;
     ctx.clearRect(0, 0, this.canvas.current.width, this.canvas.current.height);
     this.props.clearParentState();
+    this.setState({ front: false, btnText: "Show front" });
   };
 
   render() {

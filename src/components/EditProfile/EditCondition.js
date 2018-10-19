@@ -14,8 +14,8 @@ const styles = theme => ({
     maxWidth: 250
   },
   wrapper: {
-    margin: "80px 0",
-    minHeight: "80vh"
+    margin: "60px 0",
+    minHeight: "30vh"
   },
   formControl: {
     margin: theme.spacing.unit * 3,
@@ -35,7 +35,7 @@ const {
   nonPharmaData
 } = painHistoryData;
 
-const EditDialog = props => {
+const EditCondition = props => {
   const { classes, parentState, updateParentState } = props;
 
   return (
@@ -171,8 +171,8 @@ const EditDialog = props => {
   );
 };
 
-EditDialog.propTypes = {
+EditCondition.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(EditDialog);
+export default withStyles(styles)(EditCondition);
