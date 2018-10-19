@@ -581,7 +581,6 @@ class TrackPain extends Component {
   };
   getPainEntries = () => {
     db.getPainEntries(this.props.authUser.uid).then(snapshot => {
-      console.log("trackpain", this.props.authUser.uid);
       this.setState({
         entries: snapshot.val(),
         uid: this.props.authUser.uid
