@@ -15,6 +15,8 @@ import { auth } from "../../firebase";
 import { getPatient } from "../../firebase/operations";
 import { Link } from "react-router-dom";
 import logo from "../../images/logo-h-blue.svg";
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 
 const styles = theme => ({
   wrapper: {
@@ -63,7 +65,8 @@ class LogIn extends React.Component {
       email: "",
       password: "",
       user: false,
-      error: ""
+      error: "",
+      openSnackbarError: false
     };
   }
 
@@ -95,14 +98,28 @@ class LogIn extends React.Component {
       })
       .catch(error => {
         this.setState({
-          error: error.message
+          error: error.message,
+          openSnackbarError: true
         });
       });
   };
 
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ openSnackbarError: false });
+  };
+
   render() {
     const { classes } = this.props;
-    const { email, password } = this.state;
+    const { email, password, error, openSnackbarError } = this.state;
 
     return (
       <main className={classes.wrapper}>
@@ -167,14 +184,6 @@ class LogIn extends React.Component {
                 >
                   Forgot your password?
                 </Button>
-                <FormHelperText
-                  id="error"
-                  name="error"
-                  value={this.state.error}
-                  onChange={this.handleChange}
-                >
-                  {this.state.error}
-                </FormHelperText>
               </CardContent>
             </form>
             <Typography className={classes.text} variant="body1">
@@ -193,6 +202,23 @@ class LogIn extends React.Component {
             </CardActions>
           </Card>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarError}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarError"
+          name="openSnackbarError"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={error}
+          />
+        </Snackbar>
       </main>
     );
   }

@@ -12,6 +12,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import { Redirect } from "react-router-dom";
 import logo from "../../../images/logo-h-blue.svg";
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContentWrapper from "../../SnackbarContentComponent/SnackbarContentComponent";
 
 const styles = theme => ({
   wrapper: {
@@ -64,7 +66,8 @@ class Disclaimer extends Component {
     this.state = {
       chkDisclaimer: false,
       error: "",
-      redirectToSignUp: false
+      redirectToSignUp: false,
+      openSnackbarError: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -86,15 +89,34 @@ class Disclaimer extends Component {
           redirectToSignUp: true
         })
       : this.setState({
-          error: "You must agree with the terms and conditions!"
+          error: "You must agree with the terms and conditions!",
+          openSnackbarError: true
         });
   }
+
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ openSnackbarError: false });
+  };
 
   render() {
     const { from } = this.props.location.state || {
       from: { pathname: "/sign-up" }
     };
-    const { redirectToSignUp, chkDisclaimer, error } = this.state;
+    const {
+      redirectToSignUp,
+      chkDisclaimer,
+      error,
+      openSnackbarError
+    } = this.state;
     const { classes } = this.props;
 
     return (
@@ -124,19 +146,10 @@ class Disclaimer extends Component {
                       value="chkDisclaimer"
                       checked={chkDisclaimer}
                       onChange={this.handleChange}
-                      required
                     />
                   }
                   label="I have read terms and conditions and I agree with them."
                 />
-                <FormHelperText
-                  id="error"
-                  name="error"
-                  value={error}
-                  onChange={this.handleChange}
-                >
-                  {error}
-                </FormHelperText>
               </CardContent>
               <CardActions className={classes.pos}>
                 <Button
@@ -152,6 +165,23 @@ class Disclaimer extends Component {
             </form>
           </Card>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarError}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarError"
+          name="openSnackbarError"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={error}
+          />
+        </Snackbar>
       </main>
     );
   }

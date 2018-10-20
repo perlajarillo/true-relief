@@ -28,6 +28,8 @@ import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
+import { Redirect } from "react-router-dom";
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -97,7 +99,9 @@ class NewPainEntry extends Component {
       successMsg: "",
       btnText: "Register pain event",
       key: null,
-      openSnackbarSaved: false
+      openSnackbarSaved: false,
+      openSnackbarError: false,
+      returnTrack: false
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -216,7 +220,7 @@ class NewPainEntry extends Component {
    * @return {void}
    */
   handleStartDateChange = date => {
-    this.setState({ startDate: date });
+    this.setState({ startDate: date }, () => this.setEventDuration());
   };
 
   /**
@@ -305,12 +309,20 @@ class NewPainEntry extends Component {
     const key = this.state.key;
     if (thereAreErrors) {
       this.setState({
+        openSnackbarError: true,
         sectionError: "The fields with * are required"
       });
     } else if (this.state.painIsIn === "") {
       this.setState({
+        openSnackbarError: true,
         sectionError:
           "Draw in the human body image where do/did you feel the pain"
+      });
+    } else if (this.state.datesError !== "") {
+      this.setState({
+        openSnackbarError: true,
+        sectionError:
+          "The start date/time must be earlier than the end date/time"
       });
     } else {
       !key
@@ -320,18 +332,32 @@ class NewPainEntry extends Component {
         : editTrackPain(authUser, this.getFirebasePayload(), key).then(
             this.setState({ openSnackbarSaved: true })
           );
+
       this.setState({
         sectionError: "",
         successMsg: "Your entry was submitted"
       });
     }
   };
+
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
   handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({ openSnackbarSaved: false });
+    this.state.openSnackbarSaved
+      ? this.setState({
+          openSnackbarSaved: false,
+          returnTrack: true
+        })
+      : this.setState({ openSnackbarError: false });
   };
+
   render() {
     const { classes } = this.props;
     let { authUser } = this.props;
@@ -349,9 +375,11 @@ class NewPainEntry extends Component {
       painIntensityError,
       descriptionError,
       moodError,
-      successMsg,
       btnText,
-      painIsIn
+      painIsIn,
+      returnTrack,
+      openSnackbarSaved,
+      openSnackbarError
     } = this.state;
 
     let keysInPainIsIn = Object.keys(painIsIn).map(key => {
@@ -361,6 +389,14 @@ class NewPainEntry extends Component {
 
     return (
       <div className={classes.root}>
+        {returnTrack && (
+          <Redirect
+            to={{
+              pathname: "/trackPain",
+              state: { from: this.props.location }
+            }}
+          />
+        )}
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Typography variant="title">Today: {today}</Typography>
@@ -509,10 +545,6 @@ class NewPainEntry extends Component {
               >
                 {btnText}
               </Button>
-
-              <FormHelperText error={true}>
-                {sectionError ? sectionError : successMsg}
-              </FormHelperText>
             </div>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
@@ -536,7 +568,7 @@ class NewPainEntry extends Component {
             vertical: "bottom",
             horizontal: "left"
           }}
-          open={this.state.openSnackbarSaved}
+          open={openSnackbarSaved}
           autoHideDuration={3000}
           onClose={this.handleSnackbarClose}
           id="openSnackbarSaved"
@@ -546,6 +578,23 @@ class NewPainEntry extends Component {
             onClose={this.handleSnackbarClose}
             variant="success"
             message="Entry saved!"
+          />
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarError}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarError"
+          name="openSnackbarError"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={sectionError}
           />
         </Snackbar>
       </div>

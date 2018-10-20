@@ -362,7 +362,6 @@ const Habits = props => {
           </RadioGroup>
         </FormControl>
       </div>
-      <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
     </Fragment>
   );
 };

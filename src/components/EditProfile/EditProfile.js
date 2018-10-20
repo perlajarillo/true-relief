@@ -104,6 +104,9 @@ const styles = theme => ({
   },
   panel: {
     padding: theme.spacing.unit
+  },
+  btnPainConditon: {
+    marginLeft: "20px"
   }
 });
 
@@ -174,7 +177,9 @@ class EditProfile extends Component {
       key: "",
       currentCondition: {},
       openSnackbarSaved: false,
-      openSnackbarDeleted: false
+      openSnackbarDeleted: false,
+      expandedPain: false,
+      duplicatedPainCondition: false
     };
   }
 
@@ -231,7 +236,21 @@ class EditProfile extends Component {
           [name]: value
         });
 
-    name === "painCondition" && this.setPainConditionName(value);
+    if (name === "painCondition") {
+      if (this.reviewDuplicatedPainCondition(value)) {
+        this.setState({
+          openSnackbarError: true,
+          errorSection: "You already have selected " + value,
+          duplicatedPainCondition: true
+        });
+      } else {
+        this.setPainConditionName(value);
+        this.setState({
+          errorSection: "",
+          duplicatedPainCondition: false
+        });
+      }
+    }
 
     isPainConditionValue &&
       this.setPainConditionProps(name, value, this.getPropName(name));
@@ -245,7 +264,44 @@ class EditProfile extends Component {
           ["error" + name]: ""
         });
   };
-
+  /**
+   * reviewDuplicatedPainCondition - Helps to identify is the pain condition is
+   * duplicated
+   * @param {String} painConditionName name of the pain condition
+   * @return {boolean} duplicated - will be true when the condition has been
+   * already selected
+   */
+  reviewDuplicatedPainCondition = painConditionName => {
+    let duplicated = false;
+    Object.keys(this.state.painConditions).map(condition => {
+      if (this.state.painConditions[condition].name === painConditionName) {
+        duplicated = true;
+      }
+    });
+    return duplicated;
+  };
+  /**
+   * review2DuplicatedPainCondition - Helps to identify is the pain condition is
+   * duplicated, considering that the condition is not considered duplicated
+   * if is the original the user is trying to change
+   * @param {String} painConditionName name of the pain condition
+   * @return {boolean}  duplicated - will be true when the condition has been
+   * already selected
+   */
+  review2DuplicatedPainCondition = painConditionName => {
+    let duplicated = false;
+    Object.keys(this.state.painConditions).map(condition => {
+      if (this.state.painConditions[condition].name === painConditionName) {
+        if (
+          this.state.painConditions[condition] !==
+          this.state.painConditions[this.state.key]
+        ) {
+          duplicated = true;
+        }
+      }
+    });
+    return duplicated;
+  };
   /**
    * clearConditionalState - Helps to render conditional elements in the DOM for
    * painCondition component
@@ -528,7 +584,9 @@ class EditProfile extends Component {
   };
 
   /**
-   * handleChange controls the panels' behavior to expand or to be closed.
+   * handleChange sets the state of the expanded panel for the pain
+   * conditions.
+   * @param {void}
    * @returns {void}
    */
   handleChange = panel => (event, expanded) => {
@@ -540,12 +598,25 @@ class EditProfile extends Component {
   };
 
   /**
-   * handleClickOpen opens the panels for a selected pain condition.
+   * handleChangeNewPain sets the state of the expanded panel for a new pain
+   * condition.
+   * @param {void}
+   * @returns {void}
+   */
+  handleChangeNewPain = () => event => {
+    this.setState({
+      expandedPain: !this.state.expandedPain
+    });
+  };
+
+  /**
+   * handleClickOpen sets the pain condition key selected.
+   * @param {Number} key the index of the current condition object in the pain
+   * conditions array
    * @returns {void}
    */
   handleClickOpen = key => {
     this.selectCurrentCondition(key);
-
     this.setState({
       key: key !== this.state.key ? key : null
     });
@@ -670,15 +741,25 @@ class EditProfile extends Component {
   updateCurrentCondition = event => {
     const name = event.target.name;
     const value = event.target.value;
-
-    this.setState({
-      currentCondition: {
-        ...this.state.currentCondition,
-        [name]: value
-      }
-    });
-
-    this.updatePainConditionsObject(name, value);
+    if (
+      name === "painCondition" &&
+      this.review2DuplicatedPainCondition(value)
+    ) {
+      this.setState({
+        openSnackbarError: true,
+        errorSection: "You already have selected " + value,
+        duplicatedPainCondition: true
+      });
+    } else {
+      this.setState({
+        currentCondition: {
+          ...this.state.currentCondition,
+          [name]: value
+        },
+        duplicatedPainCondition: false
+      });
+      this.updatePainConditionsObject(name, value);
+    }
   };
 
   /**
@@ -741,10 +822,19 @@ class EditProfile extends Component {
     const { authUser } = this.props;
     const { name, birth, gender, weight, height } = this.state;
     const demographicData = { name, birth, gender, weight, height };
-
-    db.editDemographic(authUser.uid, demographicData).then(
-      this.setState({ openSnackbarSaved: true })
+    const errorsDemographic = validateDemographicData(
+      this.getDemographicPayload()
     );
+    if (errorsDemographic) {
+      this.setState({
+        openSnackbarError: true,
+        errorSection: "The fields with * are required"
+      });
+    } else {
+      db.editDemographic(authUser.uid, demographicData).then(
+        this.setState({ openSnackbarSaved: true })
+      );
+    }
   };
 
   /**
@@ -784,10 +874,17 @@ class EditProfile extends Component {
       kindOfCoffee,
       healthStatus
     };
-
-    db.editHabits(authUser.uid, habitsData).then(
-      this.setState({ openSnackbarSaved: true })
-    );
+    const errorsHabits = validateHabitsData(this.getHabitsPayload());
+    if (errorsHabits) {
+      this.setState({
+        openSnackbarError: true,
+        errorSection: "The fields with * are required"
+      });
+    } else {
+      db.editHabits(authUser.uid, habitsData).then(
+        this.setState({ openSnackbarSaved: true })
+      );
+    }
   };
 
   /**
@@ -797,10 +894,18 @@ class EditProfile extends Component {
   updatePreferences = () => {
     const { authUser } = this.props;
     const { needs } = this.state;
-
-    db.editNeeds(authUser.uid, needs).then(
-      this.setState({ openSnackbarSaved: true })
-    );
+    const keysInNeeds = R.keys(needs);
+    const errorsNeeds = validateThereIsAtLeastOneNeed(R.length(keysInNeeds));
+    if (errorsNeeds) {
+      this.setState({
+        openSnackbarError: true,
+        errorSection: "Please select at least one preference"
+      });
+    } else {
+      db.editNeeds(authUser.uid, needs).then(
+        this.setState({ openSnackbarSaved: true })
+      );
+    }
   };
 
   /**
@@ -810,10 +915,20 @@ class EditProfile extends Component {
   updateChallenges = () => {
     const { authUser } = this.props;
     const { challenges } = this.state;
-
-    db.editChallenges(authUser.uid, challenges).then(
-      this.setState({ openSnackbarSaved: true })
+    const keysInChallenges = R.keys(challenges);
+    const errorsChallenges = validateThereIsAtLeastOneChallenge(
+      R.length(keysInChallenges)
     );
+    if (errorsChallenges) {
+      this.setState({
+        openSnackbarError: true,
+        errorSection: "Please select at least one challenge"
+      });
+    } else {
+      db.editChallenges(authUser.uid, challenges).then(
+        this.setState({ openSnackbarSaved: true })
+      );
+    }
   };
 
   /**
@@ -822,11 +937,32 @@ class EditProfile extends Component {
    */
   addNewCondition = () => {
     const { authUser } = this.props;
-
-    db.writeNewPainCondition(authUser.uid, NEW_PAIN_CONDITION).then(
-      this.setState({ openSnackbarSaved: true })
+    const keysInPainConditions = R.keys(NEW_PAIN_CONDITION);
+    const errorsAndMsg = validatePainConditionData(
+      R.length(keysInPainConditions),
+      this.getNewConditionPayload()
     );
-    this.getPatientData();
+    const painErrors = errorsAndMsg[0];
+    const msg = errorsAndMsg[1];
+    if (painErrors) {
+      this.setState({
+        openSnackbarError: true,
+        errorSection: msg
+      });
+    } else if (this.state.duplicatedPainCondition) {
+      this.setState({
+        openSnackbarError: true
+      });
+    } else {
+      db.writeNewPainCondition(authUser.uid, NEW_PAIN_CONDITION).then(
+        this.setState({
+          openSnackbarSaved: true,
+          expandedPain: false,
+          painCondition: ""
+        })
+      );
+      this.getPatientData();
+    }
   };
 
   /**
@@ -840,6 +976,7 @@ class EditProfile extends Component {
     db.editPainConditions(authUser.uid, data, conditionID).then(
       this.setState({ openSnackbarSaved: true })
     );
+    this.getPatientData();
   };
 
   /**
@@ -859,12 +996,22 @@ class EditProfile extends Component {
     if (reason === "clickaway") {
       return;
     }
-    this.state.openSnackbarSaved
-      ? this.setState({ openSnackbarSaved: false })
-      : this.setState({ openSnackbarDeleted: false });
+    if (this.state.openSnackbarSaved) {
+      this.setState({ openSnackbarSaved: false });
+    } else if (this.state.openSnackbarError) {
+      this.setState({ openSnackbarError: false });
+    } else {
+      this.setState({ openSnackbarDeleted: false });
+    }
   };
   render() {
-    const { expanded, key, painConditions } = this.state;
+    const {
+      expanded,
+      key,
+      painConditions,
+      openSnackbarError,
+      errorSection
+    } = this.state;
     const { classes } = this.props;
 
     return (
@@ -944,17 +1091,18 @@ class EditProfile extends Component {
               <div>
                 <Preferences
                   parentState={this.state.needs}
-                  errorSection={this.state.errorSection}
                   updateParentState={this.handleNeedsCheckboxChange}
                 />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={this.updatePreferences}
-                >
-                  Save changes
-                </Button>
+                <div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={this.updatePreferences}
+                  >
+                    Save changes
+                  </Button>
+                </div>
               </div>
             </ExpansionPanelDetails>
           </ExpansionPanel>
@@ -972,17 +1120,18 @@ class EditProfile extends Component {
               <div>
                 <Challenges
                   parentState={this.state.challenges}
-                  errorSection={this.state.errorSection}
                   updateParentState={this.handleChallengesCheckboxChange}
                 />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={this.updateChallenges}
-                >
-                  Save changes
-                </Button>
+                <div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={this.updateChallenges}
+                  >
+                    Save changes
+                  </Button>
+                </div>
               </div>
             </ExpansionPanelDetails>
           </ExpansionPanel>
@@ -1051,16 +1200,20 @@ class EditProfile extends Component {
                                   }
                                   handleClose={this.handleClose}
                                 />
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  className={classes.button}
-                                  onClick={() =>
-                                    this.updateCondition(condition)
-                                  }
-                                >
-                                  Save changes
-                                </Button>
+                                <div>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className={
+                                      (classes.button, classes.btnPainConditon)
+                                    }
+                                    onClick={() =>
+                                      this.updateCondition(condition)
+                                    }
+                                  >
+                                    Save changes
+                                  </Button>
+                                </div>
                               </Fragment>
                             )}
                             <CardContent />
@@ -1070,7 +1223,10 @@ class EditProfile extends Component {
                       </div>
                     );
                   })}
-                <ExpansionPanel>
+                <ExpansionPanel
+                  onChange={this.handleChangeNewPain()}
+                  expanded={this.state.expandedPain}
+                >
                   <ExpansionPanelSummary expandIcon={<AddIcon />}>
                     <Typography className={classes.heading}>
                       Add a new Pain Condition
@@ -1129,6 +1285,23 @@ class EditProfile extends Component {
               variant="warning"
               className={classes.margin}
               message="Pain condition deleted!"
+            />
+          </Snackbar>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={openSnackbarError}
+            autoHideDuration={3000}
+            onClose={this.handleSnackbarClose}
+            id="openSnackbarError"
+            name="openSnackbarError"
+          >
+            <SnackbarContentWrapper
+              onClose={this.handleSnackbarClose}
+              variant="error"
+              message={errorSection}
             />
           </Snackbar>
           <br />

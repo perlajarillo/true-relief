@@ -171,7 +171,6 @@ const Demographic = props => {
             {parentState.errorheight}
           </FormHelperText>
         </FormControl>
-        <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
       </div>
     </Fragment>
   );

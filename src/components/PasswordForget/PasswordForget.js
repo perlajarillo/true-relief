@@ -12,6 +12,8 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import logo from "../../images/logo.png";
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 
 import { auth } from "../../firebase";
 
@@ -44,9 +46,10 @@ class PasswordForgetForm extends Component {
     this.state = {
       email: "",
       error: null,
-      successMsg: null
-    }
-
+      successMsg: null,
+      openSnackbarSaved: false,
+      openSnackbarError: false
+    };
   }
 
   handleChange = event => {
@@ -62,22 +65,48 @@ class PasswordForgetForm extends Component {
     const { email } = this.state;
     event.preventDefault();
 
-    auth.onResetPassWord(email)
+    auth
+      .onResetPassWord(email)
       .then(() => {
         this.setState({
           email: email,
-          successMsg: "We have sent you a link to reset your password"
+          successMsg: "We have sent you a link to reset your password",
+          openSnackbarSaved: true
         });
       })
       .catch(error => {
         this.setState({
-          error: error.message
+          error: error.message,
+          openSnackbarError: true
         });
-      })
-  }
+      });
+  };
+
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.state.openSnackbarSaved
+      ? this.setState({
+          openSnackbarSaved: false
+        })
+      : this.setState({ openSnackbarError: false });
+  };
 
   render() {
-    const { email, error, successMsg } = this.state;
+    const {
+      email,
+      error,
+      successMsg,
+      openSnackbarSaved,
+      openSnackbarError
+    } = this.state;
     const { classes } = this.props;
 
     return (
@@ -91,8 +120,9 @@ class PasswordForgetForm extends Component {
           <Typography variant="title" className={classes.text}>
             Reset your password
           </Typography>
-            <Typography variant="subheading" className={classes.text}>
-            Enter your email address and we will send you a link to reset your password
+          <Typography variant="subheading" className={classes.text}>
+            Enter your email address and we will send you a link to reset your
+            password
           </Typography>
           <form onSubmit={this.handleSubmit}>
             <CardContent>
@@ -102,7 +132,9 @@ class PasswordForgetForm extends Component {
                 aria-describedby="required"
                 aria-required="true"
               >
-                <InputLabel htmlFor="email">Enter your email address</InputLabel>
+                <InputLabel htmlFor="email">
+                  Enter your email address
+                </InputLabel>
                 <Input
                   id="email"
                   name="email"
@@ -112,14 +144,6 @@ class PasswordForgetForm extends Component {
                 />
                 <FormHelperText id="required">Required*</FormHelperText>
               </FormControl>
-              <FormHelperText
-                id="error"
-                name="error"
-                value={error}
-                onChange={this.handleChange}
-              >
-                {error ? error : successMsg}
-              </FormHelperText>
               <Button
                 variant="contained"
                 type="submit"
@@ -131,16 +155,49 @@ class PasswordForgetForm extends Component {
               </Button>
             </CardContent>
           </form>
-          <CardActions>
-          </CardActions>
+          <CardActions />
         </Card>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarSaved}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarSaved"
+          name="openSnackbarSaved"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="success"
+            message={successMsg}
+          />
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarError}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarError"
+          name="openSnackbarError"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={error}
+          />
+        </Snackbar>
       </div>
     );
   }
 }
 
-PasswordForgetForm.propTypes =  {
+PasswordForgetForm.propTypes = {
   classes: PropTypes.object.isRequired
-}
+};
 
 export default withStyles(styles)(PasswordForgetForm);
