@@ -33,7 +33,12 @@ import { Redirect } from "react-router-dom";
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    margin: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 3,
+    margin: "120px 0",
+    minHeight: "80vh",
+    [theme.breakpoints.up("sm")]: {
+      margin: "120px 24px"
+    }
   },
   container: {
     display: "flex",
@@ -49,19 +54,20 @@ const styles = theme => ({
   },
   slider: {
     maxWidth: 400,
-    margin: theme.spacing.unit * 3
+    margin: "24px 0"
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2
   },
   formControl: {
-    margin: theme.spacing.unit * 3,
-    minWidth: 120
+    margin: "24px 0",
+    minWidth: 250,
+    [theme.breakpoints.up("sm")]: {
+      width: 400
+    }
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 300,
+    minWidth: 250,
     padding: "10px",
     [theme.breakpoints.up("sm")]: {
       width: 400
@@ -69,7 +75,10 @@ const styles = theme => ({
   },
   button: {
     marginTop: theme.spacing.unit * 2,
-    marginLeft: theme.spacing.unit * 2
+    marginRight: theme.spacing.unit * 2
+  },
+  buttons: {
+    marginTop: theme.spacing.unit * 6
   },
   paperPadding: {
     padding: theme.spacing.unit * 3,
@@ -360,7 +369,6 @@ class NewPainEntry extends Component {
 
   render() {
     const { classes } = this.props;
-    let { authUser } = this.props;
     const {
       today,
       startDate,
@@ -399,7 +407,7 @@ class NewPainEntry extends Component {
         )}
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="title">Today: {today}</Typography>
+            <Typography variant="subheading">Today: {today}</Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
@@ -439,8 +447,10 @@ class NewPainEntry extends Component {
             </div>
             <div className={classes.sectionMargin}>
               <Typography variant="subheading">
-                How was the pain intensity during that time frame, 0 being no
-                pain at all and 10 the worst pain imaginable
+                How was the pain intensity during that time frame,
+              </Typography>
+              <Typography variant="subheading">
+                0 being no pain at all and 10 the worst pain imaginable
               </Typography>
               <div className={classes.slider}>
                 <Typography id="label">
@@ -525,27 +535,6 @@ class NewPainEntry extends Component {
                 margin="normal"
               />
             </div>
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                component={Link}
-                to={{
-                  pathname: "/trackPain"
-                }}
-                className={classes.button}
-              >
-                Return to Track Pain
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => this.handleSubmit(this.authUser)}
-                className={classes.button}
-              >
-                {btnText}
-              </Button>
-            </div>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
@@ -560,6 +549,29 @@ class NewPainEntry extends Component {
                 </Typography>
                 <Typography component="p">{keysInPainIsIn}</Typography>
               </Paper>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <div className={classes.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.handleSubmit(this.authUser)}
+                className={classes.button}
+              >
+                {btnText}
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to={{
+                  pathname: "/trackPain"
+                }}
+                className={classes.button}
+              >
+                Return to Track Pain
+              </Button>
             </div>
           </Grid>
         </Grid>
