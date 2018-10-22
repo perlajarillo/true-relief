@@ -525,46 +525,6 @@ class EditProfile extends Component {
     );
   }
 
-  checkForErrors(step) {
-    let thereAreErrors;
-    let msg = "Some fields are required";
-    switch (step) {
-      case 0:
-        thereAreErrors = validateDemographicData(
-          this.demographicDataValidations()
-        );
-        break;
-      case 1:
-        thereAreErrors = validateHabitsData(this.getHabitsPayload());
-        break;
-      case 2:
-        const keysInNeeds = R.keys(this.state.needs);
-        thereAreErrors = validateThereIsAtLeastOneNeed(R.length(keysInNeeds));
-        msg = "Please select at least one preference";
-        break;
-      case 3:
-        const keysInChallenges = R.keys(this.state.challenges);
-        thereAreErrors = validateThereIsAtLeastOneChallenge(
-          R.length(keysInChallenges)
-        );
-        msg = "Please select at least one challenge";
-        break;
-      case 4:
-        const keysInPainConditions = R.keys(this.state.painConditions);
-        const errorsAndMsg = validatePainConditionData(
-          R.length(keysInPainConditions),
-          this.getPainConditionPayload()
-        );
-        thereAreErrors = errorsAndMsg[0];
-        msg = errorsAndMsg[1];
-        break;
-      default:
-        return "Unknown step";
-    }
-    let errorsAndMsg = [thereAreErrors, msg];
-    return errorsAndMsg;
-  }
-
   /**
    * scrollToTop sets scrolls the window to coordinate 0.
    * @returns {void}
