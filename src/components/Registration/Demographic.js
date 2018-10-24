@@ -39,7 +39,7 @@ const Demographic = props => {
     updateDateInParentState
   } = props;
 
-  this.input = React.createRef();
+  let refInput = React.createRef();
 
   return (
     <Fragment>
@@ -55,7 +55,7 @@ const Demographic = props => {
             id="adornment-name"
             name="name"
             value={parentState.name}
-            ref={this.input}
+            ref={refInput}
             onChange={updateParentState}
             onBlur={reviewValidations}
             inputProps={{
@@ -128,7 +128,7 @@ const Demographic = props => {
             name="weight"
             type="number"
             value={parentState.weight}
-            ref={this.input}
+            ref={refInput}
             onChange={updateParentState}
             onBlur={reviewValidations}
             endAdornment={<InputAdornment position="end">lb</InputAdornment>}
@@ -154,7 +154,7 @@ const Demographic = props => {
             name="height"
             value={parentState.height}
             type="number"
-            ref={this.input}
+            ref={refInput}
             onChange={updateParentState}
             onBlur={reviewValidations}
             endAdornment={
