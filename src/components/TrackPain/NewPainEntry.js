@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/lab/Slider";
 import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
-import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
+import MuiPickersUtilsProvider from "material-ui-pickers/MuiPickersUtilsProvider";
 import DateTimePicker from "material-ui-pickers/DateTimePicker";
 import { format } from "date-fns";
 import distanceInWordsStrict from "date-fns/formatDistanceStrict";
@@ -422,7 +422,7 @@ class NewPainEntry extends Component {
                   label="Start date"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
-                  format={"MMM d yyyy h:mm a"}
+                  format={"MM/d/yyyy h:mm a"}
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
@@ -434,7 +434,7 @@ class NewPainEntry extends Component {
                   label="End date"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
-                  format={"MMM d yyyy h:mm a"}
+                  format={"MM/d/yyyy h:mm a"}
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
