@@ -19,6 +19,7 @@ import NewPainEntry from "./TrackPain/NewPainEntry";
 import theme from "./theme";
 import withAuthentication from "./WithAuthentication";
 import EditProfile from "./EditProfile";
+import LocalProviders from "./LocalProviders";
 
 const styles = {
   marginTop: "80px",
@@ -43,6 +44,7 @@ const App = () => (
         <Route path="/trackPain" component={TrackPain} />
         <Route path="/newPainEntry" component={NewPainEntry} />
         <Route path="/editProfile" component={EditProfile} />
+        <Route path="/localProviders" component={LocalProviders} />
       </Switch>
 
       <Footer />
