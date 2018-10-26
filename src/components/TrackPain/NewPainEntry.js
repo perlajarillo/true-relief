@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/lab/Slider";
 import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
-import MuiPickersUtilsProvider from "material-ui-pickers/MuiPickersUtilsProvider";
+import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateTimePicker from "material-ui-pickers/DateTimePicker";
 import { format } from "date-fns";
 import distanceInWordsStrict from "date-fns/formatDistanceStrict";
