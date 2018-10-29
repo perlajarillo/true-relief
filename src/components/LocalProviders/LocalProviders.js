@@ -24,7 +24,8 @@ const styles = theme => ({
       marginTop: "0%"
     },
     [theme.breakpoints.between("sm", "md")]: {
-      marginTop: "120%"
+      marginTop: "0%",
+      marginLeft: "10%"
     }
   },
 
@@ -47,6 +48,10 @@ const styles = theme => ({
     [theme.breakpoints.down("md")]: {
       minWidth: "40vh",
       minHeight: "40vh"
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      minWidth: "35vh",
+      minHeight: "60vh"
     },
     position: "absolute"
   }
