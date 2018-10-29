@@ -9,6 +9,7 @@
     "@material-ui/lab": "^1.0.0-alpha.10",
     "date-fns": "^2.0.0-alpha.16",
     "firebase": "^5.0.4",
+    "google-maps-react": "^2.0.2",
     "material-ui-pickers": "^1.0.0",
     "prop-types": "^15.6.1",
     "ramda": "^0.25.0",
