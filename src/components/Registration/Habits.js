@@ -32,7 +32,7 @@ const styles = theme => ({
 const Habits = props => {
   const { classes, parentState, updateParentState, reviewValidations } = props;
 
-  this.input = React.createRef();
+  let refInput = React.createRef();
 
   return (
     <Fragment>
@@ -200,7 +200,7 @@ const Habits = props => {
               name="drinksOfAlcohol"
               value={parentState.drinksOfAlcohol}
               type="number"
-              ref={this.input}
+              ref={refInput}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
@@ -306,7 +306,7 @@ const Habits = props => {
               name="cupsOfCoffee"
               value={parentState.cupsOfCoffee}
               type="number"
-              ref={this.input}
+              ref={refInput}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
