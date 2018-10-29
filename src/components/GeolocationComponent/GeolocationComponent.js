@@ -49,9 +49,7 @@ class GeolocationComponent extends React.Component {
   };
 
   componentDidMount() {
-    if (this.state) {
-      this.initMap();
-    }
+    this.initMap();
   }
 
   render() {
