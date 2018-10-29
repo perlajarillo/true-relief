@@ -408,12 +408,9 @@ const EntriesList = ({
                     });
                     formatedStartDate = format(
                       entry.startDate,
-                      "d MMM YYYY h:mm a"
+                      "MM/d/yyyy h:mm a"
                     );
-                    formatedEndDate = format(
-                      entry.endDate,
-                      "d MMM YYYY h:mm a"
-                    );
+                    formatedEndDate = format(entry.endDate, "MM/d/yyyy h:mm a");
                     const itIsSelected = isSelected(entry);
                     return (
                       <TableRow
@@ -581,7 +578,6 @@ class TrackPain extends Component {
   };
   getPainEntries = () => {
     db.getPainEntries(this.props.authUser.uid).then(snapshot => {
-      console.log("trackpain", this.props.authUser.uid);
       this.setState({
         entries: snapshot.val(),
         uid: this.props.authUser.uid

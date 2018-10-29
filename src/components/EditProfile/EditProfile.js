@@ -122,6 +122,7 @@ const PAIN_CONDITIONS = [
 
 let PAIN_CONDITIONS_DB;
 let NEW_PAIN_CONDITION = {};
+let scrollTimeOut;
 
 const safeStringGetter = (prop, data) => R.propOr("", prop, data);
 const safeNumberGetter = (prop, data) => R.propOr(0, prop, data);
@@ -525,12 +526,32 @@ class EditProfile extends Component {
   }
 
   /**
+   * scrollToTop sets scrolls the window to coordinate 0.
+   * @returns {void}
+   */
+  scrollToTop = () => {
+    window.scrollTo(0, 0);
+
+    this.clearTimeOut();
+  };
+
+  /**
+   * clearTimeOut clears the timeout after scrolling the window.
+   * @returns {void}
+   */
+  clearTimeOut = () => {
+    clearTimeout(scrollTimeOut);
+  };
+
+  /**
    * handleChange sets the state of the expanded panel for the pain
    * conditions.
    * @param {void}
    * @returns {void}
    */
   handleChange = panel => (event, expanded) => {
+    scrollTimeOut = setTimeout(this.scrollToTop, 200);
+
     this.setState({
       expanded: expanded ? panel : false
     });

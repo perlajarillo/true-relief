@@ -11,6 +11,9 @@ const styles = theme => ({
   button: {
     marginRight: theme.spacing.unit
   },
+  buttons: {
+    marginTop: theme.spacing.unit * 2
+  },
   input: {
     display: "none"
   },
@@ -272,8 +275,10 @@ class Canvas extends Component {
       <div>
         <div>
           <Typography variant="subheading">
-            Pick a color that best represents the intensity of your pain and
-            draw where you felt it.
+            Pick a color that best represents the intensity
+          </Typography>
+          <Typography variant="subheading">
+            of your pain and draw where you felt it.
           </Typography>
           {colors.map(color => (
             <Button
@@ -313,7 +318,7 @@ class Canvas extends Component {
             onMouseLeave={this.stopDrawing}
           />
         )}
-        <div>
+        <div className={classes.buttons}>
           <Button
             variant="contained"
             color="primary"
