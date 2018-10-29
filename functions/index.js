@@ -395,29 +395,59 @@ app.intent("body part", (conv, params) => {
   }
   const bodyPartNamed = params.painIsIn;
   let painIsIn = {};
+  let front = false;
   humanBodyFrontData.map(bodyData => {
     let bodyPart = bodyData.bodyPart;
     let x = bodyData.xStart;
     let y = bodyData.yEnd;
     if (bodyPart === bodyPartNamed) {
+      front = true;
       painIsIn = {
         [bodyPartNamed]: {
           x: x,
           y: y,
-          color: color
+          color: color,
+          front: true
         }
       };
     }
   });
+  if (!front) {
+    humanBodyBackData.map(bodyData => {
+      let bodyPart = bodyData.bodyPart;
+      let x = bodyData.xStart;
+      let y = bodyData.yEnd;
+      if (bodyPart === bodyPartNamed) {
+        painIsIn = {
+          [bodyPartNamed]: {
+            x: x,
+            y: y,
+            color: color,
+            front: false
+          }
+        };
+      }
+    });
+  }
+  const endDate = params.endDate;
+  const startDate = params.startDate;
+  let eventDuration = dateFunctions.distanceInWordsStrict(
+    endDate,
+    startDate,
+    "h"
+  );
+
   const newPainEntryData = {
     description: params.description,
-    endDate: params.endDate,
+    endDate: endDate,
     mood: params.mood,
     notes: "",
     painIntensity: intensity,
     painIsIn: painIsIn,
-    startDate: params.startDate
+    startDate: startDate,
+    eventDuration: eventDuration
   };
+
   const newTrackPainKey = db
     .ref()
     .child("patients")
