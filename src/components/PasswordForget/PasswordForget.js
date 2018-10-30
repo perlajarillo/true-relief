@@ -117,10 +117,10 @@ class PasswordForgetForm extends Component {
             image={logo}
             title="True Relief"
           />
-          <Typography variant="title" className={classes.text}>
+          <Typography variant="h6" className={classes.text}>
             Reset your password
           </Typography>
-          <Typography variant="subheading" className={classes.text}>
+          <Typography variant="subtitle1" className={classes.text}>
             Enter your email address and we will send you a link to reset your
             password
           </Typography>

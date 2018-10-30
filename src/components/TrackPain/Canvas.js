@@ -274,10 +274,10 @@ class Canvas extends Component {
     return (
       <div>
         <div>
-          <Typography variant="subheading">
+          <Typography variant="subtitle1">
             Pick a color that best represents the intensity
           </Typography>
-          <Typography variant="subheading">
+          <Typography variant="subtitle1">
             of your pain and draw where you felt it.
           </Typography>
           {colors.map(color => (

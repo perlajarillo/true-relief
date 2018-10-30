@@ -44,7 +44,7 @@ class Settings extends React.Component {
     return (
       <main className={classes.wrapper}>
         <section className={classes.sectionStyles}>
-          <Typography variant="headline">Settings</Typography>
+          <Typography variant="h5">Settings</Typography>
           <br />
           <br />
           <ExpansionPanel>

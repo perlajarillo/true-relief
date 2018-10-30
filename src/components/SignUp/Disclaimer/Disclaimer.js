@@ -130,7 +130,7 @@ class Disclaimer extends Component {
               image={logo}
               title="True Relief"
             />
-            <Typography className={classes.text} variant="subheading">
+            <Typography className={classes.text} variant="subtitle1">
               Please read and agree with the{" "}
               <a href="/policy" target="_blank" style={aTagStyles}>
                 terms and conditions{" "}

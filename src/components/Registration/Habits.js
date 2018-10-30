@@ -36,7 +36,7 @@ const Habits = props => {
 
   return (
     <Fragment>
-      <Typography variant="subheading">{habitsData.title}</Typography>
+      <Typography variant="subtitle1">{habitsData.title}</Typography>
       <div className={classes.root}>
         <FormControl
           component="fieldset"

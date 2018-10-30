@@ -407,11 +407,11 @@ class NewPainEntry extends Component {
         )}
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="subheading">Today: {today}</Typography>
+            <Typography variant="subtitle1">Today: {today}</Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
-              <Typography variant="title">
+              <Typography variant="h6">
                 Choose a time frame for your pain
               </Typography>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -441,15 +441,15 @@ class NewPainEntry extends Component {
                 />
                 <FormHelperText error={true}>{datesError}</FormHelperText>
               </MuiPickersUtilsProvider>
-              <Typography variant="title" className={classes.sectionMargin}>
+              <Typography variant="h6" className={classes.sectionMargin}>
                 {eventDuration}
               </Typography>
             </div>
             <div className={classes.sectionMargin}>
-              <Typography variant="subheading">
+              <Typography variant="subtitle1">
                 How was the pain intensity during that time frame,
               </Typography>
-              <Typography variant="subheading">
+              <Typography variant="subtitle1">
                 0 being no pain at all and 10 the worst pain imaginable
               </Typography>
               <div className={classes.slider}>
@@ -544,7 +544,7 @@ class NewPainEntry extends Component {
                 painIsInData={this.state.painIsIn}
               />
               <Paper className={classes.paperPadding} elevation={1}>
-                <Typography variant="body2" component="h3">
+                <Typography variant="body1">
                   Parts of your body affected:
                 </Typography>
                 <Typography component="p">{keysInPainIsIn}</Typography>
