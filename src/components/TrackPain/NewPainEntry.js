@@ -30,6 +30,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 import { Redirect } from "react-router-dom";
 
+const colors = ["#4caf50", "#ffd95b", "#ff7043", "#c41c00"];
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -57,7 +59,10 @@ const styles = theme => ({
     margin: "24px 0"
   },
   selectEmpty: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit * 2,
+    [theme.breakpoints.between("sm", "md")]: {
+      marginRight: "20%"
+    }
   },
   formControl: {
     margin: "24px 0",
@@ -67,10 +72,13 @@ const styles = theme => ({
     }
   },
   textField: {
-    minWidth: 250,
+    minWidth: 400,
     padding: "10px",
-    [theme.breakpoints.up("sm")]: {
-      width: 400
+    [theme.breakpoints.down("md")]: {
+      minWidth: 330
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      minWidth: 340
     }
   },
   button: {
@@ -83,6 +91,15 @@ const styles = theme => ({
   paperPadding: {
     padding: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 2
+  },
+  notesLegendStyle: {
+    marginRight: "40%",
+    [theme.breakpoints.down("md")]: {
+      marginRight: "0%"
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      marginRight: "10%"
+    }
   }
 });
 
@@ -95,7 +112,7 @@ class NewPainEntry extends Component {
       startDate: new Date(),
       endDate: new Date(),
       eventDuration: "Duration: 00",
-      painIntensity: 0,
+      painIntensity: 1,
       description: "",
       mood: "",
       datesError: "",
@@ -110,7 +127,8 @@ class NewPainEntry extends Component {
       key: null,
       openSnackbarSaved: false,
       openSnackbarError: false,
-      returnTrack: false
+      returnTrack: false,
+      color: colors[0]
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -142,7 +160,8 @@ class NewPainEntry extends Component {
       painIntensity: entries.painIntensity,
       painIsIn: entries.painIsIn,
       btnText: "Modify pain event",
-      key: key
+      key: key,
+      color: this.setColor(entries.painIntensity)
     });
   };
 
@@ -151,12 +170,12 @@ class NewPainEntry extends Component {
    * @param {Object} body part and (x,y) points
    * @return {void}
    */
-  updateParentState(bodyPart, x, y, front, color) {
+  updateParentState(bodyPart, x, y, front) {
     const xLens = R.lensProp(bodyPart);
     this.setState({
       painIsIn: R.set(
         xLens,
-        { x: x, y: y, front: front, color: color },
+        { x: x, y: y, front: front, color: this.state.color },
         this.state.painIsIn
       )
     });
@@ -303,21 +322,30 @@ class NewPainEntry extends Component {
    * @return {void}
    */
   setPainIntensity(event, value) {
-    let color;
-    if (value >= 0 && value <= 3) {
-      color = "#4caf50";
-    } else if (value >= 4 && value <= 6) {
-      color = "#ffd95b";
-    } else if (value >= 7 && value <= 8) {
-      color = "#ff7043";
-    } else if (value >= 9 && value <= 10) {
-      color = "#c41c00";
-    }
     this.setState({
       painIntensity: value,
       painIntensityError: validateSelectedValue(value),
-      color: color
+      color: this.setColor(value)
     });
+  }
+
+  /**
+   * setColor – Sets a color according with the pain intensity chosen
+   * @param {Number} painIntensityValue a number between 1 and 10
+   * @return {void}
+   */
+  setColor(painIntensityValue) {
+    let color;
+    if (painIntensityValue >= 0 && painIntensityValue <= 3) {
+      color = colors[0];
+    } else if (painIntensityValue >= 4 && painIntensityValue <= 6) {
+      color = colors[1];
+    } else if (painIntensityValue >= 7 && painIntensityValue <= 8) {
+      color = colors[2];
+    } else if (painIntensityValue >= 9 && painIntensityValue <= 10) {
+      color = colors[3];
+    }
+    return color;
   }
 
   /**
@@ -418,11 +446,11 @@ class NewPainEntry extends Component {
         )}
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="subheading">Today: {today}</Typography>
+            <Typography variant="subtitle1">Today: {today}</Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
-              <Typography variant="title">
+              <Typography variant="h6">
                 Choose a time frame for your pain
               </Typography>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -452,35 +480,9 @@ class NewPainEntry extends Component {
                 />
                 <FormHelperText error={true}>{datesError}</FormHelperText>
               </MuiPickersUtilsProvider>
-              <Typography variant="title" className={classes.sectionMargin}>
+              <Typography variant="h6" className={classes.sectionMargin}>
                 {eventDuration}
               </Typography>
-            </div>
-            <div className={classes.sectionMargin}>
-              <Typography variant="subheading">
-                How was the pain intensity during that time frame,
-              </Typography>
-              <Typography variant="subheading">
-                0 being no pain at all and 10 the worst pain imaginable
-              </Typography>
-              <div className={classes.slider}>
-                <Typography id="label">
-                  Pain Intensity: ({painIntensity}) *
-                </Typography>
-                <Slider
-                  value={painIntensity}
-                  min={0}
-                  max={10}
-                  step={1}
-                  id="painIntensity"
-                  name="painInsensity"
-                  onChange={this.setPainIntensity}
-                  onBlur={this.reviewSelectedValue("painIntensity")}
-                />
-                <FormHelperText error={true}>
-                  {painIntensityError}
-                </FormHelperText>
-              </div>
             </div>
             <div>
               <FormControl required className={classes.formControl}>
@@ -534,12 +536,20 @@ class NewPainEntry extends Component {
               </FormControl>
             </div>
             <div>
+              <FormLabel
+                component="legend"
+                className={classes.notesLegendStyle}
+              >
+                Include here any notes related to the pain, for example, can you
+                identify any event that could triggered it? what did you do
+                different than other days?
+              </FormLabel>
               <TextField
                 id="notes"
                 name="notes"
-                label="Include here any notes related to the pain"
+                label="Your notes"
                 multiline
-                rowsMax="4"
+                rowsMax="7"
                 value={notes}
                 onChange={this.handleChange}
                 className={classes.textField}
@@ -549,6 +559,25 @@ class NewPainEntry extends Component {
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
+              <FormLabel component="legend">
+                How was the pain intensity?, 1 being almost no pain and 10 the
+                worst pain imaginable
+              </FormLabel>
+              <div className={classes.slider}>
+                <Typography variant="subtitle1" id="label">
+                  Pain Intensity: ({painIntensity}) *
+                </Typography>
+                <Slider
+                  value={painIntensity}
+                  min={1}
+                  max={10}
+                  step={1}
+                  id="painIntensity"
+                  name="painInsensity"
+                  onChange={this.setPainIntensity}
+                  onBlur={this.reviewSelectedValue("painIntensity")}
+                />
+              </div>
               <Canvas
                 updateParentState={this.updateParentState}
                 clearParentState={this.clearParentState}
@@ -556,7 +585,7 @@ class NewPainEntry extends Component {
                 color={this.state.color}
               />
               <Paper className={classes.paperPadding} elevation={1}>
-                <Typography variant="body2" component="h3">
+                <Typography variant="body1">
                   Parts of your body affected:
                 </Typography>
                 <Typography component="p">{keysInPainIsIn}</Typography>
