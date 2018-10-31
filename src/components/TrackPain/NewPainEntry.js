@@ -303,9 +303,20 @@ class NewPainEntry extends Component {
    * @return {void}
    */
   setPainIntensity(event, value) {
+    let color;
+    if (value >= 0 && value <= 3) {
+      color = "#4caf50";
+    } else if (value >= 4 && value <= 6) {
+      color = "#ffd95b";
+    } else if (value >= 7 && value <= 8) {
+      color = "#ff7043";
+    } else if (value >= 9 && value <= 10) {
+      color = "#c41c00";
+    }
     this.setState({
       painIntensity: value,
-      painIntensityError: validateSelectedValue(value)
+      painIntensityError: validateSelectedValue(value),
+      color: color
     });
   }
 
@@ -542,6 +553,7 @@ class NewPainEntry extends Component {
                 updateParentState={this.updateParentState}
                 clearParentState={this.clearParentState}
                 painIsInData={this.state.painIsIn}
+                color={this.state.color}
               />
               <Paper className={classes.paperPadding} elevation={1}>
                 <Typography variant="body2" component="h3">

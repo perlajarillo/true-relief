@@ -33,7 +33,8 @@ class Canvas extends Component {
     super(props);
     this.state = {
       front: null,
-      btnText: "Show front"
+      btnText: "Show front",
+      color: this.props.color
     };
     this.isDrawing = false;
     this.isMouseDown = false;
@@ -50,6 +51,7 @@ class Canvas extends Component {
     this.switchSilhouette = this.switchSilhouette.bind(this);
     this.drawFromParent = this.drawFromParent.bind(this);
   }
+
   /**
    *componentWillReceiveProps – when the canvas receive the props we review if there are
   painData to pain in the canvas
@@ -80,6 +82,10 @@ class Canvas extends Component {
           }
         });
       }
+    } else if (this.props.color) {
+      console.log(this.props.color);
+      this.activeColor = this.props.color;
+      // this.setState({ color: this.props.color });
     }
   }
 
