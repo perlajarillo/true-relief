@@ -42,7 +42,7 @@ const PainHistory = props => {
 
   return (
     <Fragment>
-      <Typography variant="subheading">{text}</Typography>
+      <Typography variant="subtitle1">{text}</Typography>
       {/********** PAIN CONDITION ***************/}
       <form className={classes.root} autoComplete="off">
         <FormControl required className={classes.formControl}>
@@ -75,9 +75,7 @@ const PainHistory = props => {
         className={classes.root}
         style={{ display: parentState.painCondition === "" && "none" }}
       >
-        <Typography variant="subheading">
-          {sections.medication.title}
-        </Typography>
+        <Typography variant="subtitle1">{sections.medication.title}</Typography>
         <div className={classes.root}>
           <FormControl
             component="fieldset"

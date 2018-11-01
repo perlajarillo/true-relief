@@ -16,6 +16,7 @@ export default createMuiTheme({
     }
   },
   typography: {
-    fontSize: 16
+    fontSize: 16,
+    useNextVariants: true
   }
 });

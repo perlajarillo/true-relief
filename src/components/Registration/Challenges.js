@@ -51,7 +51,7 @@ const Challenges = props => {
 
   return (
     <Fragment>
-      <Typography variant="subheading">
+      <Typography variant="subtitle1">
         What are the biggest challenges you face?
       </Typography>
       <FormControl component="fieldset" className={classes.formControl}>

@@ -977,7 +977,7 @@ class EditProfile extends Component {
     return (
       <main className={classes.wrapper}>
         <div className={classes.root}>
-          <Typography variant="headline" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             Edit Profile{" "}
           </Typography>
           <ExpansionPanel

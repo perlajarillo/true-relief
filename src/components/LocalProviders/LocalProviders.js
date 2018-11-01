@@ -64,7 +64,7 @@ class LocalProviders extends React.Component {
     return (
       <div className={classes.wrapper}>
         <div className={classes.root}>
-          <Typography variant="headline" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             Local providers
           </Typography>
 
@@ -76,7 +76,7 @@ class LocalProviders extends React.Component {
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6}>
               <div className={classes.sectionStyles}>
-                <Typography variant="headline" gutterBottom>
+                <Typography variant="h5" gutterBottom>
                   Here will be the list of providers
                 </Typography>
               </div>
