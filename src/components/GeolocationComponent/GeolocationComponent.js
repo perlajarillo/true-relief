@@ -83,6 +83,6 @@ const authCondition = authUser => Boolean(authUser);
 
 export default withAuthorization(authCondition)(
   GoogleApiWrapper({
-    apiKey: "YOUR-API-KEY"
+    apiKey: process.env.REACT_APP_GEOLOCATION_API_KEY
   })(GeolocationComponent)
 );
