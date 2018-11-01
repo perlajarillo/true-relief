@@ -43,7 +43,7 @@ const Demographic = props => {
 
   return (
     <Fragment>
-      <Typography variant="subheading">{demographicData.title}</Typography>
+      <Typography variant="subtitle1">{demographicData.title}</Typography>
       <div className={classes.root}>
         <FormControl
           required={true}

@@ -24,11 +24,7 @@ function Footer(props) {
   return (
     <footer className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
-        <Typography
-          variant="title"
-          align="center"
-          className={classes.textColor}
-        >
+        <Typography variant="h6" align="center" className={classes.textColor}>
           True Relief
         </Typography>
       </Paper>

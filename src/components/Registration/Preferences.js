@@ -51,7 +51,7 @@ const Preferences = props => {
 
   return (
     <Fragment>
-      <Typography variant="subheading">{needsData.title}</Typography>
+      <Typography variant="subtitle1">{needsData.title}</Typography>
       <FormControl component="fieldset" className={classes.formControl}>
         <FormLabel component="legend">Chose all that apply</FormLabel>
         <FormGroup>

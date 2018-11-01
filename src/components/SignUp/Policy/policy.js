@@ -17,11 +17,11 @@ function Policy(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
-      <Typography variant="display1" gutterBottom>
+      <Typography variant="h4" color="textSecondary" gutterBottom>
         TERMS OF SERVICE
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         OVERVIEW
       </Typography>
 
@@ -69,7 +69,7 @@ function Policy(props) {
         you.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 1 - ONLINE STORE TERMS
       </Typography>
 
@@ -97,7 +97,7 @@ function Policy(props) {
         termination of your Services.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 2 - GENERAL CONDITIONS
       </Typography>
 
@@ -138,7 +138,7 @@ function Policy(props) {
         and will not limit or otherwise affect these Terms.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 3 - ACCURACY, COMPLETENESS AND TIMELINESS OF INFORMATION
       </Typography>
 
@@ -160,7 +160,7 @@ function Policy(props) {
         site.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 4 - MODIFICATIONS TO THE SERVICE
       </Typography>
 
@@ -174,7 +174,7 @@ function Policy(props) {
         modification, suspension or discontinuance of the Service.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 5 - SERVICES
       </Typography>
 
@@ -185,7 +185,7 @@ function Policy(props) {
         accurate.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 6 - OPTIONAL TOOLS
       </Typography>
 
@@ -216,7 +216,7 @@ function Policy(props) {
         Service.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 7 - THIRD-PARTY LINKS
       </Typography>
 
@@ -244,7 +244,7 @@ function Policy(props) {
         third-party.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 8 - USER COMMENTS, FEEDBACK AND OTHER SUBMISSIONS
       </Typography>
 
@@ -281,7 +281,7 @@ function Policy(props) {
         liability for any comments posted by you or any third-party.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 9 - PERSONAL INFORMATION
       </Typography>
 
@@ -290,7 +290,7 @@ function Policy(props) {
         our Privacy Policy. To view our Privacy Policy.
       </Typography>
 
-      <Typography variant="title" className={classes.marginBottom}>
+      <Typography variant="h6" className={classes.marginBottom}>
         SECTION 10 - ERRORS, INACCURACIES AND OMISSIONS
       </Typography>
 
@@ -314,7 +314,7 @@ function Policy(props) {
         website has been modified or updated.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 11 - PROHIBITED USES
       </Typography>
 
@@ -340,11 +340,11 @@ function Policy(props) {
         any related website for violating any of the prohibited uses.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 12 - DISCLAIMER OF WARRANTIES; LIMITATION OF LIABILITY
       </Typography>
 
-      <Typography variant="subheading" gutterBottom>
+      <Typography variant="subtitle1" gutterBottom>
         Any information/data derived from the site should be discussed by you
         with your doctor for proper diagnosis and treatment. Use of this website
         and the information/data derived from it should never be a substitute
@@ -403,7 +403,7 @@ function Policy(props) {
         permitted by law.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 13 - INDEMNIFICATION
       </Typography>
 
@@ -418,7 +418,7 @@ function Policy(props) {
         a third-party.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 14 - SEVERABILITY
       </Typography>
 
@@ -431,7 +431,7 @@ function Policy(props) {
         enforceability of any other remaining provisions.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 15 - TERMINATION
       </Typography>
 
@@ -457,7 +457,7 @@ function Policy(props) {
         thereof).
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 16 - ENTIRE AGREEMENT
       </Typography>
 
@@ -482,7 +482,7 @@ function Policy(props) {
         not be construed against the drafting party.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 17 - GOVERNING LAW
       </Typography>
 
@@ -492,7 +492,7 @@ function Policy(props) {
         laws of x, Washington, DC, 20002, United States.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 18 - CHANGES TO TERMS OF SERVICE
       </Typography>
 
@@ -510,7 +510,7 @@ function Policy(props) {
         Service constitutes acceptance of those changes.
       </Typography>
 
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         SECTION 19 - CONTACT INFORMATION
       </Typography>
 
