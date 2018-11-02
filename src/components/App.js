@@ -20,6 +20,7 @@ import theme from "./theme";
 import withAuthentication from "./WithAuthentication";
 import EditProfile from "./EditProfile";
 import LocalProviders from "./LocalProviders";
+import NotFound from "./NotFound/NotFound";
 
 const styles = {
   marginTop: "80px",
@@ -45,6 +46,7 @@ const App = () => (
         <Route path="/newPainEntry" component={NewPainEntry} />
         <Route path="/editProfile" component={EditProfile} />
         <Route path="/localProviders" component={LocalProviders} />
+        <Route path="*" component={NotFound} />
       </Switch>
 
       <Footer />
