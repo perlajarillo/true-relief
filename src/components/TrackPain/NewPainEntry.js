@@ -30,7 +30,26 @@ import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
 import { Redirect } from "react-router-dom";
 
-const colors = ["#4caf50", "#ffd95b", "#ff7043", "#c41c00"];
+const hexColorCodes = {
+  green: "#4caf50",
+  yellow: "#ffd95b",
+  orange: "#ff7043",
+  red: "#c41c00"
+};
+
+const intensityColorRange = {
+  0: "green",
+  1: "green",
+  2: "green",
+  3: "green",
+  4: "yellow",
+  5: "yellow",
+  6: "yellow",
+  7: "orange",
+  8: "orange",
+  9: "red",
+  10: "red"
+};
 
 const styles = theme => ({
   root: {
@@ -128,7 +147,7 @@ class NewPainEntry extends Component {
       openSnackbarSaved: false,
       openSnackbarError: false,
       returnTrack: false,
-      color: colors[0]
+      color: hexColorCodes.green
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -335,17 +354,8 @@ class NewPainEntry extends Component {
    * @return {void}
    */
   setColor(painIntensityValue) {
-    let color;
-    if (painIntensityValue >= 0 && painIntensityValue <= 3) {
-      color = colors[0];
-    } else if (painIntensityValue >= 4 && painIntensityValue <= 6) {
-      color = colors[1];
-    } else if (painIntensityValue >= 7 && painIntensityValue <= 8) {
-      color = colors[2];
-    } else if (painIntensityValue >= 9 && painIntensityValue <= 10) {
-      color = colors[3];
-    }
-    return color;
+    const color = intensityColorRange[painIntensityValue];
+    return hexColorCodes[color];
   }
 
   /**
@@ -540,8 +550,8 @@ class NewPainEntry extends Component {
                 component="legend"
                 className={classes.notesLegendStyle}
               >
-                Include here any notes related to the pain, for example, can you
-                identify any event that could triggered it? what did you do
+                Include here any notes related to the pain. For example, can you
+                identify any event that could trigger it? What did you do
                 different than other days?
               </FormLabel>
               <TextField
