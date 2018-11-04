@@ -5,7 +5,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import trackPainData from "./literals/trackPainData.js";
-const colors = ["#4caf50", "#ffd95b", "#ff7043", "#c41c00"];
 
 const styles = theme => ({
   button: {
@@ -45,11 +44,11 @@ class Canvas extends Component {
     this.draw = this.draw.bind(this);
     this.stopDrawing = this.stopDrawing.bind(this);
     this.clearCanvas = this.clearCanvas.bind(this);
-    this.setColor = this.setColor.bind(this);
     this.getBodyPartTerminology = this.getBodyPartTerminology.bind(this);
     this.switchSilhouette = this.switchSilhouette.bind(this);
     this.drawFromParent = this.drawFromParent.bind(this);
   }
+
   /**
    *componentWillReceiveProps – when the canvas receive the props we review if there are
   painData to pain in the canvas
@@ -80,6 +79,8 @@ class Canvas extends Component {
           }
         });
       }
+    } else if (this.props.color) {
+      this.activeColor = this.props.color;
     }
   }
 
@@ -91,7 +92,8 @@ class Canvas extends Component {
    * @return {void} body part name
    */
   getBodyPartTerminology(x, y) {
-    const { color, front } = this.state;
+    const { front } = this.state;
+    front === null && this.setState({ front: false });
     front
       ? humanBodyFrontData.map(bodyData => {
           let bodyPart = bodyData.bodyPart;
@@ -105,8 +107,7 @@ class Canvas extends Component {
             x <= parseInt(xEnd) &&
             (y >= parseInt(yStart) && y <= parseInt(yEnd));
           /**If there are coincidences the parentState is updated*/
-          isOnRange &&
-            this.props.updateParentState(bodyPart, x, y, front, color);
+          isOnRange && this.props.updateParentState(bodyPart, x, y, front);
         })
       : humanBodyBackData.map(bodyData => {
           let bodyPart = bodyData.bodyPart;
@@ -120,8 +121,7 @@ class Canvas extends Component {
             x <= parseInt(xEnd) &&
             (y >= parseInt(yStart) && y <= parseInt(yEnd));
           /**If there are coincidences the parentState is updated*/
-          isOnRange &&
-            this.props.updateParentState(bodyPart, x, y, front, color);
+          isOnRange && this.props.updateParentState(bodyPart, x, y, front);
         });
   }
   /**
@@ -194,17 +194,6 @@ class Canvas extends Component {
   };
 
   /**
-   * setColor – picks the color from the selected button
-   * @param {Object} event
-   * @return {String} the selected color
-   */
-  setColor = event => {
-    this.activeColor = event.target.value;
-    this.setState({ color: this.activeColor });
-    return this.activeColor;
-  };
-
-  /**
    * draw – create the context for canvas, sets the styles to draw
    * @param {Object} event
    * @return {void}
@@ -262,7 +251,7 @@ class Canvas extends Component {
    */
   clearCanvas = () => {
     const ctx = this.canvas.current.getContext("2d");
-    this.activeColor = null;
+    this.activeColor = this.props.color;
     ctx.clearRect(0, 0, this.canvas.current.width, this.canvas.current.height);
     this.props.clearParentState();
     this.setState({ front: false, btnText: "Show front" });
@@ -275,25 +264,8 @@ class Canvas extends Component {
       <div>
         <div>
           <Typography variant="subtitle1">
-            Pick a color that best represents the intensity
+            Draw where you felt the pain.
           </Typography>
-          <Typography variant="subtitle1">
-            of your pain and draw where you felt it.
-          </Typography>
-          {colors.map(color => (
-            <Button
-              key={color}
-              value={color}
-              variant="contained"
-              size="small"
-              style={{
-                background: color
-              }}
-              onClick={this.setColor}
-            >
-              {" "}
-            </Button>
-          ))}
         </div>
         {front ? (
           <canvas
