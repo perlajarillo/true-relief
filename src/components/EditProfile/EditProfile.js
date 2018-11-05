@@ -107,6 +107,9 @@ const styles = theme => ({
   },
   btnPainConditon: {
     marginLeft: "20px"
+  },
+  painConditionDiv: {
+    width: "98%"
   }
 });
 
@@ -1112,7 +1115,7 @@ class EditProfile extends Component {
                 {painConditions &&
                   Object.keys(painConditions).map(condition => {
                     return (
-                      <div key={condition}>
+                      <div key={condition} className={classes.painConditionDiv}>
                         <Card className={classes.card}>
                           <CardActions
                             className={classes.actions}

@@ -113,8 +113,10 @@ const styles = theme => ({
   },
   notesLegendStyle: {
     marginRight: "40%",
+    width: "60%",
     [theme.breakpoints.down("md")]: {
-      marginRight: "0%"
+      marginRight: "0%",
+      width: "100%"
     },
     [theme.breakpoints.between("sm", "md")]: {
       marginRight: "10%"
