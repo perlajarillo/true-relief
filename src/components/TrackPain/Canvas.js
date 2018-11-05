@@ -217,7 +217,7 @@ class Canvas extends Component {
     let nextY = startY;
     ctx.beginPath();
     // start from
-    ctx.moveTo(startX, startY);
+    ctx.moveTo(startX - 1, startY - 1);
     this.getBodyPartTerminology(nextX, nextY);
     ctx.lineTo(nextX, nextY);
     ctx.stroke();
