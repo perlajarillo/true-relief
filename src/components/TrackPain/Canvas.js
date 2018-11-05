@@ -172,9 +172,15 @@ class Canvas extends Component {
    */
   getCoords = event => {
     let rect = this.canvas.current.getBoundingClientRect();
-    let startX = event.clientX - rect.x;
-    let startY = event.clientY - rect.y;
-
+    let startX;
+    let startY;
+    if (rect.x) {
+      startX = event.clientX - rect.x;
+      startY = event.clientY - rect.y;
+    } else {
+      startX = event.clientX - rect.left;
+      startY = event.clientY - rect.top;
+    }
     return {
       startX,
       startY
@@ -232,7 +238,7 @@ class Canvas extends Component {
     let nextY = startY;
     ctx.beginPath();
     // start from
-    ctx.moveTo(startX, startY);
+    ctx.moveTo(startX - 1, startY - 1);
     ctx.lineTo(nextX, nextY);
     ctx.stroke();
   }
@@ -267,6 +273,7 @@ class Canvas extends Component {
             Draw where you felt the pain.
           </Typography>
         </div>
+
         {front ? (
           <canvas
             ref={this.canvas}
