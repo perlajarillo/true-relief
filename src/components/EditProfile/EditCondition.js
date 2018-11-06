@@ -15,7 +15,8 @@ const styles = theme => ({
   },
   wrapper: {
     margin: "60px 0",
-    minHeight: "30vh"
+    minHeight: "30vh",
+    maxWidth: "200vh"
   },
   formControl: {
     margin: theme.spacing.unit * 3,
@@ -39,7 +40,7 @@ const EditCondition = props => {
   const { classes, parentState, updateParentState } = props;
 
   return (
-    <main className={classes.wrapper}>
+    <div className={classes.wrapper}>
       <FormControl required className={classes.formControl}>
         <FormLabel component="legend">{sections.painCondition.title}</FormLabel>
         <Select
@@ -167,7 +168,7 @@ const EditCondition = props => {
           ))}
         </Select>
       </FormControl>
-    </main>
+    </div>
   );
 };
 
