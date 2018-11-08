@@ -20,6 +20,7 @@ import theme from "./theme";
 import withAuthentication from "./WithAuthentication";
 import EditProfile from "./EditProfile";
 import LocalProviders from "./LocalProviders";
+import Treatments from "./Treatments";
 import NotFound from "./NotFound/NotFound";
 
 const styles = {
@@ -46,6 +47,7 @@ const App = () => (
         <Route path="/newPainEntry" component={NewPainEntry} />
         <Route path="/editProfile" component={EditProfile} />
         <Route path="/localProviders" component={LocalProviders} />
+        <Route path="/treatments" component={Treatments} />
         <Route path="*" component={NotFound} />
       </Switch>
 
