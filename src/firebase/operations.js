@@ -57,6 +57,16 @@ export function getPatient(uid) {
   return userProfile;
 }
 
+export function getPatientConditions(uid) {
+  const rootRef = db.ref();
+  const userPainConditions = rootRef
+    .child("patients")
+    .child(uid)
+    .child("painConditions")
+    .once("value");
+  return userPainConditions;
+}
+
 export function writeNewPainCondition(userId, data) {
   return db
     .ref()
