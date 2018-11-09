@@ -10,7 +10,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
 import painHistoryData from "./literals/painHistoryData.js";
-import FormHelperText from "@material-ui/core/FormHelperText";
 
 const styles = theme => ({
   root: {
@@ -33,7 +32,6 @@ const PainHistory = props => {
   const { classes, parentState, updateParentState } = props;
   const {
     text,
-    otherPainCondition,
     sections,
     painConditionData,
     medicationData,
@@ -44,7 +42,7 @@ const PainHistory = props => {
 
   return (
     <Fragment>
-      <Typography variant="subheading">{text}</Typography>
+      <Typography variant="subtitle1">{text}</Typography>
       {/********** PAIN CONDITION ***************/}
       <form className={classes.root} autoComplete="off">
         <FormControl required className={classes.formControl}>
@@ -77,9 +75,7 @@ const PainHistory = props => {
         className={classes.root}
         style={{ display: parentState.painCondition === "" && "none" }}
       >
-        <Typography variant="subheading">
-          {sections.medication.title}
-        </Typography>
+        <Typography variant="subtitle1">{sections.medication.title}</Typography>
         <div className={classes.root}>
           <FormControl
             component="fieldset"
@@ -288,7 +284,6 @@ const PainHistory = props => {
             <FormControlLabel value="no" control={<Radio />} label="No" />
           </RadioGroup>
         </FormControl>
-        <FormHelperText>{otherPainCondition} </FormHelperText>
       </div>
       {/*********** IF NON PHARMA YES ********************/}
       <div
@@ -357,7 +352,6 @@ const PainHistory = props => {
           </Select>
         </FormControl>
       </div>
-      <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
     </Fragment>
   );
 };

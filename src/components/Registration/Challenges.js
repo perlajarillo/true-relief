@@ -8,8 +8,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import challengesData from "./literals/challenges";
-import FormHelperText from '@material-ui/core/FormHelperText';
-
 
 const styles = theme => ({
   formControl: {
@@ -49,11 +47,11 @@ const CheckboxComponent = props => {
 };
 
 const Challenges = props => {
-  const { classes, errorSection } = props;
+  const { classes } = props;
 
   return (
     <Fragment>
-      <Typography variant="subheading">
+      <Typography variant="subtitle1">
         What are the biggest challenges you face?
       </Typography>
       <FormControl component="fieldset" className={classes.formControl}>
@@ -69,7 +67,6 @@ const Challenges = props => {
           ))}
         </FormGroup>
       </FormControl>
-      <FormHelperText error={true}>{errorSection}</FormHelperText>
     </Fragment>
   );
 };

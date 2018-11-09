@@ -32,11 +32,11 @@ const styles = theme => ({
 const Habits = props => {
   const { classes, parentState, updateParentState, reviewValidations } = props;
 
-  this.input = React.createRef();
+  let refInput = React.createRef();
 
   return (
     <Fragment>
-      <Typography variant="subheading">{habitsData.title}</Typography>
+      <Typography variant="subtitle1">{habitsData.title}</Typography>
       <div className={classes.root}>
         <FormControl
           component="fieldset"
@@ -200,7 +200,7 @@ const Habits = props => {
               name="drinksOfAlcohol"
               value={parentState.drinksOfAlcohol}
               type="number"
-              ref={this.input}
+              ref={refInput}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
@@ -306,7 +306,7 @@ const Habits = props => {
               name="cupsOfCoffee"
               value={parentState.cupsOfCoffee}
               type="number"
-              ref={this.input}
+              ref={refInput}
               onChange={updateParentState}
               onBlur={reviewValidations}
               inputProps={{
@@ -362,7 +362,6 @@ const Habits = props => {
           </RadioGroup>
         </FormControl>
       </div>
-      <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
     </Fragment>
   );
 };

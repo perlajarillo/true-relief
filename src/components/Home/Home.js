@@ -66,7 +66,7 @@ const Home = props => {
         <section className={classes.sectionStyles}>
           <Grid item xs={12} sm={12} m={12} lg={8}>
             <div className={classes.pageTitle}>
-              <Typography variant="display1" gutterBottom>
+              <Typography variant="h4" color="textSecondary" gutterBottom>
                 True Relief provides you with tools and strategies to track your
                 pain, to better manage your condition.
               </Typography>
@@ -94,13 +94,13 @@ const Home = props => {
           </Grid>
           <Divider />
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <Typography variant="title" className={classes.tourText}>
+            <Typography variant="h6" className={classes.tourText}>
               Tools to help you manage your pain
             </Typography>
           </Grid>
           <Divider />
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <Typography variant="title" className={classes.tourText}>
+            <Typography variant="h6" className={classes.tourText}>
               Strategies to know more about your pain
             </Typography>
           </Grid>

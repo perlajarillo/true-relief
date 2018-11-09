@@ -6,8 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/lab/Slider";
 import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
-import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
-import DateTimePicker from "material-ui-pickers/DateTimePicker";
+import { MuiPickersUtilsProvider } from "material-ui-pickers";
+import { DateTimePicker } from "material-ui-pickers";
 import { format } from "date-fns";
 import distanceInWordsStrict from "date-fns/formatDistanceStrict";
 import compareAsc from "date-fns/compareAsc";
@@ -28,10 +28,38 @@ import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContentWrapper from "../SnackbarContentComponent/SnackbarContentComponent";
+import { Redirect } from "react-router-dom";
+
+const hexColorCodes = {
+  green: "#4caf50",
+  yellow: "#ffd95b",
+  orange: "#ff7043",
+  red: "#c41c00"
+};
+
+const intensityColorRange = {
+  0: "green",
+  1: "green",
+  2: "green",
+  3: "green",
+  4: "yellow",
+  5: "yellow",
+  6: "yellow",
+  7: "orange",
+  8: "orange",
+  9: "red",
+  10: "red"
+};
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    margin: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 3,
+    margin: "120px 0",
+    minHeight: "80vh",
+    [theme.breakpoints.up("sm")]: {
+      margin: "120px 24px"
+    }
   },
   container: {
     display: "flex",
@@ -47,31 +75,52 @@ const styles = theme => ({
   },
   slider: {
     maxWidth: 400,
-    margin: theme.spacing.unit * 3
+    margin: "24px 0"
   },
   selectEmpty: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit * 2,
+    [theme.breakpoints.between("sm", "md")]: {
+      marginRight: "20%"
+    }
   },
   formControl: {
-    margin: theme.spacing.unit * 3,
-    minWidth: 120
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 300,
-    padding: "10px",
+    margin: "24px 0",
+    minWidth: 250,
     [theme.breakpoints.up("sm")]: {
       width: 400
     }
   },
+  textField: {
+    minWidth: 400,
+    padding: "10px",
+    [theme.breakpoints.down("md")]: {
+      minWidth: 330
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      minWidth: 340
+    }
+  },
   button: {
     marginTop: theme.spacing.unit * 2,
-    marginLeft: theme.spacing.unit * 2
+    marginRight: theme.spacing.unit * 2
+  },
+  buttons: {
+    marginTop: theme.spacing.unit * 6
   },
   paperPadding: {
     padding: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 2
+  },
+  notesLegendStyle: {
+    marginRight: "40%",
+    width: "60%",
+    [theme.breakpoints.down("md")]: {
+      marginRight: "0%",
+      width: "100%"
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      marginRight: "10%"
+    }
   }
 });
 
@@ -84,7 +133,7 @@ class NewPainEntry extends Component {
       startDate: new Date(),
       endDate: new Date(),
       eventDuration: "Duration: 00",
-      painIntensity: 0,
+      painIntensity: 1,
       description: "",
       mood: "",
       datesError: "",
@@ -97,7 +146,10 @@ class NewPainEntry extends Component {
       successMsg: "",
       btnText: "Register pain event",
       key: null,
-      openSnackbarSaved: false
+      openSnackbarSaved: false,
+      openSnackbarError: false,
+      returnTrack: false,
+      color: hexColorCodes.green
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -129,7 +181,8 @@ class NewPainEntry extends Component {
       painIntensity: entries.painIntensity,
       painIsIn: entries.painIsIn,
       btnText: "Modify pain event",
-      key: key
+      key: key,
+      color: this.setColor(entries.painIntensity)
     });
   };
 
@@ -138,12 +191,12 @@ class NewPainEntry extends Component {
    * @param {Object} body part and (x,y) points
    * @return {void}
    */
-  updateParentState(bodyPart, x, y, front, color) {
+  updateParentState(bodyPart, x, y, front) {
     const xLens = R.lensProp(bodyPart);
     this.setState({
       painIsIn: R.set(
         xLens,
-        { x: x, y: y, front: front, color: color },
+        { x: x, y: y, front: front, color: this.state.color },
         this.state.painIsIn
       )
     });
@@ -216,7 +269,7 @@ class NewPainEntry extends Component {
    * @return {void}
    */
   handleStartDateChange = date => {
-    this.setState({ startDate: date });
+    this.setState({ startDate: date }, () => this.setEventDuration());
   };
 
   /**
@@ -292,8 +345,19 @@ class NewPainEntry extends Component {
   setPainIntensity(event, value) {
     this.setState({
       painIntensity: value,
-      painIntensityError: validateSelectedValue(value)
+      painIntensityError: validateSelectedValue(value),
+      color: this.setColor(value)
     });
+  }
+
+  /**
+   * setColor – Sets a color according with the pain intensity chosen
+   * @param {Number} painIntensityValue a number between 1 and 10
+   * @return {void}
+   */
+  setColor(painIntensityValue) {
+    const color = intensityColorRange[painIntensityValue];
+    return hexColorCodes[color];
   }
 
   /**
@@ -305,12 +369,20 @@ class NewPainEntry extends Component {
     const key = this.state.key;
     if (thereAreErrors) {
       this.setState({
+        openSnackbarError: true,
         sectionError: "The fields with * are required"
       });
     } else if (this.state.painIsIn === "") {
       this.setState({
+        openSnackbarError: true,
         sectionError:
           "Draw in the human body image where do/did you feel the pain"
+      });
+    } else if (this.state.datesError !== "") {
+      this.setState({
+        openSnackbarError: true,
+        sectionError:
+          "The start date/time must be earlier than the end date/time"
       });
     } else {
       !key
@@ -320,21 +392,34 @@ class NewPainEntry extends Component {
         : editTrackPain(authUser, this.getFirebasePayload(), key).then(
             this.setState({ openSnackbarSaved: true })
           );
+
       this.setState({
         sectionError: "",
         successMsg: "Your entry was submitted"
       });
     }
   };
+
+  /**
+   * handleSnackbarClose - sets the actions when the snackbar is closed
+   * @param {Object} event the event object
+   * @param {Object} reason for closing the snackbar
+   * @return {void}
+   */
   handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({ openSnackbarSaved: false });
+    this.state.openSnackbarSaved
+      ? this.setState({
+          openSnackbarSaved: false,
+          returnTrack: true
+        })
+      : this.setState({ openSnackbarError: false });
   };
+
   render() {
     const { classes } = this.props;
-    let { authUser } = this.props;
     const {
       today,
       startDate,
@@ -349,9 +434,11 @@ class NewPainEntry extends Component {
       painIntensityError,
       descriptionError,
       moodError,
-      successMsg,
       btnText,
-      painIsIn
+      painIsIn,
+      returnTrack,
+      openSnackbarSaved,
+      openSnackbarError
     } = this.state;
 
     let keysInPainIsIn = Object.keys(painIsIn).map(key => {
@@ -361,13 +448,21 @@ class NewPainEntry extends Component {
 
     return (
       <div className={classes.root}>
+        {returnTrack && (
+          <Redirect
+            to={{
+              pathname: "/trackPain",
+              state: { from: this.props.location }
+            }}
+          />
+        )}
         <Grid container spacing={16}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="title">Today: {today}</Typography>
+            <Typography variant="subtitle1">Today: {today}</Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <div className={classes.sectionMargin}>
-              <Typography variant="title">
+              <Typography variant="h6">
                 Choose a time frame for your pain
               </Typography>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -378,7 +473,7 @@ class NewPainEntry extends Component {
                   label="Start date"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
-                  format={"MMM d yyyy h:mm a"}
+                  format={"MM/d/yyyy h:mm a"}
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
@@ -390,40 +485,16 @@ class NewPainEntry extends Component {
                   label="End date"
                   minDate={"2000/01/01"}
                   maxDate={new Date()}
-                  format={"MMM d yyyy h:mm a"}
+                  format={"MM/d/yyyy h:mm a"}
                   disableFuture={true}
                   className={classes.dpMargin}
                   required
                 />
                 <FormHelperText error={true}>{datesError}</FormHelperText>
               </MuiPickersUtilsProvider>
-              <Typography variant="title" className={classes.sectionMargin}>
+              <Typography variant="h6" className={classes.sectionMargin}>
                 {eventDuration}
               </Typography>
-            </div>
-            <div className={classes.sectionMargin}>
-              <Typography variant="subheading">
-                How was the pain intensity during that time frame, 0 being no
-                pain at all and 10 the worst pain imaginable
-              </Typography>
-              <div className={classes.slider}>
-                <Typography id="label">
-                  Pain Intensity: ({painIntensity}) *
-                </Typography>
-                <Slider
-                  value={painIntensity}
-                  min={0}
-                  max={10}
-                  step={1}
-                  id="painIntensity"
-                  name="painInsensity"
-                  onChange={this.setPainIntensity}
-                  onBlur={this.reviewSelectedValue("painIntensity")}
-                />
-                <FormHelperText error={true}>
-                  {painIntensityError}
-                </FormHelperText>
-              </div>
             </div>
             <div>
               <FormControl required className={classes.formControl}>
@@ -477,19 +548,72 @@ class NewPainEntry extends Component {
               </FormControl>
             </div>
             <div>
+              <FormLabel
+                component="legend"
+                className={classes.notesLegendStyle}
+              >
+                Include here any notes related to the pain. For example, can you
+                identify any event that could trigger it? What did you do
+                different than other days?
+              </FormLabel>
               <TextField
                 id="notes"
                 name="notes"
-                label="Include here any notes related to the pain"
+                label="Your notes"
                 multiline
-                rowsMax="4"
+                rowsMax="7"
                 value={notes}
                 onChange={this.handleChange}
                 className={classes.textField}
                 margin="normal"
               />
             </div>
-            <div>
+          </Grid>
+          <Grid item xs={12} sm={6} md={6} lg={6}>
+            <div className={classes.sectionMargin}>
+              <FormLabel component="legend">
+                How was the pain intensity?, 1 being almost no pain and 10 the
+                worst pain imaginable
+              </FormLabel>
+              <div className={classes.slider}>
+                <Typography variant="subtitle1" id="label">
+                  Pain Intensity: ({painIntensity}) *
+                </Typography>
+                <Slider
+                  value={painIntensity}
+                  min={1}
+                  max={10}
+                  step={1}
+                  id="painIntensity"
+                  name="painInsensity"
+                  onChange={this.setPainIntensity}
+                  onBlur={this.reviewSelectedValue("painIntensity")}
+                />
+              </div>
+              <Canvas
+                updateParentState={this.updateParentState}
+                clearParentState={this.clearParentState}
+                painIsInData={this.state.painIsIn}
+                color={this.state.color}
+              />
+              <Paper className={classes.paperPadding} elevation={1}>
+                <Typography variant="body1">
+                  Parts of your body affected:
+                </Typography>
+                <Typography component="p">{keysInPainIsIn}</Typography>
+              </Paper>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <div className={classes.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.handleSubmit(this.authUser)}
+                className={classes.button}
+              >
+                {btnText}
+              </Button>
               <Button
                 variant="contained"
                 color="primary"
@@ -501,33 +625,6 @@ class NewPainEntry extends Component {
               >
                 Return to Track Pain
               </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => this.handleSubmit(this.authUser)}
-                className={classes.button}
-              >
-                {btnText}
-              </Button>
-
-              <FormHelperText error={true}>
-                {sectionError ? sectionError : successMsg}
-              </FormHelperText>
-            </div>
-          </Grid>
-          <Grid item xs={12} sm={6} md={6} lg={6}>
-            <div className={classes.sectionMargin}>
-              <Canvas
-                updateParentState={this.updateParentState}
-                clearParentState={this.clearParentState}
-                painIsInData={this.state.painIsIn}
-              />
-              <Paper className={classes.paperPadding} elevation={1}>
-                <Typography variant="body2" component="h3">
-                  Parts of your body affected:
-                </Typography>
-                <Typography component="p">{keysInPainIsIn}</Typography>
-              </Paper>
             </div>
           </Grid>
         </Grid>
@@ -536,7 +633,7 @@ class NewPainEntry extends Component {
             vertical: "bottom",
             horizontal: "left"
           }}
-          open={this.state.openSnackbarSaved}
+          open={openSnackbarSaved}
           autoHideDuration={3000}
           onClose={this.handleSnackbarClose}
           id="openSnackbarSaved"
@@ -546,6 +643,23 @@ class NewPainEntry extends Component {
             onClose={this.handleSnackbarClose}
             variant="success"
             message="Entry saved!"
+          />
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={openSnackbarError}
+          autoHideDuration={3000}
+          onClose={this.handleSnackbarClose}
+          id="openSnackbarError"
+          name="openSnackbarError"
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={sectionError}
           />
         </Snackbar>
       </div>

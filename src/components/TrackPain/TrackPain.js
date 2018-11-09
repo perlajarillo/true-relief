@@ -271,11 +271,11 @@ let EnhancedTableToolbar = props => {
     >
       <div className={classes.title}>
         {entryKey !== "" ? (
-          <Typography color="inherit" variant="subheading">
+          <Typography color="inherit" variant="subtitle1">
             {1} selected
           </Typography>
         ) : (
-          <Typography variant="title" id="tableTitle">
+          <Typography variant="h6" id="tableTitle">
             All pain entries
           </Typography>
         )}
@@ -361,7 +361,7 @@ const EntriesList = ({
   return (
     <div className={classes.root}>
       <div className={classes.titleRow}>
-        <Typography variant="headline">Track Pain</Typography>
+        <Typography variant="h5">Track Pain</Typography>
         <Button
           size="small"
           variant="contained"
@@ -408,12 +408,9 @@ const EntriesList = ({
                     });
                     formatedStartDate = format(
                       entry.startDate,
-                      "d MMM YYYY h:mm a"
+                      "MM/d/yyyy h:mm a"
                     );
-                    formatedEndDate = format(
-                      entry.endDate,
-                      "d MMM YYYY h:mm a"
-                    );
+                    formatedEndDate = format(entry.endDate, "MM/d/yyyy h:mm a");
                     const itIsSelected = isSelected(entry);
                     return (
                       <TableRow
@@ -489,7 +486,7 @@ const EntriesList = ({
         </Paper>
       ) : (
         <div className={classes.root}>
-          <Typography variant="headline">
+          <Typography variant="h5">
             {" "}
             You don't have any entries yet. To register a new event, click on
             the button above (+)
@@ -581,7 +578,6 @@ class TrackPain extends Component {
   };
   getPainEntries = () => {
     db.getPainEntries(this.props.authUser.uid).then(snapshot => {
-      console.log("trackpain", this.props.authUser.uid);
       this.setState({
         entries: snapshot.val(),
         uid: this.props.authUser.uid

@@ -10,7 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Typography from "@material-ui/core/Typography";
 import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
-import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
+import { MuiPickersUtilsProvider } from "material-ui-pickers";
 import { DatePicker } from "material-ui-pickers";
 import demographicData from "./literals/demographic";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -39,11 +39,11 @@ const Demographic = props => {
     updateDateInParentState
   } = props;
 
-  this.input = React.createRef();
+  let refInput = React.createRef();
 
   return (
     <Fragment>
-      <Typography variant="subheading">{demographicData.title}</Typography>
+      <Typography variant="subtitle1">{demographicData.title}</Typography>
       <div className={classes.root}>
         <FormControl
           required={true}
@@ -55,7 +55,7 @@ const Demographic = props => {
             id="adornment-name"
             name="name"
             value={parentState.name}
-            ref={this.input}
+            ref={refInput}
             onChange={updateParentState}
             onBlur={reviewValidations}
             inputProps={{
@@ -128,7 +128,7 @@ const Demographic = props => {
             name="weight"
             type="number"
             value={parentState.weight}
-            ref={this.input}
+            ref={refInput}
             onChange={updateParentState}
             onBlur={reviewValidations}
             endAdornment={<InputAdornment position="end">lb</InputAdornment>}
@@ -154,7 +154,7 @@ const Demographic = props => {
             name="height"
             value={parentState.height}
             type="number"
-            ref={this.input}
+            ref={refInput}
             onChange={updateParentState}
             onBlur={reviewValidations}
             endAdornment={
@@ -171,7 +171,6 @@ const Demographic = props => {
             {parentState.errorheight}
           </FormHelperText>
         </FormControl>
-        <FormHelperText error={true}>{parentState.errorSection}</FormHelperText>
       </div>
     </Fragment>
   );
