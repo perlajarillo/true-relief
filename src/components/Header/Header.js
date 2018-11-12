@@ -111,7 +111,7 @@ const NavAuthUser = props => {
                   component={Link}
                   to="/treatments"
                 >
-                  Treatments and products
+                  Treatments
                 </Button>
               </List>
               <List>
