@@ -85,7 +85,7 @@ class Treatments extends React.Component {
   }
   /**
    * getRecommendedTreatments matches the patient's pain conditions with the
-   * recommended treatments and sets them in RECOMMENDED_TREATMENTS
+   * recommended treatments and sets them in RECOMMENDED_TREATMENTS.
    * @returns {Void}
    */
   getRecommendedTreatments(painConditions) {
@@ -100,58 +100,70 @@ class Treatments extends React.Component {
     });
   }
 
+  /**
+   * componentDidMount calls getPatientConditions method if there is an
+   * authenticated user
+   * @returns {Void}
+   */
   componentDidMount() {
     if (this.props.authUser) {
-      this.getPatientConditions();
+      this.unregisterObserver = this.getPatientConditions();
     }
+  }
+
+  /**
+   * componentWillUnmount sets unregisterObserver to null and
+   * RECOMMENDED_TREATMENTS lenght to 0 in order to avoid leaks of memory
+   * @returns {Void}
+   */
+  componentWillUnmount() {
+    this.unregisterObserver = null;
+    RECOMMENDED_TREATMENTS.length = 0;
   }
 
   render() {
     const { classes } = this.props;
     const { painConditions } = this.state;
     painConditions !== null && this.getRecommendedTreatments(painConditions);
-    return RECOMMENDED_TREATMENTS ? (
+    return (
       <div className={classes.wrapper}>
         <div className={classes.root}>
-          <Typography variant="h5" gutterBottom>
-            Suggested no-pharmacological treatments for you{" "}
-          </Typography>
-          {RECOMMENDED_TREATMENTS.map(treatment => {
-            return (
-              <Card className={classes.card} key={treatment.name}>
-                <div className={classes.details}>
-                  {" "}
-                  <CardContent className={classes.content}>
-                    <Typography variant="h6">{treatment.name} </Typography>
-                    <Typography variant="subtitle1">
-                      {treatment.description}
-                    </Typography>
-                  </CardContent>
-                  <CardActions className={classes.controls}>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="primary"
-                      href={treatment.source}
-                    >
-                      Learn More
-                    </Button>
-                  </CardActions>
-                </div>
-                <Image
-                  imageName={treatment.picture}
-                  coverImage={classes.coverImage}
-                />
-              </Card>
-            );
-          })}
+          {RECOMMENDED_TREATMENTS.length > 0 ? (
+            <Typography variant="h5" gutterBottom>
+              Suggested no-pharmacological treatments for you.
+            </Typography>
+          ) : (
+            <Typography variant="h5" gutterBottom>
+              There are not recommended treatments for you.
+            </Typography>
+          )}
+          {RECOMMENDED_TREATMENTS.map(treatment => (
+            <Card className={classes.card} key={treatment.name}>
+              <div className={classes.details}>
+                <CardContent className={classes.content}>
+                  <Typography variant="h6">{treatment.name} </Typography>
+                  <Typography variant="subtitle1">
+                    {treatment.description}
+                  </Typography>
+                </CardContent>
+                <CardActions className={classes.controls}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                    href={treatment.source}
+                  >
+                    Learn More
+                  </Button>
+                </CardActions>
+              </div>
+              <Image
+                imageName={treatment.picture}
+                coverImage={classes.coverImage}
+              />
+            </Card>
+          ))}
         </div>
-      </div>
-    ) : (
-      <div>
-        <Typography variant="h5" gutterBottom>
-          There are not recommended treatments for you{" "}
-        </Typography>
       </div>
     );
   }
