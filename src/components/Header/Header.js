@@ -105,8 +105,13 @@ const NavAuthUser = props => {
                 </Button>
               </List>
               <List>
-                <Button tabIndex="-1" color="inherit" component={Link} to="/">
-                  Treatments and products
+                <Button
+                  tabIndex="-1"
+                  color="inherit"
+                  component={Link}
+                  to="/treatments"
+                >
+                  Treatments
                 </Button>
               </List>
               <List>
