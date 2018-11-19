@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import GeolocationComponent from "../GeolocationComponent/GeolocationComponent";
 import Grid from "@material-ui/core/Grid";
+import ProvidersService from "./ProvidersService";
 
 const styles = theme => ({
   root: {
@@ -58,6 +59,14 @@ const styles = theme => ({
 });
 
 class LocalProviders extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      response: ""
+    };
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -77,8 +86,9 @@ class LocalProviders extends React.Component {
             <Grid item xs={12} sm={6} md={6} lg={6}>
               <div className={classes.sectionStyles}>
                 <Typography variant="h5" gutterBottom>
-                  Here will be the list of providers
+                  Providers in your area
                 </Typography>
+                <ProvidersService />
               </div>
             </Grid>
           </Grid>
