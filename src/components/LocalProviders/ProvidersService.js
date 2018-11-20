@@ -11,35 +11,30 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
-  card: {
-    maxWidth: 545
-  },
-  media: {
-    objectFit: "cover"
-  },
-  coverImage: {
-    width: 251,
+  cover: {
+    width: 161,
     maxHeight: 200,
-    marginRight: 10,
-    marginLeft: 400,
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: 0
-    },
-    [theme.breakpoints.up("md")]: {
-      marginLeft: 400
-    },
-    [theme.breakpoints.between("xs", "sm")]: {
-      marginLeft: 0,
-      marginRight: 0,
-      width: 71,
-      maxHeight: 70
-    },
-    [theme.breakpoints.between("sm", "md")]: {
-      marginLeft: 0,
-      marginRight: 0,
-      width: 251,
-      maxHeight: 300
-    }
+    marginRight: "0"
+  },
+  root: {
+    flexGrow: 1,
+    margin: theme.spacing.unit * 3
+  },
+  card: {
+    display: "flex",
+    marginTop: "10px"
+  },
+  details: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  content: {
+    flex: "auto"
+  },
+  controls: {
+    alignItems: "center",
+    paddingLeft: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit
   }
 });
 
@@ -89,21 +84,28 @@ class ProvidersService extends React.Component {
       .catch(error => console.log(error));
   };
 
-  getProviders = () => {
+  getProviders = userLocation => {
+    console.log(userLocation.lat + ", " + userLocation.lng + ", 100");
     const doctors_url =
-      "https://api.betterdoctor.com/2016-03-01/doctors?location=37.773,-122.413,100&skip=2&limit=10&user_key=" +
+      "https://api.betterdoctor.com/2016-03-01/doctors?location=" +
+      userLocation.lat +
+      ", " +
+      userLocation.lng +
+      ", 100&skip=2&limit=10&user_key=" +
       process.env.REACT_APP_BETTER_DOCTOR_KEY;
 
     this.get(doctors_url)
       .then(response => {
         this.setState({ providers: response.data });
+        console.log(response.data);
       })
       .catch(error => console.log(error));
   };
 
-  componentDidMount() {
-    //this.getSpecialties();
-    this.getProviders();
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) {
+      this.getProviders(this.props.userLocation);
+    }
   }
 
   render() {
@@ -114,31 +116,40 @@ class ProvidersService extends React.Component {
         {providers !== null &&
           providers.map(item => (
             <Card className={classes.card} key={item.uid}>
+              <CardMedia
+                component="img"
+                className={classes.cover}
+                image={item.profile.image_url}
+              />
               <div className={classes.details}>
                 <CardContent className={classes.content}>
-                  <Typography variant="body1">
+                  <Typography variant="h6">
                     {item.profile.title} {item.profile.first_name}{" "}
                     {item.profile.last_name}
                   </Typography>
                   {item.specialties.map(specialty => (
-                    <Typography variant="body1">{specialty.name}</Typography>
+                    <Typography variant="subtitle2" key={specialty.uid}>
+                      {specialty.name}
+                    </Typography>
                   ))}
-                  {item.practices.map(practice => (
-                    <Fragment>
-                      <Typography variant="body1">{practice.name}</Typography>
-                      <Typography variant="body1">
-                        {practice.visit_address.street}{" "}
-                        {practice.visit_address.city}{" "}
-                        {practice.visit_address.state}
-                        {""}
-                        {practice.visit_address.zip}
-                      </Typography>
-                    </Fragment>
-                  ))}
+                  <div className={classes.controls}>
+                    {item.practices.map(practice => (
+                      <Fragment key={practice.uid}>
+                        <Typography variant="overline" gutterBottom>
+                          {" "}
+                          <li>{practice.name}</li>
+                        </Typography>
+                        <Typography variant="caption" gutterBottom>
+                          {practice.visit_address.street}{" "}
+                          {practice.visit_address.city}
+                          {", "}
+                          {practice.visit_address.state}{" "}
+                          {practice.visit_address.zip}
+                        </Typography>
+                      </Fragment>
+                    ))}
+                  </div>
                 </CardContent>
-              </div>
-              <div>
-                <img src={item.profile.image_url} height="100px" />
               </div>
             </Card>
           ))}
