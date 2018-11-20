@@ -55,6 +55,12 @@ const styles = theme => ({
       minHeight: "60vh"
     },
     position: "absolute"
+  },
+  card: {
+    maxWidth: 345
+  },
+  media: {
+    objectFit: "cover"
   }
 });
 
