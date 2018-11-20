@@ -6,6 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import GeolocationComponent from "../GeolocationComponent/GeolocationComponent";
 import Grid from "@material-ui/core/Grid";
 import ProvidersService from "./ProvidersService";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 const styles = theme => ({
   root: {
@@ -29,6 +31,13 @@ const styles = theme => ({
       marginLeft: "10%"
     }
   },
+  query: {
+    marginTop: "95%",
+    [theme.breakpoints.between("sm", "md")]: {
+      marginTop: 850
+    }
+  },
+  button: { marginTop: "5%" },
 
   container: {
     display: "flex",
@@ -69,9 +78,27 @@ class LocalProviders extends React.Component {
     super(props);
 
     this.state = {
-      response: ""
+      response: "",
+      selectedPlace: {
+        position: {
+          lat: -34.397,
+          lng: 150.644
+        },
+        name: "Current location"
+      },
+      activeMarker: {}
     };
   }
+  /**
+   * updateParentStateLocation - sets user location in state
+   * @param {Object} event the event object
+   * @return {void}
+   */
+  updateParentStateLocation = (pos, name) => {
+    this.setState({
+      selectedPlace: { position: pos, name: name }
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -83,18 +110,44 @@ class LocalProviders extends React.Component {
             Local providers
           </Typography>
 
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={6} md={6} lg={6}>
+          <Grid container spacing={8}>
+            <Grid item xs={12} sm={6} md={6} lg={4}>
               <div className={classes.map}>
-                <GeolocationComponent />
+                <GeolocationComponent
+                  parentState={this.state}
+                  updateParentStateLocation={this.updateParentStateLocation}
+                />
+                }{" "}
+              </div>
+              <div className={classes.query}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Write a keyword to locate a proper provider for you (e.g.
+                  'Back pain')
+                </Typography>
+                <TextField
+                  id="query"
+                  label="Keyword"
+                  placeholder="e.g. 'Back pain'"
+                  className={classes.textField}
+                  margin="normal"
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                >
+                  Search
+                </Button>
               </div>
             </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={6}>
+            <Grid item xs={12} sm={6} md={6} lg={8}>
               <div className={classes.sectionStyles}>
                 <Typography variant="h5" gutterBottom>
                   Providers in your area
                 </Typography>
-                <ProvidersService />
+                <ProvidersService
+                  userLocation={this.state.selectedPlace.position}
+                />
               </div>
             </Grid>
           </Grid>
