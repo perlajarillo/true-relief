@@ -5,17 +5,8 @@ import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 class GeolocationComponent extends React.Component {
   constructor(props, context) {
     super(props, context);
-
     this.state = {
-      showingInfoWindow: false,
-      activeMarker: {},
-      selectedPlace: {
-        position: {
-          lat: -34.397,
-          lng: 150.644
-        },
-        name: "Current location"
-      }
+      showingInfoWindow: false
     };
   }
   onMarkerClick = (props, marker, e) =>
@@ -41,9 +32,7 @@ class GeolocationComponent extends React.Component {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        this.setState({
-          selectedPlace: { position: pos, name: "Current location" }
-        });
+        this.props.updateParentStateLocation(pos, "Current location");
       });
     }
   };
@@ -53,18 +42,19 @@ class GeolocationComponent extends React.Component {
   }
 
   render() {
+    const { updateParentStateLocation, parentState } = this.props;
     return (
       <Map
         style={{ position: "absolute" }}
         className={"map"}
         google={this.props.google}
         zoom={14}
-        center={this.state.selectedPlace.position}
+        center={parentState.selectedPlace.position}
       >
         <Marker
           onClick={this.onMarkerClick}
           name={"Current location"}
-          position={this.state.selectedPlace.position}
+          position={parentState.selectedPlace.position}
         />
         <InfoWindow
           onClose={this.onInfoWindowClose}
@@ -72,7 +62,7 @@ class GeolocationComponent extends React.Component {
           visible={this.state.showingInfoWindow}
         >
           <div>
-            <h1>{this.state.selectedPlace.name}</h1>
+            <h1>{parentState.selectedPlace.name}</h1>
           </div>
         </InfoWindow>
       </Map>
