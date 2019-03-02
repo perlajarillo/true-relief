@@ -407,10 +407,13 @@ const EntriesList = ({
                       return (c += key);
                     });
                     formatedStartDate = format(
-                      entry.startDate,
-                      "MM/d/yyyy h:mm a"
+                      new Date(entry.startDate),
+                      "MM/dd/yyyy h:mm a"
                     );
-                    formatedEndDate = format(entry.endDate, "MM/d/yyyy h:mm a");
+                    formatedEndDate = format(
+                      new Date(entry.endDate),
+                      "MM/dd/yyyy h:mm a"
+                    );
                     const itIsSelected = isSelected(entry);
                     return (
                       <TableRow
@@ -577,12 +580,14 @@ class TrackPain extends Component {
     this.setState({ open: false, entryKey: "" });
   };
   getPainEntries = () => {
-    db.getPainEntries(this.props.authUser.uid).then(snapshot => {
-      this.setState({
-        entries: snapshot.val(),
-        uid: this.props.authUser.uid
-      });
-    });
+    db.getPainEntries(this.props.authUser.uid)
+      .then(snapshot => {
+        this.setState({
+          entries: snapshot.val(),
+          uid: this.props.authUser.uid
+        });
+      })
+      .catch(e => this.setState({ entries: [] }));
   };
   componentDidMount() {
     if (this.props.authUser) {
